@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>tornadost.github.io</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #0a0a0a;
+      font-family: 'Courier New', monospace;
+      color: cyan;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 3em;
+      text-shadow: 0 0 10px cyan, 0 0 20px cyan, 0 0 40px cyan;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        text-shadow: 0 0 10px cyan, 0 0 20px cyan, 0 0 40px cyan;
+      }
+      50% {
+        text-shadow: 0 0 20px cyan, 0 0 40px cyan, 0 0 60px cyan;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to tornadost.github.io</h1>
+</body>
+</html>
