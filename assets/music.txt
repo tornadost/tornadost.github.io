@@ -39,64 +39,6 @@ Beyoncé
 Billie Eilish
 Biquini Cavadão
 Bomba
-Britney Spears
-Bruno Mars
-Banda Cheiro De Amor
-Bob Dylan
-Bob Marley
-Bob Sinclar
-Bon Jovi
-Bruce Springsteen
-Carla Cristina
-Cazuza
-Cachorro Grande
-Cada Vez
-Camino de la Vida
-Candela
-Capital Inicial
-Cássia Eller
-Céline Dion
-Chiclete Com Banana
-Christina Aguilera
-Chuck Berry
-Companhia Do Pagode
-Cristiano Araújo
-Daft Punk
-Daniel
-Danni Carlos
-Danza Kuduro
-David Bowie
-David Guetta
-Deadmau5
-Deep Purple
-Def Leppard
-Deftones
-Di Paullo & Paulino
-Dimitri Vegas & Like Mike
-Dire Straits
-Disc 1, 2, 3, 4
-Dudu Nobre
-Duda Nobre
-Eagles
-Eek A Mouse
-Eli Silva e Zé Goiano
-Eliane Elias
-Elton John
-Elvis Presley
-Eminem
-Erasmo Carlos
-Eric Clapton
-É O Tchan
-Forró Perfeito
-Jammil E Uma Noites
-Jamelão
-J. Cole
-Jimi Hendrix
-John Lennon
-Johnny Cash
-João Mineiro & Marciano
-João Paulo & Daniel
-Justin Timberlake
 Kendrick Lamar
 Kid Cudi
 Klaf
@@ -210,7 +152,6 @@ Belchior
 Erasmo Carlos
 MartÂ´NÃ¡lia
 Moacyr Luz
-Music_Qobuz_new
 Sururu Na Roda
 Toquinho
 ZÃ© Ramalho
@@ -245,7 +186,6 @@ Metro Boomin
 Migos
 Moinho
 Molejo
-Music_Qobuz_new
 Nando Reis
 Netinho
 Offset
@@ -306,8 +246,7 @@ Mac Miller
 Macarena
 Mama Insegname a Bailar
 Manu Chao
-Music_Qobuz_new
-MÃƒÆ’Ã‚Â¶tley CrÃƒÆ’Ã‚Â¼e
+Mötley Crüe
 Olivia Rodrigo
 Os Mutantes
 Pato Fu
@@ -350,8 +289,7 @@ Luan Santana
 Macarena
 Mama Insegname a Bailar
 Manu Chao
-Music_Qobuz_new
-MÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¶tley CrÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼e
+Mötley Crüe
 Os Mutantes
 Pato Fu
 Rabiosa
@@ -364,25 +302,9 @@ The Gladiators
 Tic Tic Tac
 UB40
 Vitor Kley
-( Check and Upload )
-15
-18
-1968
-1969
-2
-20
 2016ALBUM
-23
-25
-28
 2Pac
-3
 4 Mazurkas
-5
-7
-70
-89 & 4
-9
 ABBA
 AC
 Adele
@@ -494,11 +416,6 @@ Milionario e Jose Rico
 Milton Nascimento
 Mundo Livre S
 Muse
-Music_Qobuz_new_BR
-Music_Qobuz_new_BR_2
-Music_Qobuz_new_all
-Music_Qobuz_new_all_2
-Music_Qobuz_new_pendrive_rony
 Nara Leão
 Natiruts
 Nação Zumbi
@@ -1959,3 +1876,61 @@ Ira!
 Iron Maiden
 Ivan Lins
 IZA
+Britney Spears
+Bruno Mars
+Banda Cheiro De Amor
+Bob Dylan
+Bob Marley
+Bob Sinclar
+Bon Jovi
+Bruce Springsteen
+Carla Cristina
+Cazuza
+Cachorro Grande
+Cada Vez
+Camino de la Vida
+Candela
+Capital Inicial
+Cássia Eller
+Céline Dion
+Chiclete Com Banana
+Christina Aguilera
+Chuck Berry
+Companhia Do Pagode
+Cristiano Araújo
+Daft Punk
+Daniel
+Danni Carlos
+Danza Kuduro
+David Bowie
+David Guetta
+Deadmau5
+Deep Purple
+Def Leppard
+Deftones
+Di Paullo & Paulino
+Dimitri Vegas & Like Mike
+Dire Straits
+Disc 1, 2, 3, 4
+Dudu Nobre
+Duda Nobre
+Eagles
+Eek A Mouse
+Eli Silva e Zé Goiano
+Eliane Elias
+Elton John
+Elvis Presley
+Eminem
+Erasmo Carlos
+Eric Clapton
+É O Tchan
+Forró Perfeito
+Jammil E Uma Noites
+Jamelão
+J. Cole
+Jimi Hendrix
+John Lennon
+Johnny Cash
+João Mineiro & Marciano
+João Paulo & Daniel
+Justin Timberlake
