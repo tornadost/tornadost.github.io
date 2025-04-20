@@ -1,3 +1,3 @@
 <p align="center">
-  <img src="http://rkeaves.online/assets/tornado.webp">
+  <img src="http://tornadost.github.io/images/tornado.webp">
 </p>
