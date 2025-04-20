@@ -1,3 +1,24 @@
+Ambrosia
+DJ Samir
+Dora Morelenbaum
+Dragon Ball
+Firefall
+FR3ST
+Geraldo Azevedo
+Luiz Gonzaga
+Luísa Sonza
+Mag
+MC Daleste
+MC Hariel
+MC Júnior E MC Leonardo
+Mc Ws da leste
+Nas
+Oswaldo Montenegro
+Ritchie
+RXDXVIL
+SCXR SOUL
+Travis Tritt
+twenty one pilots
 1Kilo
 3030
 Armandinho
@@ -190,7 +211,7 @@ Nando Reis
 Netinho
 Offset
 Os Paralamas Do Sucesso
-Papas Da LÃƒÂ­ngua
+Papas da Língua
 Psirico
 Rae Sremmurd
 Rich the kid
@@ -222,10 +243,6 @@ Danni Carlos
 Danza Kuduro
 Def Leppard
 Deftones
-Disc 1
-Disc 2
-Disc 3
-Disc 4
 Dudu Nobre
 El Meneaito
 Eliane Elias
@@ -552,23 +569,9 @@ Zé Ramalho
 (1998) Raça Negra
 (2001) Raça Negra
 (2012) Raça Negra Vol. 36 (Inédito)
-.picasaoriginals
-01
-01 Thriller @320
-01.cd
-02 Dont Stop Till You Get Enough @320
-02.cd
-03 Rock With You @320
-03.cd
-04 Billie Jean @320
-04.cd
-05 Beat It @320
-05.cd
-06 Bad @320
 07 The Way You Make Me Feel @320
 08 Dirty Diana @320
 09 Smooth Criminal @320
-1
 1 (while alive) Studio albums
 1 Blue Horizon Box (1999) @320
 1 Come On
@@ -583,7 +586,6 @@ Zé Ramalho
 12 Got Live If You Want It! (EP)
 12 Remember The Time @320
 13 In The Closet @320
-14
 14 Jam @320
 15 Big Ones
 15 Heal The World @320
@@ -852,14 +854,7 @@ Zé Ramalho
 1999 Sound Asleep EP
 1999 Unsurpassed Studio Takes @320
 1999___RARE_PEARLS__BONUS_CD_
-2
-2 (while alive) Live albums
-2 Compilation albums
 2 I Wanna Be Your Man
-2 Live
-2 Live albums
-2 Soundtracks
-2. English Albums
 20 Blood On The Dance Floor @320
 20 Grandes Sucessos De Nara Leao
 2000 BBC Sessions @320
@@ -992,7 +987,6 @@ Zé Ramalho
 3 Tribute albums  
 3. Live Albums  
 3.0 Turbinado  
-31  
 3D (Justin Timberlake Remix)  
 4 (posthumous) Live albums  
 4 Box sets  
@@ -1135,16 +1129,10 @@ CD2 Japanese Bonus
 CD2 Live At Lyon  
 CD2 Stereo  
 CD2 [Bonus Disc]  
-CD3  
 CD3 1969 Pious Bird of Good Omen @320  
-CD4  
 CD4 1970 Blues Jam in Chicago vol 1 @320  
-CD5  
 CD5 1970 Blues Jam in Chicago vol 2 @320  
-CD6  
 CD6 1971 The Original Fleetwood Mac @320  
-CD_1  
-CD_2  
 COMPILATIONS  
 CPM 22  
 Caetano Veloso  
@@ -1193,11 +1181,8 @@ Creed
 Creedence Clearwater Revival  
 Céline Dion  
 DCC, 24Kt GOLD DISC  
-DISC_1  
 DISC_1 – I GOT DEM OL' KOZMIC BL  
-DISC_2  
 DISC_2 – RECORDED LIVE AT WOODST  
-DISC_3  
 Da Lama Ao Caos  
 Da Licença Meu Senhor  
 Dance Moderno  
@@ -1391,19 +1376,7 @@ Labiata
 Lado Z – 2003
 Lady Gaga
 Lauryn Hill
-Leandro & Leonardo Vol. 01
-Leandro & Leonardo Vol. 02
-Leandro & Leonardo Vol. 03 & 04
-Leandro & Leonardo Vol. 03 e 04
-Leandro & Leonardo Vol. 05
-Leandro & Leonardo Vol. 06
-Leandro & Leonardo Vol. 07
-Leandro & Leonardo Vol. 08
-Leandro & Leonardo Vol. 09
-Leandro & Leonardo Vol. 11
-Leandro & Leonardo Vol. 12
-Leandro & Leonardo Vol. 9
-Leandro & Leonardo vol. 10
+Leandro & Leonardo
 Leandro and Leonardo
 Leandro e Leonardo Vol. 06
 Legião Urbana
@@ -1628,7 +1601,7 @@ Serie Retratos [2008]
 Sgt. Pepper's Lonely Hearts Club Band
 Shaggy
 Shakira
-Shakira Greatest Hits 2010 [MP3][320kbps][Hectorbusinspector]
+Shakira Greatest Hits 2010
 Shot of Love
 Shut Down Vol. 2
 Signo de Ar
