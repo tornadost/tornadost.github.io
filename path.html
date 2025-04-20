@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tornado .st</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Courier New', monospace; background: #000; }
+
+ .sign-face h1 {
+  /* existing rules… */
+  white-space: nowrap;
+}
+	  
+	  /* Matrix Canvas */
+    #matrixCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      background: #000;
+    }
+
+    /* Rain canvas (optional, for future effects) */
+    #rainCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+	.sign-wrapper {
+  /* change this… */
+      width: auto;   /* or bump above ~600px */
+  /* rest of your rules */
+}
+	  
+    .container {
+      position: relative;
+      z-index: 3;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 800px;
+      overflow: visible;
+    }
+
+    .sign-wrapper {
+      position: relative;
+      width: 400px;
+      height: 150px;
+      transform: rotateX(8deg) rotateY(-2deg);
+      transform-style: preserve-3d;
+    }
+
+    .sign-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 40, 0, 0.6);
+      border: 5px solid rgba(0, 255, 0, 0.9);
+      border-radius: 6px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7), inset 0 0 8px rgba(0,255,0,0.4);
+      backface-visibility: hidden;
+    }
+
+    .sign-face::before {
+      content: '';
+      position: absolute;
+      top: -5px; left: -5px;
+      width: calc(100% + 10px);
+      height: calc(100% + 10px);
+      border: 2px solid rgba(0,255,0,0.7);
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0,255,0,0.7);
+      pointer-events: none;
+    }
+
+    .bolt {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #222;
+      border: 2px solid #444;
+      border-radius: 50%;
+      box-shadow: inset 0 0 4px rgba(0,0,0,0.8);
+    }
+    .bolt:nth-child(1) { top: 8px; left: 8px; }
+    .bolt:nth-child(2) { top: 8px; right: 8px; }
+    .bolt:nth-child(3) { bottom: 8px; left: 8px; }
+    .bolt:nth-child(4) { bottom: 8px; right: 8px; }
+
+    .sign-face h1 {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+      font-size: 2.2em;
+      color: #0f0;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 8px #0f0, 0 0 16px #0f0;
+      animation: flicker 2s infinite;
+      pointer-events: none;
+    }
+    .sign-face h1::before,
+    .sign-face h1::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+      clip: rect(0,900px,0,0);
+    }
+    .sign-face h1::before {
+      left: 2px;
+      text-shadow: -2px 0 #f0f;
+      animation: glitch-top 3s infinite linear;
+    }
+    .sign-face h1::after {
+      left: -2px;
+      text-shadow: -2px 0 #0f0;
+      animation: glitch-bottom 2.5s infinite linear;
+    }
+
+    .subtext {
+      position: absolute;
+      bottom: 21px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.9em;
+      color: #8f8;
+      text-shadow: 0 0 4px #0f0;
+      font-style: italic;
+      opacity: 0.85;
+    }
+
+    .post {
+      position: absolute;
+      top: 100%;
+      width: 12px;
+      background: rgba(0,255,0,0.8);
+      border-radius: 4px;
+      box-shadow: 0 0 4px rgba(0,255,0,0.8);
+    }
+    .post.left  { left: 15%; height: 30vh; }
+    .post.right { left: 85%; height: 30vh; }
+
+    .crossbeam {
+      position: absolute;
+      top: calc(100% - 20px);
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background: rgba(0,255,0,0.7);
+      box-shadow: 0 0 6px rgba(0,255,0,0.8);
+    }
+
+    .links a, .extras a {
+      position: absolute;
+      padding:0.8em 1.5em;
+      color: #0f0;
+      text-decoration:none;
+      font-size:1.2em;
+      box-shadow:0 0 10px rgba(0,255,0,0.7);
+      opacity:.7;
+      transition:opacity .3s,transform .3s;
+      z-index:4;
+      animation:pulse 2.5s infinite;
+    }
+    .links a:hover, .extras a:hover {
+      opacity:1;
+      transform:scale(1.2) rotate(2deg);
+    }
+    .links a:nth-child(1) { top: 10%; left: 5%; }
+    .links a:nth-child(2) { top: 10%; right: 5%; }
+    .links a:nth-child(3) { bottom: 10%; left: 50%; transform: translateX(-50%); }
+    .extras a:nth-child(1) { bottom: 5%; left: 5%; }
+    .extras a:nth-child(2) { bottom: 5%; right: 5%; }
+
+    #texture {
+      position: fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      z-index:5;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"><rect width="8" height="8" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="0.5" /></svg>');
+      pointer-events:none;
+      opacity:0.3;
+      animation: grain 0.5s steps(10) infinite;
+    }
+
+    @keyframes grain { 0%{opacity:.3;}50%{opacity:.35;}100%{opacity:.3;} }
+    @keyframes flicker { 0%,19%,21%,23%,25%,54%,56%,100%{opacity:.99;}20%,24%,55%{opacity:.3;} }
+    @keyframes glitch-top { 0%{clip:rect(0,900px,5px,0);}10%{clip:rect(10px,900px,15px,0);}20%{clip:rect(20px,900px,25px,0);}30%{clip:rect(5px,900px,10px,0);}40%{clip:rect(15px,900px,20px,0);}50%{clip:rect(25px,900px,30px,0);}60%{clip:rect(10px,900px,15px,0);}70%{clip:rect(0,900px,5px,0);}100%{clip:rect(0,900px,5px,0);} }
+    @keyframes glitch-bottom { 0%{clip:rect(30px,900px,35px,0);}10%{clip:rect(40px,900px,45px,0);}20%{clip:rect(50px,900px,55px,0);}30%{clip:rect(35px,900px,40px,0);}40%{clip:rect(45px,900px,50px,0);}50%{clip:rect(55px,900px,60px,0);}60%{clip:rect(40px,900px,45px,0);}70%{clip:rect(30px,900px,35px,0);}100%{clip:rect(30px,900px,35px,0);} }
+  </style>
+</head>
+<body>
+  <!-- Matrix Background Canvas -->
+  <canvas id="matrixCanvas"></canvas>
+  <!-- Optional Rain Layer -->
+  <canvas id="rainCanvas"></canvas>
+
+  <!-- 3D Sign -->
+  <div class="container">
+    <div class="sign-wrapper">
+      <div class="sign-face">
+        <h1 class="glitch" data-text="Tornado st.">&nbsp; tornado st.&nbsp;</h1>
+        <div class="subtext">you are on the right path...</div>
+<div class="bolt"></div>
+        <div class="bolt"></div>
+        <div class="bolt"></div>
+        <div class="bolt"></div>
+      </div>
+      <div class="post left"></div>
+      <div class="post right"></div>
+      <div class="crossbeam"></div>
+    </div>
+  </div>
+
+  <!-- Links -->
+  <div class="links">
+  </div>
+  <div class="extras"></div>
+
+  <!-- Grain Texture Overlay -->
+  <div id="texture"></div>
+
+  <!-- Matrix Animation Script -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('matrixCanvas');
+      const ctx = canvas.getContext('2d');
+      let cols, drops;
+
+      const setupMatrix = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        cols = Math.floor(canvas.width / 14);
+        drops = Array(cols).fill(1);
+      };
+      window.addEventListener('resize', setupMatrix);
+      setupMatrix();
+
+      const drawMatrix = () => {
+        // subtle darker trail
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < drops.length; i++) {
+          const x = i * 14;
+          const y = drops[i] * 14;
+          const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+          ctx.fillStyle = (Math.random() < 0.005) ? '#FFF' : '#0F0';
+          ctx.font = (14 + Math.random() * 4) + 'px monospace';
+          ctx.fillText(char, x, y);
+          drops[i] = (y > canvas.height && Math.random() > 0.98) ? 0 : drops[i] + 1;
+        }
+        requestAnimationFrame(drawMatrix);
+      };
+      drawMatrix();
+
+      // Floating buttons avoiding the title area
+      const buttons = Array.from(document.querySelectorAll('.links a'));
+      const titleEl = document.querySelector('.glitch');
+      const moveButton = (btn) => {
+        const titleRect = titleEl.getBoundingClientRect();
+        let x, y;
+        do {
+          x = Math.random() * (window.innerWidth - btn.offsetWidth);
+          y = Math.random() * (window.innerHeight - btn.offsetHeight);
+        } while (
+          x < titleRect.right + 20 && x + btn.offsetWidth > titleRect.left - 20 &&
+          y < titleRect.bottom + 20 && y + btn.offsetHeight > titleRect.top - 20
+        );
+        btn.style.left = x + 'px';
+        btn.style.top = y + 'px';
+        setTimeout(() => moveButton(btn), 2000 + Math.random() * 2000);
+      };
+      buttons.forEach(btn => moveButton(btn));
+    });
+  </script>
+</body>
+</html>
