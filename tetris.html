@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tetris</title>
+  <title>Cyber Tetris</title>
   <style>
     html, body {
       margin: 0;
@@ -85,9 +85,9 @@
 
   const tetrominoSequence = [];
   const playfield = [];
-  for (let row = -2; row < 20; row++) {
-    playfield[row] = [];
-    for (let col = 0; col < 10; col++) playfield[row][col] = 0;
+  // populate empty playfield: 20 visible rows
+  for (let row = 0; row < 20; row++) {
+    playfield[row] = new Array(10).fill(0);
   }
 
   const tetrominos = {
@@ -114,8 +114,8 @@
     if (!tetrominoSequence.length) generateSequence();
     const name = tetrominoSequence.pop();
     const matrix = tetrominos[name];
-    const col = playfield[0].length / 2 - Math.ceil(matrix[0].length / 2);
-    const row = name === 'I' ? -1 : -2;
+    const col = Math.floor((10 - matrix[0].length) / 2);
+    const row = 0; // start at top row, no hidden buffer
     return { name, matrix, row, col };
   }
   function rotate(matrix) {
@@ -126,13 +126,13 @@
     return matrix.every((r, y) => r.every((v, x) => {
       if (!v) return true;
       const nx = col + x, ny = row + y;
-      return nx >= 0 && nx < 10 && ny < 20 && !playfield[ny][nx];
+      return nx >= 0 && nx < 10 && ny >= 0 && ny < 20 && !playfield[ny][nx];
     }));
   }
   function placeTetromino() {
     tetromino.matrix.forEach((r, y) => r.forEach((v, x) => {
       if (v) {
-        if (tetromino.row + y < 0) return showGameOver();
+        if (!isValidMove(tetromino.matrix, tetromino.row, tetromino.col)) return showGameOver();
         playfield[tetromino.row + y][tetromino.col + x] = tetromino.name;
       }
     }));
@@ -140,7 +140,7 @@
     for (let r = 19; r >= 0; ) {
       if (playfield[r].every(c => c)) {
         for (let rr = r; rr > 0; rr--) playfield[rr] = [...playfield[rr - 1]];
-        playfield[0] = Array(10).fill(0);
+        playfield[0] = new Array(10).fill(0);
         lines++;
         linesEl.textContent = 'Lines: ' + lines;
       } else r--;
