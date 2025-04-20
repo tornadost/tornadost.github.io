@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Courier New', monospace;
+    }
+    /* Matrix rain background */
+    #matrix {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    /* Game canvas with neon glow and shadow */
+    #game {
+      position: relative;
+      z-index: 2;
+      width: 600px;
+      height: 600px;
+      border: 4px solid #0f0;
+      box-shadow:
+        0 0 16px rgba(0, 255, 0, 0.7),
+        0 0 32px rgba(0, 255, 0, 0.5);
+      background: rgba(0, 0, 0, 0.7);
+    }
+    /* Score display */
+    #score {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #0f0;
+      font-size: 24px;
+      text-shadow: 0 0 8px rgba(0,255,0,0.8);
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix"></canvas>
+  <div id="score">Score: 0</div>
+  <canvas id="game" width="600" height="600"></canvas>
+
+  <script>
+  // --- Matrix Rain Effect ---
+  const matrixCanvas = document.getElementById('matrix');
+  const mctx = matrixCanvas.getContext('2d');
+  matrixCanvas.width = window.innerWidth;
+  matrixCanvas.height = window.innerHeight;
+  const cols = Math.floor(matrixCanvas.width / 20);
+  const drops = Array(cols).fill(1);
+
+  function drawMatrix() {
+    mctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    mctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+    mctx.fillStyle = '#0F0';
+    mctx.font = '20px monospace';
+    for (let i = 0; i < drops.length; i++) {
+      const text = String.fromCharCode(0x30A0 + Math.random() * 96);
+      mctx.fillText(text, i * 20, drops[i] * 20);
+      if (drops[i] * 20 > matrixCanvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+    requestAnimationFrame(drawMatrix);
+  }
+  drawMatrix();
+
+  // --- Snake Game ---
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  const scoreEl = document.getElementById('score');
+
+  const grid = 20;
+  let count = 0;
+  let score = 0;
+
+  const snake = {
+    x: 200, y: 200,
+    dx: grid, dy: 0,
+    cells: [],
+    maxCells: 4
+  };
+  let apple = { x: 400, y: 400 };
+
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  function loop() {
+    requestAnimationFrame(loop);
+    if (++count < 4) return;
+    count = 0;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    snake.x += snake.dx;
+    snake.y += snake.dy;
+
+    // wrap
+    if (snake.x < 0) snake.x = canvas.width - grid;
+    if (snake.x >= canvas.width) snake.x = 0;
+    if (snake.y < 0) snake.y = canvas.height - grid;
+    if (snake.y >= canvas.height) snake.y = 0;
+
+    snake.cells.unshift({ x: snake.x, y: snake.y });
+    if (snake.cells.length > snake.maxCells) snake.cells.pop();
+
+    // draw apple
+    ctx.save();
+    ctx.fillStyle = 'red';
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = 'red';
+    ctx.fillRect(apple.x, apple.y, grid - 2, grid - 2);
+    ctx.restore();
+
+    // draw snake
+    snake.cells.forEach((cell, index) => {
+      ctx.save();
+      ctx.fillStyle = 'cyan';
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = 'cyan';
+      ctx.fillRect(cell.x, cell.y, grid - 2, grid - 2);
+      ctx.restore();
+
+      // eat apple
+      if (cell.x === apple.x && cell.y === apple.y) {
+        snake.maxCells++;
+        score++;
+        scoreEl.textContent = 'Score: ' + score;
+        apple.x = getRandomInt(0, canvas.width / grid) * grid;
+        apple.y = getRandomInt(0, canvas.height / grid) * grid;
+      }
+
+      // check collision
+      for (let i = index + 1; i < snake.cells.length; i++) {
+        if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+          // reset
+          snake.x = 200; snake.y = 200;
+          snake.cells = [];
+          snake.maxCells = 4;
+          snake.dx = grid; snake.dy = 0;
+          score = 0;
+          scoreEl.textContent = 'Score: ' + score;
+          apple.x = getRandomInt(0, canvas.width / grid) * grid;
+          apple.y = getRandomInt(0, canvas.height / grid) * grid;
+        }
+      }
+    });
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.which === 37 && snake.dx === 0) { snake.dx = -grid; snake.dy = 0; }
+    if (e.which === 38 && snake.dy === 0) { snake.dy = -grid; snake.dx = 0; }
+    if (e.which === 39 && snake.dx === 0) { snake.dx = grid; snake.dy = 0; }
+    if (e.which === 40 && snake.dy === 0) { snake.dy = grid; snake.dx = 0; }
+  });
+
+  requestAnimationFrame(loop);
+  </script>
+</body>
+</html>
