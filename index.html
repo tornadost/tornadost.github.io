@@ -1,199 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>tornado st.</title>
+  <title>ingressor</title>
   <style>
-
-    body, html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Courier New', monospace;
-      background: #000;
-    }
-    
-    #matrixCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
-
-    .login-container {
-      position: relative;
-      z-index: 2;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .login-box {
-      background: rgba(0, 0, 0, 0.8);
-      padding: 2em;
-      border: 2px solid #0f0;
-      box-shadow: 0 0 10px #0f0;
-      color: #0f0;
-      text-align: center;
-    }
-
-    .login-box h2 {
-      margin-bottom: 1em;
-      text-shadow: 0 0 10px #0f0;
-    }
-
-    .login-box input {
-      width: 100%;
-      margin: 0.5em 0;
-      padding: 0.6em;
-      border: none;
-      background: #111;
-      color: #0f0;
-      box-shadow: 0 0 5px #0f0;
-    }
-
-    .login-box button {
-      margin-top: 1em;
-      padding: 0.6em 1.2em;
-      background: transparent;
-      border: 1px solid #0f0;
-      color: #0f0;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .login-box button:hover {
-      background: #0f0;
-      color: #000;
-    }
-
-    .error {
-      color: red;
-      margin-top: 1em;
-      word-break: break-all;
-      white-space: pre-wrap;
-    }
+    body,html{margin:0;padding:0;width:100%;height:100%;overflow:hidden;
+      font-family:'Courier New',monospace;background:#000}
+    #kG7nZ5{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1}
+    .cH8jT2{position:relative;z-index:2;height:100%;display:flex;
+      align-items:center;justify-content:center}
+    .bP6mR4{background:rgba(0,0,0,0.8);padding:2em;border:2px solid #0f0;
+      box-shadow:0 0 10px #0f0;color:#0f0;text-align:center}
+    .bP6mR4 h2{margin-bottom:1em;text-shadow:0 0 10px #0f0}
+    .bP6mR4 input{width:100%;margin:0.5em 0;padding:0.6em;border:none;
+      background:#111;color:#0f0;box-shadow:0 0 5px #0f0}
+    .bP6mR4 button{margin-top:1em;padding:0.6em 1.2em;background:transparent;
+      border:1px solid #0f0;color:#0f0;cursor:pointer;transition:background .3s}
+    .bP6mR4 button:hover{background:#0f0;color:#000}
+    .eR3vW1{color:red;margin-top:1em;word-break:break-all;
+      white-space:pre-wrap}
   </style>
 </head>
-
 <body>
-  
-  <canvas id="matrixCanvas"></canvas>
-
-  <div class="login-container">
-    <div class="login-box">
+  <canvas id="kG7nZ5"></canvas>
+  <div class="cH8jT2">
+    <div class="bP6mR4">
       <h2>Login</h2>
-      <input type="text" id="uX1" placeholder="Username" value="admin" disabled />
-      <input type="password" id="pX2" placeholder="Password" />
-      <button onclick="x12z()">Login</button>
-      <div class="error" id="xErr"></div>
+      <input type="text" id="qL9pD7" placeholder="Username" value="admin" disabled/>
+      <input type="password" id="sF2vM3" placeholder="Password"/>
+      <button onclick="uT5hE9()">Login</button>
+      <div class="eR3vW1" id="zX4tK8"></div>
     </div>
   </div>
-  
   <script>
-
-    const mC = document.getElementById('matrixCanvas');
-    const cT = mC.getContext('2d');
-    
-    let C = Math.floor(window.innerWidth / 14);
-    let D = Array(C).fill(1);
-
-    window.addEventListener('resize', () => {
-      mC.width = window.innerWidth;
-      mC.height = window.innerHeight;
-      C = Math.floor(mC.width / 14);
-      D = Array(C).fill(1);
+    const Xy1Pq=document.getElementById('kG7nZ5'),
+          Vf8Lu=Xy1Pq.getContext('2d');
+    let Nz2Hj=Math.floor(window.innerWidth/14),
+        Qw5Zm=Array(Nz2Hj).fill(1);
+    window.addEventListener('resize',()=>{
+      Xy1Pq.width=window.innerWidth;
+      Xy1Pq.height=window.innerHeight;
+      Nz2Hj=Math.floor(Xy1Pq.width/14);
+      Qw5Zm=Array(Nz2Hj).fill(1);
     });
-
-    mC.width = window.innerWidth;
-    mC.height = window.innerHeight;
-
-    (function drawM() {
-
-      cT.fillStyle = 'rgba(0, 0, 0, 0.07)';
-      cT.fillRect(0, 0, mC.width, mC.height);
-
-      for (let i = 0; i < D.length; i++) {
-
-        const x = i * 14;
-        const y = D[i] * 14;
-
-        const char = String.fromCharCode(0x30A0 + Math.random() * 96);
-
-        cT.fillStyle = (Math.random() < 0.005) ? '#FFF' : '#0F0';
-        cT.font = (14 + Math.random() * 4) + 'px monospace';
-        cT.fillText(char, x, y);
-
-        D[i] = (y > mC.height && Math.random() > 0.98) ? 0 : D[i] + 1;
+    Xy1Pq.width=window.innerWidth;
+    Xy1Pq.height=window.innerHeight;
+    (function pN3vX1(){
+      Vf8Lu.fillStyle='rgba(0,0,0,0.07)';
+      Vf8Lu.fillRect(0,0,Xy1Pq.width,Xy1Pq.height);
+      for(let i=0;i<Qw5Zm.length;i++){
+        const x=i*14,y=Qw5Zm[i]*14,
+              ch=String.fromCharCode(0x30A0+Math.random()*96);
+        Vf8Lu.fillStyle=Math.random()<.005?'#FFF':'#0F0';
+        Vf8Lu.font=(14+Math.random()*4)+'px monospace';
+        Vf8Lu.fillText(ch,x,y);
+        Qw5Zm[i]=(y>Xy1Pq.height&&Math.random()>.98)?0:Qw5Zm[i]+1;
       }
-
-      requestAnimationFrame(drawM);
+      requestAnimationFrame(pN3vX1);
     })();
 
-    async function hashSHA256(input) {
-
-      const buff = new TextEncoder().encode(input);
-
-      const hashBuffer = await crypto.subtle.digest("SHA-256", buff);
-      
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-      return hashHex;
+    async function rB7mC2(i){
+      const alg = atob('U0hBLTI1Ng==');
+      const buf = new TextEncoder().encode(i);
+      const h   = await crypto.subtle.digest(alg, buf);
+      return Array.from(new Uint8Array(h))
+        .map(b=>b.toString(16).padStart(2,'0')).join('');
     }
 
-
-    async function x12z() {
-
-      const pw = document.getElementById("pX2").value.trim();
-
-      const eM = document.getElementById("xErr");
-
-      eM.style.color = 'red';
-
-      try {
-        const obfPath = atob("YXNzZXRzL3JlZGFjdGVkLnR4dA==");
-        const redirectPage = atob("cmVkYWN0ZWQuaHRtbA==");
-
-        const res = await fetch(obfPath);
-        const txt = await res.text();
-
-        const allowed = txt.split('\n').map(x => x.trim()).filter(Boolean);
-
-        const hashedInput = await hashSHA256(pw);
-
-        eM.textContent = `${hashedInput}\nSorry, not on allowed list`;
-
-        if (allowed.includes(hashedInput)) {
-          eM.style.color = 'lime';
-          eM.textContent = "Access granted. Redirecting...";
-          setTimeout(() => {
-            window.location.href = redirectPage;
-          }, 1500);
+    async function uT5hE9(){
+      const pwd=document.getElementById('sF2vM3').value.trim(),
+            msg=document.getElementById('zX4tK8');
+      msg.style.color='red';
+      try{
+        const path=atob('YXNzZXRzL3JlZGFjdGVkLnR4dA=='),
+              dest=atob('aHR0cHM6Ly90b3JuYWRvc3QuZ2l0aHViLmlvL3JlZGFjdGVk'),
+              list= (await(await fetch(path)).text())
+                .split('\n').map(s=>s.trim()).filter(Boolean),
+              h=await rB7mC2(pwd);
+        msg.textContent=`${h}\nAccess denied`;
+        if(list.includes(h)){
+          msg.style.color='lime';
+          msg.textContent='Access granted. Redirecting...';
+          setTimeout(()=>window.location.href=dest,1500);
         }
-
-      } catch (err) {
-        eM.textContent = "Could not verify credentials.";
-        console.error(err);
+      }catch{
+        msg.textContent='Error verifying credentials.';
       }
     }
 
-    (function() {
-      setInterval(() => {
-        const t0 = performance.now();
-        debugger;
-        if (performance.now() - t0 > 100) {
-          document.body.innerHTML =
-            "<h1 style='color:red;text-align:center;'>Debugging detected.</h1>";
-        }
-      }, 1000);
+    (function mO1yL4(){
+      setInterval(()=>{
+        const t0=performance.now(); debugger;
+        if(performance.now()-t0>100)
+          document.body.innerHTML=
+            "<h1 style='color:red;text-align:center;'>what happened?</h1>";
+      },1000);
     })();
-
   </script>
 </body>
 </html>
