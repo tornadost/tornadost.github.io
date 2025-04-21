@@ -16,7 +16,6 @@
       justify-content: center;
       font-family: 'Courier New', monospace;
     }
-    /* Matrix rain background */
     #matrix {
       position: absolute;
       top: 0; left: 0;
@@ -24,7 +23,6 @@
       height: 100%;
       z-index: 1;
     }
-    /* Game canvas with neon glow and shadow */
     #game {
       position: relative;
       z-index: 2;
@@ -36,7 +34,6 @@
         0 0 32px rgba(0, 255, 0, 0.5);
       background: rgba(0, 0, 0, 0.7);
     }
-    /* Score display */
     #score {
       position: absolute;
       top: 20px;
@@ -50,12 +47,21 @@
   </style>
 </head>
 <body>
+  <script>
+    (function() {
+      const cookies = document.cookie.split('; ');
+      const loggedIn = cookies.some(c => c.startsWith('is_logged_in='));
+      if (!loggedIn) {
+        window.location.replace('index.html');
+      }
+    })();
+  </script>
+  
   <canvas id="matrix"></canvas>
   <div id="score">Score: 0</div>
   <canvas id="game" width="600" height="600"></canvas>
 
   <script>
-  // --- Matrix Rain Effect ---
   const matrixCanvas = document.getElementById('matrix');
   const mctx = matrixCanvas.getContext('2d');
   matrixCanvas.width = window.innerWidth;
@@ -80,7 +86,6 @@
   }
   drawMatrix();
 
-  // --- Snake Game ---
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
   const scoreEl = document.getElementById('score');
@@ -120,7 +125,6 @@
     snake.cells.unshift({ x: snake.x, y: snake.y });
     if (snake.cells.length > snake.maxCells) snake.cells.pop();
 
-    // draw apple
     ctx.save();
     ctx.fillStyle = 'red';
     ctx.shadowBlur = 20;
@@ -128,7 +132,6 @@
     ctx.fillRect(apple.x, apple.y, grid - 2, grid - 2);
     ctx.restore();
 
-    // draw snake
     snake.cells.forEach((cell, index) => {
       ctx.save();
       ctx.fillStyle = 'cyan';
@@ -137,7 +140,6 @@
       ctx.fillRect(cell.x, cell.y, grid - 2, grid - 2);
       ctx.restore();
 
-      // eat apple
       if (cell.x === apple.x && cell.y === apple.y) {
         snake.maxCells++;
         score++;
@@ -146,7 +148,6 @@
         apple.y = getRandomInt(0, canvas.height / grid) * grid;
       }
 
-      // check collision
       for (let i = index + 1; i < snake.cells.length; i++) {
         if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
           // reset
