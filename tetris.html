@@ -12,11 +12,20 @@
   </style>
 </head>
 <body>
+  <script>
+    (function() {
+      const cookies = document.cookie.split('; ');
+      const loggedIn = cookies.some(c => c.startsWith('is_logged_in='));
+      if (!loggedIn) {
+        window.location.replace('index.html');
+      }
+    })();
+  </script>
+  
   <canvas id="matrix"></canvas>
   <div id="lines">Lines: 0</div>
   <canvas id="game" width="320" height="640"></canvas>
   <script>
-    // Matrix rain effect
     const matrix = document.getElementById('matrix'), mctx = matrix.getContext('2d');
     matrix.width = innerWidth; matrix.height = innerHeight;
     const cols = Math.floor(innerWidth / 16), drops = Array(cols).fill(1);
@@ -32,7 +41,6 @@
       requestAnimationFrame(rain);
     })();
 
-    // Tetris game setup
     const gameCanvas = document.getElementById('game'), ctx = gameCanvas.getContext('2d');
     const linesDisplay = document.getElementById('lines');
     const GRID = 32;
@@ -51,7 +59,6 @@
     };
     const colors = { I:'cyan', J:'blue', L:'orange', O:'yellow', S:'lime', Z:'red', T:'purple' };
 
-    // Random bag generator
     let bag = [];
     function refillBag() {
       bag = ['I','J','L','O','S','T','Z'];
@@ -86,14 +93,13 @@
       tetromino.matrix.forEach((r, y) => r.forEach((v, x) => {
         if (v) playfield[tetromino.row + y][tetromino.col + x] = tetromino.type;
       }));
-      // Clear lines
       for (let y = 19; y >= 0; y--) {
         if (playfield[y].every(c => c !== 0)) {
           playfield.splice(y, 1);
           playfield.unshift(Array(10).fill(0));
           linesCleared++;
           linesDisplay.textContent = 'Lines: ' + linesCleared;
-          y++; // recheck this row index
+          y++;
         }
       }
       tetromino = nextPiece();
@@ -143,7 +149,6 @@
 
     function draw() {
       ctx.clearRect(0,0,gameCanvas.width,gameCanvas.height);
-      // draw playfield
       playfield.forEach((row, y) => row.forEach((v, x) => {
         if (v) {
           ctx.save(); ctx.fillStyle = colors[v]; ctx.shadowColor = colors[v]; ctx.shadowBlur = 12;
@@ -151,7 +156,6 @@
           ctx.restore();
         }
       }));
-      // draw active piece
       tetromino.matrix.forEach((r, y) => r.forEach((v, x) => {
         if (v) {
           ctx.save(); ctx.fillStyle = colors[tetromino.type]; ctx.shadowColor = colors[tetromino.type]; ctx.shadowBlur = 12;
