@@ -125,8 +125,8 @@
       const eM = document.getElementById("xErr");
 
       try {
-        const obfPath = atob("YXNzZXRzL3JlZGFjdGVkLnR4dA==");
-        const redirectPage = atob("cmVkYWN0ZWQuaHRtbA==");
+        const obfPath = atob("YXNzZXRzL3JlZGFjdGVkLnR4dA=="); // assets/redacted.txt
+        const redirectPage = atob("cmVkYWN0ZWQuaHRtbA==");     // redacted.html
         const res = await fetch(obfPath);
         const t = await res.text();
         const arr = t.split('\n').map(x => x.trim()).filter(Boolean);
