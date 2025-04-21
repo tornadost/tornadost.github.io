@@ -93,6 +93,17 @@
   </style>
 </head>
 <body>
+  <!-- Authentication check: redirect if no valid cookie -->
+  <script>
+    (function() {
+      const cookies = document.cookie.split('; ');
+      const loggedIn = cookies.some(c => c.startsWith('is_logged_in='));
+      if (!loggedIn) {
+        window.location.replace('index.html');
+      }
+    })();
+  </script>
+
   <canvas id="matrixCanvas"></canvas>
   <div class="container">
     <h1 class="glitch" data-text="Tornado .st">Tornado st.</h1>
@@ -102,7 +113,7 @@
   <div class="links">
     <a id="btnSnake" href="/snake" target="_blank">Snake</a>
     <a id="btnTetris" href="/tetris" target="_blank">Tetris</a>
-    <a id="btnTetris" href="/wait" target="_blank"> ? </a>
+    <a href="/wait" target="_blank"> ? </a>
     <a href="/cache.html" target="_blank">Cache</a>
   </div>
 
@@ -121,7 +132,6 @@
       setupMatrix();
 
       const drawMatrix = () => {
-        // subtle darker trail
         ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         for (let i = 0; i < drops.length; i++) {
