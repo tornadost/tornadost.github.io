@@ -86,6 +86,16 @@
   </style>
 </head>
 <body>
+  <script>
+    (function() {
+      const cookies = document.cookie.split('; ');
+      const loggedIn = cookies.some(c => c.startsWith('is_logged_in='));
+      if (!loggedIn) {
+        window.location.replace('index.html');
+      }
+    })();
+  </script>
+  
   <canvas id="matrixCanvas"></canvas>
   <div class="container">
     <h1 class="glitch" data-text="Repo Cache">Repo Cache</h1>
@@ -124,7 +134,6 @@
     }
     drawMatrix();
 
-    // GitHub repo fetching with exclusions
     const GITHUB_USERNAME = "RKeaves";
     const excludedRepos = ["7612u", "Private-Trackers-Spreadsheet", "RKeaves", "MrScraper", "rkeaves.github.io", "Private-Trackers-Spreadsheet", "DiscordBee", "Media-Finder", "DropToPTP", "Dasharr", "Gazelle", "proton-vpn-setup-cudy-router", "red", "REDBetter"];
 
