@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Meta tags -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Page title -->
   <title>tornado st.</title>
+
+  <!-- Inline CSS for Matrix background & login form styling -->
   <style>
+    /* Reset body/html */
     body, html {
       margin: 0;
       padding: 0;
@@ -14,6 +20,8 @@
       font-family: 'Courier New', monospace;
       background: #000;
     }
+
+    /* Matrix canvas covers entire screen */
     #matrixCanvas {
       position: fixed;
       top: 0;
@@ -22,6 +30,8 @@
       height: 100%;
       z-index: 1;
     }
+
+    /* Container centering login box */
     .login-container {
       position: relative;
       z-index: 2;
@@ -30,6 +40,8 @@
       align-items: center;
       justify-content: center;
     }
+
+    /* Login box styling */
     .login-box {
       background: rgba(0, 0, 0, 0.8);
       padding: 2em;
@@ -38,10 +50,14 @@
       color: #0f0;
       text-align: center;
     }
+
+    /* Heading inside login */
     .login-box h2 {
       margin-bottom: 1em;
       text-shadow: 0 0 10px #0f0;
     }
+
+    /* Input fields */
     .login-box input {
       width: 100%;
       margin: 0.5em 0;
@@ -51,6 +67,8 @@
       color: #0f0;
       box-shadow: 0 0 5px #0f0;
     }
+
+    /* Login button */
     .login-box button {
       margin-top: 1em;
       padding: 0.6em 1.2em;
@@ -60,10 +78,14 @@
       cursor: pointer;
       transition: background 0.3s;
     }
+
+    /* Hover effect on button */
     .login-box button:hover {
       background: #0f0;
       color: #000;
     }
+
+    /* Error / debug text */
     .error {
       color: red;
       margin-top: 1em;
@@ -71,8 +93,12 @@
     }
   </style>
 </head>
+
 <body>
+  <!-- Matrix effect canvas -->
   <canvas id="matrixCanvas"></canvas>
+
+  <!-- Login form container -->
   <div class="login-container">
     <div class="login-box">
       <h2>Login</h2>
@@ -83,12 +109,19 @@
     </div>
   </div>
 
+  <!-- JavaScript begins here -->
   <script>
     // — Matrix rain setup (unchanged) —
+
+    // Grab canvas element and 2D context
     const mC = document.getElementById('matrixCanvas');
     const cT = mC.getContext('2d');
-    let C = Math.floor(window.innerWidth / 14), D = Array(C).fill(1);
 
+    // Calculate number of columns and initialize drops array
+    let C = Math.floor(window.innerWidth / 14);
+    let D = Array(C).fill(1);
+
+    // On window resize, recalculate
     window.addEventListener('resize', () => {
       mC.width = window.innerWidth;
       mC.height = window.innerHeight;
@@ -96,71 +129,105 @@
       D = Array(C).fill(1);
     });
 
+    // Initialize canvas dimensions
     mC.width = window.innerWidth;
     mC.height = window.innerHeight;
 
+    // Draw the matrix rain
     (function drawM() {
+      // Darken previous frame slightly for trailing effect
       cT.fillStyle = 'rgba(0, 0, 0, 0.07)';
       cT.fillRect(0, 0, mC.width, mC.height);
+
+      // Loop over drops
       for (let i = 0; i < D.length; i++) {
-        const x = i * 14, y = D[i] * 14;
+        // x and y positions
+        const x = i * 14;
+        const y = D[i] * 14;
+
+        // Random Katakana char
         const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+
+        // Randomize color occasionally
         cT.fillStyle = (Math.random() < 0.005) ? '#FFF' : '#0F0';
         cT.font = (14 + Math.random() * 4) + 'px monospace';
         cT.fillText(char, x, y);
+
+        // Reset drop or continue
         D[i] = (y > mC.height && Math.random() > 0.98) ? 0 : D[i] + 1;
       }
+
+      // Loop animation
       requestAnimationFrame(drawM);
     })();
 
-    // — SHA-256 helper —
+
+    // — SHA-256 helper function — 
     async function hashSHA256(input) {
+      // UTF-8 encode input
       const buff = new TextEncoder().encode(input);
-      const hash = await crypto.subtle.digest("SHA-256", buff);
-      return Array.from(new Uint8Array(hash))
-        .map(b => b.toString(16).padStart(2,'0'))
-        .join('');
+
+      // Compute hash
+      const hashBuffer = await crypto.subtle.digest("SHA-256", buff);
+
+      // Convert buffer to hex string
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      return hashHex;
     }
 
-    // — Login check with debug logging —
+
+    // — Login check with debug logging and fixed template literal —
     async function x12z() {
+      // Get trimmed password input
       const pw = document.getElementById("pX2").value.trim();
+
+      // Reference to error/debug div
       const eM = document.getElementById("xErr");
+
+      // Default color red
       eM.style.color = 'red';
 
       try {
+        // Base64‑encoded paths
         const obfPath = atob("YXNzZXRzL3JlZGFjdGVkLnR4dA==");   // "assets/redacted.txt"
         const redirectPage = atob("cmVkYWN0ZWQuaHRtbA==");     // "redacted.html"
 
-        // fetch allowed hashes
+        // Fetch allowed hashes file
         const res = await fetch(obfPath);
         const txt = await res.text();
+
+        // Split into trimmed lines, ignore blanks
         const allowed = txt.split('\n').map(x => x.trim()).filter(Boolean);
 
-        // compute hash of input
+        // Compute hash of input password
         const hashedInput = await hashSHA256(pw);
 
-        // DEBUG OUTPUT
+        // DEBUG OUTPUT (fixed with backticks)
         console.log("🛠️ allowed hashes:", allowed);
         console.log("🛠️ your hash this run:", hashedInput);
-        eM.textContent = 
-          Your SHA-256: ${hashedInput}\nAllowed list:\n${allowed.join('\n')};
+        eM.textContent = `Your SHA-256: ${hashedInput}\nAllowed list:\n${allowed.join('\n')}`;
 
-        // check match
+        // If match found, success
         if (allowed.includes(hashedInput)) {
           eM.style.color = 'lime';
           eM.textContent = "Access granted. Redirecting...";
-          setTimeout(() => window.location.href = redirectPage, 1500);
+          setTimeout(() => {
+            window.location.href = redirectPage;
+          }, 1500);
         }
+
       } catch (err) {
+        // On error, show message
         eM.textContent = "Could not verify credentials.";
         console.error(err);
       }
     }
 
-    // — anti-debug —
-    (function(){
-      setInterval(()=>{
+
+    // — Anti‑debugging snippet — 
+    (function() {
+      setInterval(() => {
         const t0 = performance.now();
         debugger;
         if (performance.now() - t0 > 100) {
@@ -169,6 +236,7 @@
         }
       }, 1000);
     })();
+
   </script>
 </body>
 </html>
