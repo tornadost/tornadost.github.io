@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>redacted</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+      background: #000;
+    }
+
+    #matrixCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .login-container {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-box {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 2em;
+      border: 2px solid #0f0;
+      box-shadow: 0 0 10px #0f0;
+      color: #0f0;
+      text-align: center;
+    }
+
+    .login-box h2 {
+      margin-bottom: 1em;
+      text-shadow: 0 0 10px #0f0;
+    }
+
+    .login-box input {
+      width: 100%;
+      margin: 0.5em 0;
+      padding: 0.6em;
+      border: none;
+      background: #111;
+      color: #0f0;
+      box-shadow: 0 0 5px #0f0;
+    }
+
+    .login-box button {
+      margin-top: 1em;
+      padding: 0.6em 1.2em;
+      background: transparent;
+      border: 1px solid #0f0;
+      color: #0f0;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .login-box button:hover {
+      background: #0f0;
+      color: #000;
+    }
+
+    .error {
+      color: red;
+      margin-top: 1em;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrixCanvas"></canvas>
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Login</h2>
+      <input type="text" id="username" placeholder="Username" value="admin" disabled />
+      <input type="password" id="password" placeholder="Password" />
+      <button onclick="checkLogin()">Login</button>
+      <div class="error" id="errorMsg"></div>
+    </div>
+  </div>
+
+  <script>
+    // Matrix background
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    let cols, drops;
+
+    function setupMatrix() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      cols = Math.floor(canvas.width / 14);
+      drops = Array(cols).fill(1);
+    }
+
+    window.addEventListener('resize', setupMatrix);
+    setupMatrix();
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < drops.length; i++) {
+        const x = i * 14;
+        const y = drops[i] * 14;
+        const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+        ctx.fillStyle = (Math.random() < 0.005) ? '#FFF' : '#0F0';
+        ctx.font = (14 + Math.random() * 4) + 'px monospace';
+        ctx.fillText(char, x, y);
+        drops[i] = (y > canvas.height && Math.random() > 0.98) ? 0 : drops[i] + 1;
+      }
+      requestAnimationFrame(drawMatrix);
+    }
+
+    drawMatrix();
+
+    // Login logic
+    async function checkLogin() {
+      const passwordInput = document.getElementById("password").value.trim();
+      const errorMsg = document.getElementById("errorMsg");
+
+      try {
+        const res = await fetch("assets/redacted.txt");
+        const text = await res.text();
+        const passwords = text.split('\n').map(line => line.trim()).filter(Boolean);
+
+        if (passwords.includes(passwordInput)) {
+          errorMsg.style.color = "lime";
+          errorMsg.textContent = "Access granted. Redirecting...";
+          setTimeout(() => {
+            // Replace with the page you want to go to after login
+            window.location.href = "cache.html";
+          }, 1500);
+        } else {
+          errorMsg.textContent = "Invalid password.";
+        }
+      } catch (err) {
+        errorMsg.textContent = "Could not verify credentials.";
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
