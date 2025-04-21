@@ -112,26 +112,17 @@
       requestAnimationFrame(drawM);
     })();
 
-    async function hashSHA256(input) {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(input);
-      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
     async function x12z() {
       const pw = document.getElementById("pX2").value.trim();
       const eM = document.getElementById("xErr");
 
       try {
-        const obfPath = atob("YXNzZXRzL3JlZGFjdGVkLnR4dA=="); // assets/redacted.txt
-        const redirectPage = atob("cmVkYWN0ZWQuaHRtbA==");     // redacted.html
+        const obfPath = atob("YXNzZXRzL3JlZGFjdGVkLnR4dA=="); // 'assets/redacted.txt'
+        const redirectPage = atob("cmVkYWN0ZWQuaHRtbA=="); // 'redacted.html'
         const res = await fetch(obfPath);
         const t = await res.text();
         const arr = t.split('\n').map(x => x.trim()).filter(Boolean);
-        const hashedInput = await hashSHA256(pw);
-        const match = arr.includes(hashedInput);
+        const match = arr.some(p => p === pw);
 
         if (match) {
           eM.style.color = "lime";
@@ -148,12 +139,13 @@
       }
     }
 
+    // Basic anti-debugging
     (function () {
       setInterval(function () {
         const start = performance.now();
         debugger;
         if (performance.now() - start > 100) {
-          document.body.innerHTML = "<h1 style='color:red;text-align:center;'>what happened?</h1>";
+          document.body.innerHTML = "<h1 style='color:red;text-align:center;'>Debugging detected. Session terminated.</h1>";
         }
       }, 1000);
     })();
