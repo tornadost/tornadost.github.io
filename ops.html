@@ -167,8 +167,6 @@
 
         const hashedInput = await hashSHA256(pw);
 
-        console.log("🛠️ allowed hashes:", allowed);
-        console.log("🛠️ your hash this run:", hashedInput);
         eM.textContent = `${hashedInput}\nSorry, not on allowed list`;
 
         if (allowed.includes(hashedInput)) {
