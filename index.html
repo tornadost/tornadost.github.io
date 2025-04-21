@@ -112,17 +112,26 @@
       requestAnimationFrame(drawM);
     })();
 
+    async function hashSHA256(input) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(input);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
     async function x12z() {
       const pw = document.getElementById("pX2").value.trim();
       const eM = document.getElementById("xErr");
 
       try {
         const obfPath = atob("YXNzZXRzL3JlZGFjdGVkLnR4dA==");
-        const redirectPage = atob("cmVkYWN0ZWQuaHRtbA=="); 
+        const redirectPage = atob("cmVkYWN0ZWQuaHRtbA==");
         const res = await fetch(obfPath);
         const t = await res.text();
         const arr = t.split('\n').map(x => x.trim()).filter(Boolean);
-        const match = arr.some(p => p === pw);
+        const hashedInput = await hashSHA256(pw);
+        const match = arr.includes(hashedInput);
 
         if (match) {
           eM.style.color = "lime";
@@ -138,6 +147,7 @@
         console.error(e);
       }
     }
+
     (function () {
       setInterval(function () {
         const start = performance.now();
