@@ -67,7 +67,7 @@
     .error {
       color: red;
       margin-top: 1em;
-      word-break: break-all;
+      word-break: break-all; /* Allows long hashes to wrap */ :contentReference[oaicite:7]{index=7}
     }
   </style>
 </head>
@@ -84,10 +84,11 @@
   </div>
 
   <script>
-    // — Matrix rain setup (unchanged) —
-    const mC = document.getElementById('matrixCanvas');
-    const cT = mC.getContext('2d');
-    let C = Math.floor(window.innerWidth / 14), D = Array(C).fill(1);
+    // — Matrix rain setup :contentReference[oaicite:8]{index=8} —
+    const mC = document.getElementById('matrixCanvas'),
+          cT = mC.getContext('2d');
+    let C = Math.floor(window.innerWidth / 14),
+        D = Array(C).fill(1);
 
     window.addEventListener('resize', () => {
       mC.width = window.innerWidth;
@@ -95,58 +96,64 @@
       C = Math.floor(mC.width / 14);
       D = Array(C).fill(1);
     });
-
     mC.width = window.innerWidth;
     mC.height = window.innerHeight;
 
-    (function drawM() {
+    (function drawM(){
       cT.fillStyle = 'rgba(0, 0, 0, 0.07)';
       cT.fillRect(0, 0, mC.width, mC.height);
-      for (let i = 0; i < D.length; i++) {
-        const x = i * 14, y = D[i] * 14;
-        const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+      for(let i=0; i<D.length; i++){
+        const x = i * 14,
+              y = D[i] * 14,
+              char = String.fromCharCode(0x30A0 + Math.random() * 96); :contentReference[oaicite:9]{index=9}
         cT.fillStyle = (Math.random() < 0.005) ? '#FFF' : '#0F0';
         cT.font = (14 + Math.random() * 4) + 'px monospace';
         cT.fillText(char, x, y);
         D[i] = (y > mC.height && Math.random() > 0.98) ? 0 : D[i] + 1;
       }
-      requestAnimationFrame(drawM);
+      requestAnimationFrame(drawM); :contentReference[oaicite:10]{index=10}
     })();
 
-    // — SHA-256 helper —
+    // — SHA-256 helper :contentReference[oaicite:11]{index=11} —
     async function hashSHA256(input) {
-      const buff = new TextEncoder().encode(input);
-      const hash = await crypto.subtle.digest("SHA-256", buff);
-      return Array.from(new Uint8Array(hash))
-        .map(b => b.toString(16).padStart(2,'0'))
-        .join('');
+      const data = new TextEncoder().encode(input); :contentReference[oaicite:12]{index=12}
+      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+      return Array.from(new Uint8Array(hashBuffer))
+                  .map(b => b.toString(16).padStart(2,'0'))
+                  .join(''); // Convert bytes to hex :contentReference[oaicite:13]{index=13}
     }
 
-    // — Login check with debug logging —
+    // — Login check with normalization, debug & redirect :contentReference[oaicite:14]{index=14} :contentReference[oaicite:15]{index=15}—
     async function x12z() {
-      const pw = document.getElementById("pX2").value.trim();
-      const eM = document.getElementById("xErr");
+      const pw = document.getElementById("pX2").value.trim(),
+            eM = document.getElementById("xErr");
       eM.style.color = 'red';
 
       try {
-        const obfPath = atob("YXNzZXRzL3JlZGFjdGVkLnR4dA==");   // "assets/redacted.txt"
-        const redirectPage = atob("cmVkYWN0ZWQuaHRtbA==");     // "redacted.html"
+        // Decode paths
+        const obfPath      = atob("YXNzZXRzL3JlZGFjdGVkLnR4dA=="),   // "assets/redacted.txt" 
+              redirectPage = atob("cmVkYWN0ZWQuaHRtbA==");        // "redacted.html"
 
-        // fetch allowed hashes
+        // Fetch and normalize
         const res = await fetch(obfPath);
-        const txt = await res.text();
-        const allowed = txt.split('\n').map(x => x.trim()).filter(Boolean);
+        let txt = await res.text();
+        txt = txt.replace(/^\uFEFF/, '')        // Strip BOM :contentReference[oaicite:16]{index=16}
+                 .replaceAll('\r\n', '\n');     // Convert CRLF to LF :contentReference[oaicite:17]{index=17}
 
-        // compute hash of input
+        const allowed = txt.split('\n')        // Split into lines :contentReference[oaicite:18]{index=18}
+                            .map(line => line.trim())
+                            .filter(Boolean);
+
+        // Compute input hash
         const hashedInput = await hashSHA256(pw);
 
-        // DEBUG OUTPUT
-        console.log("🛠️ allowed hashes:", allowed);
-        console.log("🛠️ your hash this run:", hashedInput);
+        // Debug output
+        console.log("Allowed hashes:", allowed);
+        console.log("Your hash:     ", hashedInput);
         eM.textContent = 
           `Your SHA-256: ${hashedInput}\nAllowed list:\n${allowed.join('\n')}`;
 
-        // check match
+        // Match & redirect
         if (allowed.includes(hashedInput)) {
           eM.style.color = 'lime';
           eM.textContent = "Access granted. Redirecting...";
@@ -158,13 +165,13 @@
       }
     }
 
-    // — anti-debug —
+    // — Basic anti-debug :contentReference[oaicite:19]{index=19} —
     (function(){
       setInterval(()=>{
         const t0 = performance.now();
         debugger;
         if (performance.now() - t0 > 100) {
-          document.body.innerHTML =
+          document.body.innerHTML = 
             "<h1 style='color:red;text-align:center;'>Debugging detected.</h1>";
         }
       }, 1000);
