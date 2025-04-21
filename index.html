@@ -14,7 +14,6 @@
       font-family: 'Courier New', monospace;
       background: #000;
     }
-
     #matrixCanvas {
       position: fixed;
       top: 0;
@@ -23,7 +22,6 @@
       height: 100%;
       z-index: 1;
     }
-
     .login-container {
       position: relative;
       z-index: 2;
@@ -32,7 +30,6 @@
       align-items: center;
       justify-content: center;
     }
-
     .login-box {
       background: rgba(0, 0, 0, 0.8);
       padding: 2em;
@@ -41,12 +38,10 @@
       color: #0f0;
       text-align: center;
     }
-
     .login-box h2 {
       margin-bottom: 1em;
       text-shadow: 0 0 10px #0f0;
     }
-
     .login-box input {
       width: 100%;
       margin: 0.5em 0;
@@ -56,7 +51,6 @@
       color: #0f0;
       box-shadow: 0 0 5px #0f0;
     }
-
     .login-box button {
       margin-top: 1em;
       padding: 0.6em 1.2em;
@@ -66,12 +60,10 @@
       cursor: pointer;
       transition: background 0.3s;
     }
-
     .login-box button:hover {
       background: #0f0;
       color: #000;
     }
-
     .error {
       color: red;
       margin-top: 1em;
@@ -83,71 +75,78 @@
   <div class="login-container">
     <div class="login-box">
       <h2>Login</h2>
-      <input type="text" id="username" placeholder="Username" value="admin" disabled />
-      <input type="password" id="password" placeholder="Password" />
-      <button onclick="checkLogin()">Login</button>
-      <div class="error" id="errorMsg"></div>
+      <input type="text" id="uX1" placeholder="Username" value="admin" disabled />
+      <input type="password" id="pX2" placeholder="Password" />
+      <button onclick="x12z()">Login</button>
+      <div class="error" id="xErr"></div>
     </div>
   </div>
 
   <script>
-    // Matrix background
-    const canvas = document.getElementById('matrixCanvas');
-    const ctx = canvas.getContext('2d');
-    let cols, drops;
+    const mC = document.getElementById('matrixCanvas');
+    const cT = mC.getContext('2d');
+    let C = Math.floor(window.innerWidth / 14), D = Array(C).fill(1);
 
-    function setupMatrix() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      cols = Math.floor(canvas.width / 14);
-      drops = Array(cols).fill(1);
-    }
+    window.addEventListener('resize', () => {
+      mC.width = window.innerWidth;
+      mC.height = window.innerHeight;
+      C = Math.floor(mC.width / 14);
+      D = Array(C).fill(1);
+    });
 
-    window.addEventListener('resize', setupMatrix);
-    setupMatrix();
+    mC.width = window.innerWidth;
+    mC.height = window.innerHeight;
 
-    function drawMatrix() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < drops.length; i++) {
+    (function drawM() {
+      cT.fillStyle = 'rgba(0, 0, 0, 0.07)';
+      cT.fillRect(0, 0, mC.width, mC.height);
+      for (let i = 0; i < D.length; i++) {
         const x = i * 14;
-        const y = drops[i] * 14;
+        const y = D[i] * 14;
         const char = String.fromCharCode(0x30A0 + Math.random() * 96);
-        ctx.fillStyle = (Math.random() < 0.005) ? '#FFF' : '#0F0';
-        ctx.font = (14 + Math.random() * 4) + 'px monospace';
-        ctx.fillText(char, x, y);
-        drops[i] = (y > canvas.height && Math.random() > 0.98) ? 0 : drops[i] + 1;
+        cT.fillStyle = (Math.random() < 0.005) ? '#FFF' : '#0F0';
+        cT.font = (14 + Math.random() * 4) + 'px monospace';
+        cT.fillText(char, x, y);
+        D[i] = (y > mC.height && Math.random() > 0.98) ? 0 : D[i] + 1;
       }
-      requestAnimationFrame(drawMatrix);
-    }
+      requestAnimationFrame(drawM);
+    })();
 
-    drawMatrix();
-
-    // Login logic
-    async function checkLogin() {
-      const passwordInput = document.getElementById("password").value.trim();
-      const errorMsg = document.getElementById("errorMsg");
+    async function x12z() {
+      const pw = document.getElementById("pX2").value.trim();
+      const eM = document.getElementById("xErr");
 
       try {
-        const res = await fetch("assets/redacted.txt");
-        const text = await res.text();
-        const passwords = text.split('\n').map(line => line.trim()).filter(Boolean);
+        const obfPath = atob("YXNzZXRzL3JlZGFjdGVkLnR4dA==");
+        const redirectPage = atob("cmVkYWN0ZWQuaHRtbA=="); 
+        const res = await fetch(obfPath);
+        const t = await res.text();
+        const arr = t.split('\n').map(x => x.trim()).filter(Boolean);
+        const match = arr.some(p => p === pw);
 
-        if (passwords.includes(passwordInput)) {
-          errorMsg.style.color = "lime";
-          errorMsg.textContent = "Access granted. Redirecting...";
+        if (match) {
+          eM.style.color = "lime";
+          eM.textContent = "Access granted. Redirecting...";
           setTimeout(() => {
-            // Replace with the page you want to go to after login
-            window.location.href = "redacted.html";
+            window.location.href = redirectPage;
           }, 1500);
         } else {
-          errorMsg.textContent = "Invalid password.";
+          eM.textContent = "Invalid password.";
         }
-      } catch (err) {
-        errorMsg.textContent = "Could not verify credentials.";
-        console.error(err);
+      } catch (e) {
+        eM.textContent = "Could not verify credentials.";
+        console.error(e);
       }
     }
+    (function () {
+      setInterval(function () {
+        const start = performance.now();
+        debugger;
+        if (performance.now() - start > 100) {
+          document.body.innerHTML = "<h1 style='color:red;text-align:center;'>Debugging detected. Session terminated.</h1>";
+        }
+      }, 1000);
+    })();
   </script>
 </body>
 </html>
