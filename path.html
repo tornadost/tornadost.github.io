@@ -8,12 +8,12 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Courier New', monospace; background: #000; }
 
- .sign-face h1 {
-  /* existing rules… */
-  white-space: nowrap;
-}
-	  
-	  /* Matrix Canvas */
+    .sign-face h1 {
+      /* existing rules… */
+      white-space: nowrap;
+    }
+    
+    /* Matrix Canvas */
     #matrixCanvas {
       position: fixed;
       top: 0;
@@ -35,12 +35,10 @@
       pointer-events: none;
     }
 
-	.sign-wrapper {
-  /* change this… */
-      width: auto;   /* or bump above ~600px */
-  /* rest of your rules */
-}
-	  
+    .sign-wrapper {
+      width: auto;
+    }
+        
     .container {
       position: relative;
       z-index: 3;
@@ -208,6 +206,17 @@
   </style>
 </head>
 <body>
+  <!-- Authentication check: redirect if no valid cookie -->
+  <script>
+    (function() {
+      const cookies = document.cookie.split('; ');
+      const loggedIn = cookies.some(c => c.startsWith('is_logged_in='));
+      if (!loggedIn) {
+        window.location.replace('index.html');
+      }
+    })();
+  </script>
+
   <!-- Matrix Background Canvas -->
   <canvas id="matrixCanvas"></canvas>
   <!-- Optional Rain Layer -->
@@ -219,7 +228,7 @@
       <div class="sign-face">
         <h1 class="glitch" data-text="Tornado st.">&nbsp; tornado st.&nbsp;</h1>
         <div class="subtext">you are on the right path...</div>
-<div class="bolt"></div>
+        <div class="bolt"></div>
         <div class="bolt"></div>
         <div class="bolt"></div>
         <div class="bolt"></div>
