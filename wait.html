@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>tornado st.</title>
   <style>
-    /* Fullscreen Matrix Background */
     body, html {
       margin: 0;
       padding: 0;
@@ -24,7 +23,6 @@
       z-index: 1;
     }
 
-    /* Centered content for title */
     .container {
       position: relative;
       z-index: 2;
@@ -36,7 +34,6 @@
       text-align: center;
     }
 
-    /* Glitchy neon heading */
     h1 {
       position: relative;
       font-size: 4em;
@@ -67,11 +64,9 @@
       animation: glitch-bottom 2.5s infinite linear;
     }
     @keyframes flicker { 0%,19%,21%,23%,25%,54%,56%,100%{opacity:.99;}20%,24%,55%{opacity:.4;} }
-    /* Detailed glitch frames */
     @keyframes glitch-top { 0%{clip:rect(0,900px,5px,0);}10%{clip:rect(10px,900px,15px,0);}20%{clip:rect(20px,900px,25px,0);}30%{clip:rect(5px,900px,10px,0);}40%{clip:rect(15px,900px,20px,0);}50%{clip:rect(25px,900px,30px,0);}60%{clip:rect(10px,900px,15px,0);}70%{clip:rect(0,900px,5px,0);}100%{clip:rect(0,900px,5px,0);} }
     @keyframes glitch-bottom {0%{clip:rect(30px,900px,35px,0);}10%{clip:rect(40px,900px,45px,0);}20%{clip:rect(50px,900px,55px,0);}30%{clip:rect(35px,900px,40px,0);}40%{clip:rect(45px,900px,50px,0);}50%{clip:rect(55px,900px,60px,0);}60%{clip:rect(40px,900px,45px,0);}70%{clip:rect(30px,900px,35px,0);}100%{clip:rect(30px,900px,35px,0);} }
 
-    /* Floating Neon Buttons */
     .links a {
       position: absolute;
       padding: 0.8em 1.5em;
@@ -93,12 +88,21 @@
   </style>
 </head>
 <body>
+  <script>
+    (function() {
+      const cookies = document.cookie.split('; ');
+      const loggedIn = cookies.some(c => c.startsWith('is_logged_in='));
+      if (!loggedIn) {
+        window.location.replace('index.html');
+      }
+    })();
+  </script>
+  
   <canvas id="matrixCanvas"></canvas>
   <div class="container">
     <h1 class="glitch" data-text="Tornado .st">Tornado st.</h1>
   </div>
 
-  <!-- Floating link buttons -->
   <div class="links">
     <a id="btnTetris" href="/?" target="_blank">return!</a>
     <a id="btnTetris" href="/path" target="_blank">stay</a>
@@ -120,7 +124,6 @@
       setupMatrix();
 
       const drawMatrix = () => {
-        // subtle darker trail
         ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         for (let i = 0; i < drops.length; i++) {
@@ -136,7 +139,6 @@
       };
       drawMatrix();
 
-      // Floating buttons with title-avoidance
       const buttons = Array.from(document.querySelectorAll('.links a'));
       const titleEl = document.querySelector('.glitch');
       const moveButton = (btn) => {
