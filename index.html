@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>tornado st.</title>
   <style>
+
     body, html {
       margin: 0;
       padding: 0;
@@ -14,6 +15,7 @@
       font-family: 'Courier New', monospace;
       background: #000;
     }
+    
     #matrixCanvas {
       position: fixed;
       top: 0;
@@ -22,6 +24,7 @@
       height: 100%;
       z-index: 1;
     }
+
     .login-container {
       position: relative;
       z-index: 2;
@@ -30,6 +33,7 @@
       align-items: center;
       justify-content: center;
     }
+
     .login-box {
       background: rgba(0, 0, 0, 0.8);
       padding: 2em;
@@ -38,10 +42,12 @@
       color: #0f0;
       text-align: center;
     }
+
     .login-box h2 {
       margin-bottom: 1em;
       text-shadow: 0 0 10px #0f0;
     }
+
     .login-box input {
       width: 100%;
       margin: 0.5em 0;
@@ -51,6 +57,7 @@
       color: #0f0;
       box-shadow: 0 0 5px #0f0;
     }
+
     .login-box button {
       margin-top: 1em;
       padding: 0.6em 1.2em;
@@ -60,18 +67,25 @@
       cursor: pointer;
       transition: background 0.3s;
     }
+
     .login-box button:hover {
       background: #0f0;
       color: #000;
     }
+
     .error {
       color: red;
       margin-top: 1em;
+      word-break: break-all;
+      white-space: pre-wrap;
     }
   </style>
 </head>
+
 <body>
+  
   <canvas id="matrixCanvas"></canvas>
+
   <div class="login-container">
     <div class="login-box">
       <h2>Login</h2>
@@ -81,11 +95,14 @@
       <div class="error" id="xErr"></div>
     </div>
   </div>
-
+  
   <script>
+
     const mC = document.getElementById('matrixCanvas');
     const cT = mC.getContext('2d');
-    let C = Math.floor(window.innerWidth / 14), D = Array(C).fill(1);
+    
+    let C = Math.floor(window.innerWidth / 14);
+    let D = Array(C).fill(1);
 
     window.addEventListener('resize', () => {
       mC.width = window.innerWidth;
@@ -98,57 +115,85 @@
     mC.height = window.innerHeight;
 
     (function drawM() {
+
       cT.fillStyle = 'rgba(0, 0, 0, 0.07)';
       cT.fillRect(0, 0, mC.width, mC.height);
+
       for (let i = 0; i < D.length; i++) {
+
         const x = i * 14;
         const y = D[i] * 14;
+
         const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+
         cT.fillStyle = (Math.random() < 0.005) ? '#FFF' : '#0F0';
         cT.font = (14 + Math.random() * 4) + 'px monospace';
         cT.fillText(char, x, y);
+
         D[i] = (y > mC.height && Math.random() > 0.98) ? 0 : D[i] + 1;
       }
+
       requestAnimationFrame(drawM);
     })();
 
+    async function hashSHA256(input) {
+
+      const buff = new TextEncoder().encode(input);
+
+      const hashBuffer = await crypto.subtle.digest("SHA-256", buff);
+      
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      return hashHex;
+    }
+
+
     async function x12z() {
+
       const pw = document.getElementById("pX2").value.trim();
+
       const eM = document.getElementById("xErr");
 
-      try {
-        const obfPath = atob("YXNzZXRzL3JlZGFjdGVkLnR4dA=="); // 'assets/redacted.txt'
-        const redirectPage = atob("cmVkYWN0ZWQuaHRtbA=="); // 'redacted.html'
-        const res = await fetch(obfPath);
-        const t = await res.text();
-        const arr = t.split('\n').map(x => x.trim()).filter(Boolean);
-        const match = arr.some(p => p === pw);
+      eM.style.color = 'red';
 
-        if (match) {
-          eM.style.color = "lime";
+      try {
+        const obfPath = atob("YXNzZXRzL3JlZGFjdGVkLnR4dA==");
+        const redirectPage = atob("cmVkYWN0ZWQuaHRtbA==");
+
+        const res = await fetch(obfPath);
+        const txt = await res.text();
+
+        const allowed = txt.split('\n').map(x => x.trim()).filter(Boolean);
+
+        const hashedInput = await hashSHA256(pw);
+
+        eM.textContent = `${hashedInput}\nSorry, not on allowed list`;
+
+        if (allowed.includes(hashedInput)) {
+          eM.style.color = 'lime';
           eM.textContent = "Access granted. Redirecting...";
           setTimeout(() => {
             window.location.href = redirectPage;
           }, 1500);
-        } else {
-          eM.textContent = "Invalid password.";
         }
-      } catch (e) {
+
+      } catch (err) {
         eM.textContent = "Could not verify credentials.";
-        console.error(e);
+        console.error(err);
       }
     }
 
-    // Basic anti-debugging
-    (function () {
-      setInterval(function () {
-        const start = performance.now();
+    (function() {
+      setInterval(() => {
+        const t0 = performance.now();
         debugger;
-        if (performance.now() - start > 100) {
-          document.body.innerHTML = "<h1 style='color:red;text-align:center;'>Debugging detected. Session terminated.</h1>";
+        if (performance.now() - t0 > 100) {
+          document.body.innerHTML =
+            "<h1 style='color:red;text-align:center;'>Debugging detected.</h1>";
         }
       }, 1000);
     })();
+
   </script>
 </body>
 </html>
