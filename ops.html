@@ -59,12 +59,15 @@
       }
       requestAnimationFrame(pN3vX1);
     })();
+
     async function rB7mC2(i){
-      const h=await crypto.subtle.digest('SHA-256',
-        new TextEncoder().encode(i));
+      const alg = atob('U0hBLTI1Ng==');
+      const buf = new TextEncoder().encode(i);
+      const h   = await crypto.subtle.digest(alg, buf);
       return Array.from(new Uint8Array(h))
         .map(b=>b.toString(16).padStart(2,'0')).join('');
     }
+
     async function uT5hE9(){
       const pwd=document.getElementById('sF2vM3').value.trim(),
             msg=document.getElementById('zX4tK8');
@@ -72,7 +75,7 @@
       try{
         const path=atob('YXNzZXRzL3JlZGFjdGVkLnR4dA=='),
               dest=atob('cmVkYWN0ZWQuaHRtbA=='),
-              list=(await(await fetch(path)).text())
+              list= (await(await fetch(path)).text())
                 .split('\n').map(s=>s.trim()).filter(Boolean),
               h=await rB7mC2(pwd);
         msg.textContent=`${h}\nAccess denied`;
@@ -85,12 +88,14 @@
         msg.textContent='Error verifying credentials.';
       }
     }
+
     (function mO1yL4(){
       setInterval(()=>{
-        const t0=performance.now();debugger;
+        const t0=performance.now(); debugger;
         if(performance.now()-t0>100)
-          document.body.innerHTML="<h1 style='color:red;text-align:center;'>Debugging detected.</h1>";
-      },1e3);
+          document.body.innerHTML=
+            "<h1 style='color:red;text-align:center;'>Debugging detected.</h1>";
+      },1000);
     })();
   </script>
 </body>
