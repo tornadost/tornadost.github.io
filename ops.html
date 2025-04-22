@@ -1,102 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ingressor</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>~cache</title>
   <style>
-    body,html{margin:0;padding:0;width:100%;height:100%;overflow:hidden;
-      font-family:'Courier New',monospace;background:#000}
-    #kG7nZ5{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1}
-    .cH8jT2{position:relative;z-index:2;height:100%;display:flex;
-      align-items:center;justify-content:center}
-    .bP6mR4{background:rgba(0,0,0,0.8);padding:2em;border:2px solid #0f0;
-      box-shadow:0 0 10px #0f0;color:#0f0;text-align:center}
-    .bP6mR4 h2{margin-bottom:1em;text-shadow:0 0 10px #0f0}
-    .bP6mR4 input{width:100%;margin:0.5em 0;padding:0.6em;border:none;
-      background:#111;color:#0f0;box-shadow:0 0 5px #0f0}
-    .bP6mR4 button{margin-top:1em;padding:0.6em 1.2em;background:transparent;
-      border:1px solid #0f0;color:#0f0;cursor:pointer;transition:background .3s}
-    .bP6mR4 button:hover{background:#0f0;color:#000}
-    .eR3vW1{color:red;margin-top:1em;word-break:break-all;
-      white-space:pre-wrap}
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+      background: #000;
+    }
+    #matrixCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+    }
+
+    /* Glitchy neon heading */
+    h1 {
+      position: relative;
+      font-size: 4em;
+      color: #0f0;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+      animation: flicker 2s infinite;
+      margin: 0;
+    }
+    h1::before, h1::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+      clip: rect(0, 900px, 0, 0);
+    }
+    h1::before {
+      left: 2px;
+      text-shadow: -2px 0 #f0f;
+      animation: glitch-top 3s infinite linear;
+    }
+    h1::after {
+      left: -2px;
+      text-shadow: -2px 0 #0f0;
+      animation: glitch-bottom 2.5s infinite linear;
+    }
+    @keyframes flicker { 
+      0%,19%,21%,23%,25%,54%,56%,100%{opacity:.99;}
+      20%,24%,55%{opacity:.4;}
+    }
+    @keyframes glitch-top { 
+      0%{clip:rect(0,900px,5px,0);}
+      10%{clip:rect(10px,900px,15px,0);}
+      20%{clip:rect(20px,900px,25px,0);}
+      30%{clip:rect(5px,900px,10px,0);}
+      40%{clip:rect(15px,900px,20px,0);}
+      50%{clip:rect(25px,900px,30px,0);}
+      60%{clip:rect(10px,900px,15px,0);}
+      70%{clip:rect(0,900px,5px,0);}
+      100%{clip:rect(0,900px,5px,0);}
+    }
+    @keyframes glitch-bottom {
+      0%{clip:rect(30px,900px,35px,0);}
+      10%{clip:rect(40px,900px,45px,0);}
+      20%{clip:rect(50px,900px,55px,0);}
+      30%{clip:rect(35px,900px,40px,0);}
+      40%{clip:rect(45px,900px,50px,0);}
+      50%{clip:rect(55px,900px,60px,0);}
+      60%{clip:rect(40px,900px,45px,0);}
+      70%{clip:rect(30px,900px,35px,0);}
+      100%{clip:rect(30px,900px,35px,0);}
+    }
+
+    .links a {
+      position: absolute;
+      padding: 0.8em 1.5em;
+      color: #0f0;
+      text-decoration: none;
+      font-size: 1.2em;
+      background: transparent;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+      opacity: 0.7;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 2;
+      animation: pulse 2.5s infinite;
+    }
+    .links a:hover {
+      opacity: 1;
+      transform: scale(1.2) rotate(2deg);
+    }
+    @keyframes pulse { 
+      0%,100%{box-shadow:0 0 5px rgba(0,255,0,0.7);}
+      50%{box-shadow:0 0 20px rgba(0,255,0,1);}
+    }
+
+    /* ============================
+       New Top Navigation Styles
+    ============================ */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 1.5em;
+      padding: 1em;
+      background: rgba(0,0,0,0.3);
+      box-shadow: 0 0 20px rgba(0,255,0,0.5);
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      z-index: 3;
+    }
+    .top-nav a {
+      color: #0f0;
+      text-decoration: none;
+      font-size: 1.2em;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
+      opacity: 0.85;
+      transition: transform 0.2s ease-out, opacity 0.2s ease-out, text-shadow 0.2s ease-out, filter 0.2s ease-out;
+      animation: float 3s ease-in-out infinite, flickerText 4s infinite;
+    }
+    .top-nav a:hover {
+      transform: scale(1.06) translateY(-2px);
+      opacity: 1;
+      text-shadow: 0 0 15px #0f0, 0 0 30px #0f0;
+      filter: drop-shadow(0 0 8px #0f0);
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0) scale(1) rotate(0); }
+      50%     { transform: translateY(-4px) scale(1.02) rotate(0.5deg); }
+    }
+    @keyframes flickerText {
+      0%,18%,22%,55%,100% { opacity: 0.9; }
+      20%,50%           { opacity: 0.6; }
+    }
+
   </style>
 </head>
 <body>
-  <canvas id="kG7nZ5"></canvas>
-  <div class="cH8jT2">
-    <div class="bP6mR4">
-      <h2>CODE REQUIRED</h2>
-      <input type="password" id="sF2vM3" placeholder="access code"/>
-      <button onclick="uT5hE9()">Enter</button>
-      <div class="eR3vW1" id="zX4tK8"></div>
-    </div>
-  </div>
   <script>
-    const Xy1Pq = document.getElementById('kG7nZ5'),
-          Vf8Lu = Xy1Pq.getContext('2d');
-    let Nz2Hj = Math.floor(window.innerWidth/14),
-        Qw5Zm = Array(Nz2Hj).fill(1);
-    window.addEventListener('resize', () => {
-      Xy1Pq.width = window.innerWidth;
-      Xy1Pq.height = window.innerHeight;
-      Nz2Hj = Math.floor(Xy1Pq.width/14);
-      Qw5Zm = Array(Nz2Hj).fill(1);
-    });
-    Xy1Pq.width = window.innerWidth;
-    Xy1Pq.height = window.innerHeight;
-    (function pN3vX1(){
-      Vf8Lu.fillStyle = 'rgba(0,0,0,0.07)';
-      Vf8Lu.fillRect(0,0,Xy1Pq.width,Xy1Pq.height);
-      for(let i=0; i<Qw5Zm.length; i++){
-        const x = i*14, y = Qw5Zm[i]*14,
-              ch = String.fromCharCode(0x30A0 + Math.random()*96);
-        Vf8Lu.fillStyle = Math.random()<.005 ? '#FFF' : '#0F0';
-        Vf8Lu.font = (14 + Math.random()*4) + 'px monospace';
-        Vf8Lu.fillText(ch, x, y);
-        Qw5Zm[i] = (y > Xy1Pq.height && Math.random() > .98) ? 0 : Qw5Zm[i] + 1;
+    (function() {
+      const cookies = document.cookie.split('; ');
+      const loggedIn = cookies.some(c => c.startsWith('is_logged_in='));
+      if (!loggedIn) {
+        window.location.replace('index.html');
       }
-      requestAnimationFrame(pN3vX1);
-    })();
-
-    async function rB7mC2(i){
-      const alg = atob('U0hBLTI1Ng=='),
-            buf = new TextEncoder().encode(i),
-            h   = await crypto.subtle.digest(alg, buf);
-      return Array.from(new Uint8Array(h))
-        .map(b => b.toString(16).padStart(2,'0')).join('');
-    }
-
-    async function uT5hE9(){
-      const pwd = document.getElementById('sF2vM3').value.trim(),
-            msg = document.getElementById('zX4tK8');
-      msg.style.color = 'red';
-      try {
-        const path = atob('YXNzZXRzL3JlZGFjdGVkLnR4dA=='),
-              dest = atob('aHR0cHM6Ly90b3JuYWRvc3QuZ2l0aHViLmlvL3JlZGFjdGVk'),
-              list = (await (await fetch(path)).text())
-                       .split('\n').map(s=>s.trim()).filter(Boolean),
-              h = await rB7mC2(pwd);
-        msg.textContent = `${h}\nAccess denied`;
-        if (list.includes(h)) {
-          document.cookie = "is_logged_in=true; Path=/; Max-Age=3600; Secure; SameSite=Strict";
-          msg.style.color = 'lime';
-          msg.textContent = 'Access granted. Redirecting...';
-          setTimeout(() => window.location.href = dest, 1500);
-        }
-      } catch {
-        msg.textContent = 'Error verifying credentials.';
-      }
-    }
-
-    (function mO1yL4(){
-      setInterval(()=>{
-        const t0 = performance.now(); debugger;
-        if (performance.now() - t0 > 100)
-          document.body.innerHTML =
-            "<h1 style='color:red;text-align:center;'>what happened?</h1>";
-      }, 1000);
     })();
   </script>
+
+  <!-- New Top Navigation -->
+  <nav class="top-nav">
+    <a href="#" id="link1">Link1</a>
+    <a href="#" id="link2">Link2</a>
+    <a href="#" id="link3">Link3</a>
+    <a href="#" id="link4">Link4</a>
+    <a href="#" id="link5">Link5</a>
+    <a href="#" id="link6">Link6</a>
+  </nav>
+
+
+  <canvas id="matrixCanvas"></canvas>
+  <div class="container">
+    <h1 class="glitch" data-text="CACHE VAULT">CACHE VAULT</h1>
+  </div>
+
+  <div class="links">
+    <a id="btnSnake" href="/snake" target="_blank">Snake</a>
+    <a id="btnTetris" href="/tetris" target="_blank">Tetris</a>
+    <a href="/wait" target="_blank"> ? </a>
+    <a href="/cache.html" target="_blank">Cache</a>
+  </div>
+
+
+
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('matrixCanvas');
+      const ctx = canvas.getContext('2d');
+      let cols, drops;
+      const setupMatrix = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        cols = Math.floor(canvas.width / 14);
+        drops = Array(cols).fill(1);
+      };
+      window.addEventListener('resize', setupMatrix);
+      setupMatrix();
+
+      const drawMatrix = () => {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < drops.length; i++) {
+          const x = i * 14;
+          const y = drops[i] * 14;
+          const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+          ctx.fillStyle = (Math.random() < 0.005) ? '#FFF' : '#0F0';
+          ctx.font = (14 + Math.random() * 4) + 'px monospace';
+          ctx.fillText(char, x, y);
+          drops[i] = (y > canvas.height && Math.random() > 0.98) ? 0 : drops[i] + 1;
+        }
+        requestAnimationFrame(drawMatrix);
+      };
+      drawMatrix();
+
+      const buttons = Array.from(document.querySelectorAll('.links a'));
+      const titleEl = document.querySelector('.glitch');
+      const moveButton = (btn) => {
+        const titleRect = titleEl.getBoundingClientRect();
+        let x, y;
+        do {
+          x = Math.random() * (window.innerWidth - btn.offsetWidth);
+          y = Math.random() * (window.innerHeight - btn.offsetHeight);
+        } while (
+          x < titleRect.right + 20 && x + btn.offsetWidth > titleRect.left - 20 &&
+          y < titleRect.bottom + 20 && y + btn.offsetHeight > titleRect.top - 20
+        );
+        btn.style.left = x + 'px';
+        btn.style.top = y + 'px';
+        setTimeout(() => moveButton(btn), 2000 + Math.random() * 2000);
+      };
+      buttons.forEach(btn => moveButton(btn));
+    });
+  </script>
+
 </body>
 </html>
