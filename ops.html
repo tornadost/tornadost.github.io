@@ -22,6 +22,8 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 1;
+      /* Smooth opacity transition */
+      transition: opacity 0.5s ease-in-out;
     }
 
     .container {
@@ -220,6 +222,16 @@
         requestAnimationFrame(drawMatrix);
       };
       drawMatrix();
+
+      // —— NEW: fade canvas on mousemove ——
+      let fadeTimeout;
+      window.addEventListener('mousemove', () => {
+        canvas.style.opacity = '0.3';
+        clearTimeout(fadeTimeout);
+        fadeTimeout = setTimeout(() => {
+          canvas.style.opacity = '1';
+        }, 2000);
+      });
 
       const buttons = Array.from(document.querySelectorAll('.links a'));
       const titleEl = document.querySelector('.glitch');
