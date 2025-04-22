@@ -10,8 +10,8 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  background: #000;
   overflow: hidden;
+  background: black;
   font-family: 'Courier New', Courier, monospace;
 }
 #matrixCanvas {
@@ -26,6 +26,7 @@ html, body {
   position: relative;
   z-index: 2;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
@@ -33,19 +34,18 @@ html, body {
 h1.glitch {
   font-size: 4em;
   color: #0f0;
-  text-transform: uppercase;
   text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
   animation: flicker 2s infinite alternate;
-  position: relative;
   margin: 0;
+  position: relative;
 }
 h1.glitch::before, h1.glitch::after {
   content: attr(data-text);
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   overflow: hidden;
-  clip: rect(0, 900px, 0, 0);
 }
 h1.glitch::before {
   left: 2px;
@@ -55,57 +55,61 @@ h1.glitch::before {
 h1.glitch::after {
   left: -2px;
   text-shadow: -2px 0 #0f0;
-  animation: glitch-bottom 2.5s infinite linear;
+  animation: glitch-bottom 3s infinite linear;
 }
 @keyframes flicker {
   0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
   20%,24%,55% { opacity: 0.6; }
 }
 @keyframes glitch-top {
-  0%{clip:rect(0,900px,5px,0);} 50%{clip:rect(10px,900px,15px,0);} 100%{clip:rect(0,900px,5px,0);}
+  0%,100%{clip:rect(0,900px,5px,0);}
+  50%{clip:rect(10px,900px,15px,0);}
 }
 @keyframes glitch-bottom {
-  0%{clip:rect(30px,900px,35px,0);} 50%{clip:rect(40px,900px,45px,0);} 100%{clip:rect(30px,900px,35px,0);}
+  0%,100%{clip:rect(30px,900px,35px,0);}
+  50%{clip:rect(40px,900px,45px,0);}
 }
 nav.top-nav {
   position: fixed;
   top: 0;
   left: 15%;
   right: 15%;
+  z-index: 3;
   display: flex;
   justify-content: space-around;
   align-items: center;
   padding: 1em 0;
-  z-index: 3;
 }
 nav.top-nav a {
   color: #0f0;
   font-weight: bold;
-  text-decoration: none;
   font-size: 1.2em;
   text-shadow: 0 0 5px #0f0;
+  text-decoration: none;
   transition: all 0.3s;
 }
 nav.top-nav a:hover {
-  transform: scale(1.05);
+  transform: scale(1.1);
   text-shadow: 0 0 10px #0f0;
 }
+
+/* ✨ Floating links properly styled ✨ */
 .links a {
   position: absolute;
   padding: 0.7em 1.2em;
   color: #0f0;
-  font-size: 1.2em;
   text-decoration: none;
   border: 1px solid #0f0;
-  box-shadow: 0 0 8px #0f0;
+  font-size: 1.1em;
   background: transparent;
+  box-shadow: 0 0 8px #0f0;
   opacity: 0.8;
   transition: all 0.3s;
   z-index: 2;
 }
 .links a:hover {
-  transform: scale(1.1);
   opacity: 1;
+  transform: scale(1.1);
 }
 </style>
 </head>
@@ -135,7 +139,7 @@ nav.top-nav a:hover {
 </div>
 
 <script>
-// --- Login Check ---
+// --- Auth Check ---
 (function() {
   const cookies = document.cookie.split('; ');
   if (!cookies.some(c => c.startsWith('is_logged_in='))) {
@@ -147,39 +151,42 @@ nav.top-nav a:hover {
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('matrixCanvas');
   const ctx = canvas.getContext('2d');
-
-  // Matrix Character Set: Japanese Katakana + mapped for all systems
   const katakana = 'アィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチッヂヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲン'.split('');
-
+  
   let drops = [];
-  const setupMatrix = () => {
+  const fontSize = 18;
+  const columns = Math.floor(window.innerWidth / fontSize);
+
+  for (let i = 0; i < columns; i++) {
+    drops[i] = Math.random() * -100;
+  }
+
+  const draw = () => {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.font = `${fontSize}px 'Courier New', Courier, monospace`;
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = katakana[Math.floor(Math.random() * katakana.length)];
+      ctx.fillStyle = '#0F0';
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+    requestAnimationFrame(draw);
+  };
+
+  draw();
+
+  window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    const columns = Math.floor(canvas.width / 16);
-    drops = Array(columns).fill(1);
-  };
+  });
 
-  window.addEventListener('resize', setupMatrix);
-  setupMatrix();
-
-  const drawMatrix = () => {
-    ctx.fillStyle = 'rgba(0,0,0,0.06)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.font = '16px "Courier New", Courier, monospace';
-    for (let i = 0; i < drops.length; i++) {
-      const char = katakana[Math.floor(Math.random() * katakana.length)];
-      const x = i * 16;
-      const y = drops[i] * 16;
-      ctx.fillStyle = Math.random() < 0.005 ? '#fff' : '#0f0';
-      ctx.fillText(char, x, y);
-      drops[i] = (y > canvas.height && Math.random() > 0.975) ? 0 : drops[i] + 1;
-    }
-    requestAnimationFrame(drawMatrix);
-  };
-  drawMatrix();
-
-  // --- Mouse Blur Fade ---
+  // --- Mouse Move Blur ---
   let fadeTimeout;
   window.addEventListener('mousemove', () => {
     canvas.style.opacity = '0.4';
@@ -191,14 +198,15 @@ window.addEventListener('DOMContentLoaded', () => {
     }, 1500);
   });
 
-  // --- Floating Links Smooth Drift ---
+  // --- Floating Buttons like Matrix ---
   const buttons = document.querySelectorAll('.links a');
   buttons.forEach(btn => {
     const drift = () => {
       const x = Math.random() * (window.innerWidth - btn.offsetWidth);
       const y = Math.random() * (window.innerHeight - btn.offsetHeight);
-      btn.style.transform = `translate(${x}px, ${y}px)`;
-      setTimeout(drift, 5000 + Math.random() * 3000);
+      btn.style.left = `${x}px`;
+      btn.style.top = `${y}px`;
+      setTimeout(drift, 4000 + Math.random() * 3000);
     };
     drift();
   });
