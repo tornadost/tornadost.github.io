@@ -3,11 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>~cache</title>
+  <title>~star</title>
   <style>
-    /* ==========================
-       Base Styles + Matrix Canvas
-       ========================== */
     body, html {
       margin: 0;
       padding: 0;
@@ -22,7 +19,6 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 1;
-      /* Smooth opacity transition */
       transition: opacity 0.5s ease-in-out;
     }
 
@@ -37,7 +33,6 @@
       text-align: center;
     }
 
-    /* Glitchy neon heading */
     h1 {
       position: relative;
       font-size: 4em;
@@ -83,7 +78,6 @@
       100%{clip:rect(30px,900px,35px,0);}
     }
 
-    /* Floating buttons */
     .links a {
       position: absolute;
       padding: 0.8em 1.5em;
@@ -106,15 +100,11 @@
       50%   {box-shadow:0 0 20px rgba(0,255,0,1);}
     }
 
-    /* ============================
-       Updated Top Navigation Styles
-       (15% side margins, neon underline)
-    ============================ */
     .top-nav {
       position: fixed;
       top: 0;
-      left: 15%;        /* start 15% in from left */
-      right: 15%;       /* end 15% before right */
+      left: 15%;
+      right: 15%;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -172,7 +162,6 @@
     })();
   </script>
 
-  <!-- Updated Top Navigation (15% margins each side) -->
   <nav class="top-nav">
     <a href="/redacted" id="link1">index</a>
     <a href="/layer/cache" id="link2">vault</a>
@@ -184,7 +173,7 @@
 
   <canvas id="matrixCanvas"></canvas>
   <div class="container">
-    <h1 class="glitch" data-text="CACHE VAULT">CACHE VAULT</h1>
+    <h1 class="glitch" data-text="CACHE VAULT">STAR VAULT</h1>
   </div>
 
   <div class="links">
@@ -221,7 +210,6 @@
       };
       drawMatrix();
 
-      // —— NEW: fade canvas on mousemove ——
       let fadeTimeout;
       window.addEventListener('mousemove', () => {
         canvas.style.opacity = '0.3';
