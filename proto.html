@@ -2,23 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Matrix Rain Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cache Vault ~ Matrix Pro</title>
 <style>
-:root {
-  --neon-green: #00ff00;
-  --neon-pink: #ff00ff;
-  --matrix-speed: 60;
-}
+/* Base Styles */
 html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  font-family: 'Courier New', monospace;
   background: #000;
+  font-family: 'Courier New', monospace;
 }
+
+/* Matrix Canvases */
 canvas {
   position: fixed;
   top: 0;
@@ -26,23 +24,31 @@ canvas {
   width: 100%;
   height: 100%;
   display: block;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.6s ease, filter 1.2s ease;
 }
+
+/* Main Content */
 .container {
   position: relative;
-  z-index: 5;
+  z-index: 2;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   height: 100%;
 }
+
+/* Glitch Title */
 h1.glitch {
   font-size: 4em;
+  color: #0f0;
   text-transform: uppercase;
-  color: var(--neon-green);
-  text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+  text-shadow: 0 0 8px #0f0, 0 0 20px #0f0;
+  animation: flicker 2s infinite alternate;
   position: relative;
-  animation: hologram 6s infinite;
 }
+
 h1.glitch::before, h1.glitch::after {
   content: attr(data-text);
   position: absolute;
@@ -52,204 +58,198 @@ h1.glitch::before, h1.glitch::after {
   opacity: 0.7;
   overflow: hidden;
 }
+
 h1.glitch::before {
-  color: var(--neon-pink);
+  color: #f0f;
   clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
   animation: glitch-top 2s infinite alternate;
 }
+
 h1.glitch::after {
-  color: var(--neon-green);
+  color: #0f0;
   clip-path: polygon(0 66%, 100% 66%, 100% 100%, 0 100%);
   animation: glitch-bottom 3s infinite alternate;
 }
+
+/* Buttons */
+.links a {
+  position: absolute;
+  padding: 0.7em 1.5em;
+  color: #0f0;
+  text-decoration: none;
+  font-size: 1.2em;
+  border: 1px solid #0f0;
+  opacity: 0.8;
+  background: transparent;
+  transition: all 0.4s ease;
+  box-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+  z-index: 2;
+}
+
+.links a:hover {
+  opacity: 1;
+  transform: scale(1.1) rotate(1deg);
+}
+
+/* Top Navigation */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  display: flex;
+  justify-content: space-around;
+  padding: 1em 0;
+  z-index: 3;
+}
+
+.top-nav a {
+  color: #0f0;
+  font-size: 1.2em;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.top-nav a:hover {
+  transform: scale(1.05);
+  text-shadow: 0 0 5px #0f0;
+}
+
+/* Animations */
+@keyframes flicker {
+  0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
+  20%,24%,55% { opacity: 0.4; }
+}
+
 @keyframes glitch-top {
   0% { transform: translate(0, 0); }
   50% { transform: translate(2px, -2px); }
   100% { transform: translate(0, 0); }
 }
+
 @keyframes glitch-bottom {
   0% { transform: translate(0, 0); }
   50% { transform: translate(-2px, 2px); }
   100% { transform: translate(0, 0); }
-}
-@keyframes hologram {
-  0%, 100% { transform: translateZ(0) rotateX(0deg) rotateY(0deg); }
-  50% { transform: translateZ(20px) rotateX(2deg) rotateY(1deg); }
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="particles"></canvas>
-<canvas id="matrix"></canvas>
+<!-- Navigation -->
+<nav class="top-nav">
+  <a href="/index">Index</a>
+  <a href="/vault">Vault</a>
+  <a href="/star">Star</a>
+  <a href="/blog">Blog</a>
+  <a href="/secret">Secret</a>
+  <a href="/games">Games</a>
+</nav>
+
+<!-- Matrix Canvases -->
+<canvas id="matrixCanvas1"></canvas>
+<canvas id="matrixCanvas2"></canvas>
+
+<!-- Main Title -->
 <div class="container">
-  <h1 class="glitch" data-text="~cache">~cache</h1>
+  <h1 class="glitch" data-text="CACHE VAULT">CACHE VAULT</h1>
+</div>
+
+<!-- Floating Links -->
+<div class="links">
+  <a href="/snake">Snake</a>
+  <a href="/tetris">Tetris</a>
+  <a href="/wait">?</a>
+  <a href="/cache">Cache</a>
 </div>
 
 <script>
-// --------------------------------------
-// Matrix Rain PRO
-// --------------------------------------
-class MatrixLayer {
-  constructor(canvas, options) {
+// Check login
+(function() {
+  const cookies = document.cookie.split('; ');
+  if (!cookies.some(c => c.startsWith('is_logged_in='))) {
+    window.location.href = 'index.html';
+  }
+})();
+
+// Matrix Rain Class
+class MatrixRain {
+  constructor(canvas, charset) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
-    this.katakana = 'アィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチッヂヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲン'.split('');
-    this.charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*'.split('');
-    this.columns = 0;
-    this.drops = [];
-    this.options = options;
+    this.chars = charset;
+    this.columns = [];
+    this.init();
+  }
+
+  init() {
     this.resize();
-    this.initDrops();
-    window.addEventListener('resize', this.resize.bind(this));
+    window.addEventListener('resize', () => {
+      clearTimeout(this.resizeTimer);
+      this.resizeTimer = setTimeout(() => this.resize(), 200);
+    });
   }
 
   resize() {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
-    this.columns = Math.floor(this.canvas.width / this.options.columnSize);
-    this.initDrops();
-  }
-
-  initDrops() {
-    this.drops = Array.from({length: this.columns}).map(() => ({
-      y: Math.random() * -this.canvas.height,
-      speed: this.options.speedMin + Math.random() * (this.options.speedMax - this.options.speedMin),
-      alpha: 0.5 + Math.random() * 0.5,
-      fontSize: this.options.fontMin + Math.random() * (this.options.fontMax - this.options.fontMin),
-      set: Math.random() > 0.5 ? this.katakana : this.charset
-    }));
+    const cols = Math.floor(this.canvas.width / 18);
+    this.columns = Array.from({ length: cols }, () => Math.random() * -this.canvas.height);
   }
 
   drawBackground() {
-    this.ctx.fillStyle = `rgba(0, 0, 0, ${this.options.backgroundFade})`;
+    this.ctx.fillStyle = 'rgba(0,0,0,0.08)';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  drawCharacter(x, y, fontSize, char, alpha) {
+  drawChar(x, y, fontSize, alpha) {
+    const char = this.chars[Math.floor(Math.random() * this.chars.length)];
     this.ctx.font = `${fontSize}px 'Courier New'`;
-    this.ctx.fillStyle = `hsla(120, 100%, 50%, ${alpha})`;
+    this.ctx.fillStyle = `hsla(120,100%,50%,${alpha})`;
     this.ctx.fillText(char, x, y);
   }
 
   animate() {
     this.drawBackground();
-    this.drops.forEach((drop, idx) => {
-      const char = drop.set[Math.floor(Math.random() * drop.set.length)];
-      const x = idx * this.options.columnSize;
-      this.drawCharacter(x, drop.y, drop.fontSize, char, drop.alpha);
-      drop.y += drop.speed;
-
-      if (drop.y > this.canvas.height) {
-        drop.y = Math.random() * -100;
-        drop.speed = this.options.speedMin + Math.random() * (this.options.speedMax - this.options.speedMin);
-      }
-
-      if (Math.random() > 0.98) {
-        drop.set = Math.random() > 0.5 ? this.katakana : this.charset;
-      }
+    this.columns.forEach((y, idx) => {
+      const fontSize = 12 + Math.random() * 8;
+      const alpha = 0.5 + Math.random() * 0.5;
+      this.drawChar(idx * 18, y, fontSize, alpha);
+      this.columns[idx] = y > this.canvas.height ? Math.random() * -100 : y + 18;
     });
-  }
-}
 
-// --------------------------------------
-// Particles Background
-// --------------------------------------
-class ParticlesBackground {
-  constructor(canvas) {
-    this.canvas = canvas;
-    this.ctx = canvas.getContext('2d');
-    this.particles = [];
-    this.init();
-    window.addEventListener('resize', () => this.resize());
-  }
-
-  init() {
-    this.resize();
-    for (let i = 0; i < 150; i++) {
-      this.particles.push(this.createParticle());
+    if (Math.random() > 0.98) {
+      this.ctx.globalCompositeOperation = 'xor';
+      setTimeout(() => {
+        this.ctx.globalCompositeOperation = 'screen';
+      }, 50);
     }
-  }
 
-  resize() {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
-  }
-
-  createParticle() {
-    return {
-      x: Math.random() * this.canvas.width,
-      y: Math.random() * this.canvas.height,
-      size: 0.5 + Math.random() * 2,
-      speedX: -0.5 + Math.random(),
-      speedY: -0.5 + Math.random(),
-      opacity: 0.1 + Math.random() * 0.3
-    };
-  }
-
-  updateParticles() {
-    this.particles.forEach(p => {
-      p.x += p.speedX;
-      p.y += p.speedY;
-
-      if (p.x < 0 || p.x > this.canvas.width || p.y < 0 || p.y > this.canvas.height) {
-        Object.assign(p, this.createParticle());
-      }
-    });
-  }
-
-  drawParticles() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.particles.forEach(p => {
-      this.ctx.beginPath();
-      this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      this.ctx.fillStyle = `rgba(0, 255, 0, ${p.opacity})`;
-      this.ctx.fill();
-    });
-  }
-
-  animate() {
-    this.updateParticles();
-    this.drawParticles();
+    requestAnimationFrame(() => this.animate());
   }
 }
 
-// --------------------------------------
-// Initialize Animation
-// --------------------------------------
-const particlesCanvas = document.getElementById('particles');
-const matrixCanvas = document.getElementById('matrix');
+// Initialize Matrix Layers
+const katakana = 'アィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチッヂヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲン'.split('');
+const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()'.split('');
 
-const particles = new ParticlesBackground(particlesCanvas);
-const matrix1 = new MatrixLayer(matrixCanvas, {
-  columnSize: 20,
-  speedMin: 2,
-  speedMax: 5,
-  fontMin: 14,
-  fontMax: 22,
-  backgroundFade: 0.07
-});
+const matrix1 = new MatrixRain(document.getElementById('matrixCanvas1'), latin);
+const matrix2 = new MatrixRain(document.getElementById('matrixCanvas2'), katakana);
 
-function animationLoop() {
-  particles.animate();
-  matrix1.animate();
-  requestAnimationFrame(animationLoop);
-}
+// Start animations
+matrix1.animate();
+matrix2.animate();
 
-document.addEventListener('DOMContentLoaded', () => {
-  animationLoop();
-
-  let blurTimeout;
-  window.addEventListener('mousemove', () => {
-    matrixCanvas.style.opacity = '0.3';
-    matrixCanvas.style.filter = 'blur(2px)';
-    clearTimeout(blurTimeout);
-    blurTimeout = setTimeout(() => {
-      matrixCanvas.style.opacity = '0.95';
-      matrixCanvas.style.filter = 'blur(0)';
-    }, 1200);
-  }, {passive: true});
+// Interactive Blur Effect
+window.addEventListener('mousemove', () => {
+  document.getElementById('matrixCanvas1').style.opacity = '0.3';
+  document.getElementById('matrixCanvas2').style.opacity = '0.3';
+  clearTimeout(window.blurTimeout);
+  window.blurTimeout = setTimeout(() => {
+    document.getElementById('matrixCanvas1').style.opacity = '1';
+    document.getElementById('matrixCanvas2').style.opacity = '1';
+  }, 1800);
 });
 </script>
 
