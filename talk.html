@@ -1,1 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>~chat</title>
+  <style>
+    /* === Reset & Matrix BG === */
+    body, html {
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+      background: #000;
+    }
+    #matrixCanvas {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+      transition: opacity 0.5s ease-in-out;
+    }
 
+    /* === Centered Chat Container === */
+    .container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    /* === WidgetBot Embed Styles === */
+    widgetbot {
+      width: 40vw;
+      height: 60vh;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0,255,0,0.5);
+      border: 1px solid #0f0;
+      overflow: hidden;
+    }
+
+    /* === Floating Links === */
+    .links a {
+      position: absolute;
+      padding: 0.8em 1.5em;
+      color: #0f0;
+      text-decoration: none;
+      font-size: 1.2em;
+      background: transparent;
+      box-shadow: 0 0 10px rgba(0,255,0,0.7);
+      opacity: 0.7;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 2;
+      animation: pulse 2.5s infinite;
+    }
+    .links a:hover {
+      opacity: 1;
+      transform: scale(1.2) rotate(2deg);
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 5px rgba(0,255,0,0.7); }
+      50%      { box-shadow: 0 0 20px rgba(0,255,0,1); }
+    }
+
+    /* === Top Navigation === */
+    .top-nav {
+      position: fixed;
+      top: 0; left: 15%; right: 15%;
+      display: flex; justify-content: space-between;
+      align-items: center;
+      padding: 1em 0;
+      z-index: 3;
+    }
+    .top-nav a {
+      color: #0f0;
+      text-decoration: none;
+      font-size: 1.2em;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
+      opacity: 0.85;
+      transition: transform 0.2s, opacity 0.2s;
+      animation: float 3s ease-in-out infinite, flickerText 4s infinite;
+      position: relative;
+      padding-bottom: 0.2em;
+    }
+    .top-nav a::after {
+      content: '';
+      position: absolute; left: 0; bottom: 0;
+      width: 0; height: 2px;
+      background: #0f0;
+      box-shadow: 0 0 8px #0f0, 0 0 12px #0f0;
+      transition: width 0.3s ease-out;
+    }
+    .top-nav a:hover {
+      transform: scale(1.06) translateY(-2px);
+      opacity: 1;
+    }
+    .top-nav a:hover::after {
+      width: 100%;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0) scale(1) rotate(0); }
+      50%     { transform: translateY(-4px) scale(1.02) rotate(0.5deg); }
+    }
+    @keyframes flickerText {
+      0%,18%,22%,55%,100% { opacity: 0.9; }
+      20%,50%              { opacity: 0.6; }
+    }
+  </style>
+</head>
+<body>
+  <!-- redirect if not logged-in -->
+  <script>
+    (function() {
+      const loggedIn = document.cookie.split('; ').some(c => c.startsWith('is_logged_in='));
+      if (!loggedIn) window.location.replace('index.html');
+    })();
+  </script>
+
+  <!-- Top Nav -->
+  <nav class="top-nav">
+    <a href="/redacted">index</a>
+    <a href="/layer/cache">vault</a>
+    <a href="/layer/star">star</a>
+    <a href="/feed/blog">blog</a>
+    <a href="/layer/archive">secret</a>
+    <a href="/games/play">play</a>
+  </nav>
+
+  <!-- Matrix Canvas -->
+  <canvas id="matrixCanvas"></canvas>
+
+  <!-- Chat Embed -->
+  <div class="container">
+    <!--
+      1) Invite WidgetBot: https://widgetbot.io/channels/invite
+      2) Copy your IDs in Dev Mode
+    -->
+    <widgetbot
+      server="299881420891881473"
+      channel="355719584830980096"
+      width="40vw"
+      height="60vh"
+    ></widgetbot>
+    <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+  </div>
+
+  <!-- Floating Links -->
+  <div class="links">
+    <a href="/wait" target="_blank">?</a>
+    <a href="/cache.html" target="_blank">Cache</a>
+  </div>
+
+  <!-- Matrix + Link Animation -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('matrixCanvas');
+      const ctx = canvas.getContext('2d');
+      let cols, drops;
+      const setup = () => {
+        canvas.width = innerWidth;
+        canvas.height = innerHeight;
+        cols = Math.floor(innerWidth / 14);
+        drops = Array(cols).fill(1);
+      };
+      window.addEventListener('resize', setup);
+      setup();
+
+      function draw() {
+        ctx.fillStyle = 'rgba(0,0,0,0.07)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        drops.forEach((d, i) => {
+          const x = i * 14, y = d * 14;
+          const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+          ctx.fillStyle = Math.random() < 0.005 ? '#FFF' : '#0F0';
+          ctx.font = (14 + Math.random() * 4) + 'px monospace';
+          ctx.fillText(char, x, y);
+          drops[i] = y > canvas.height && Math.random() > 0.98 ? 0 : d + 1;
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+
+      // fade on mousemove
+      let ft;
+      window.addEventListener('mousemove', () => {
+        canvas.style.opacity = 0.3;
+        clearTimeout(ft);
+        ft = setTimeout(() => canvas.style.opacity = 1, 2000);
+      });
+
+      // floating links avoid chat
+      const btns = Array.from(document.querySelectorAll('.links a'));
+      const chatBox = document.querySelector('widgetbot');
+      function move(b) {
+        const t = chatBox.getBoundingClientRect();
+        let x, y;
+        do {
+          x = Math.random() * (innerWidth - b.offsetWidth);
+          y = Math.random() * (innerHeight - b.offsetHeight);
+        } while (
+          x < t.right + 20 && x + b.offsetWidth > t.left - 20 &&
+          y < t.bottom + 20 && y + b.offsetHeight > t.top - 20
+        );
+        b.style.left = `${x}px`;
+        b.style.top = `${y}px`;
+        setTimeout(() => move(b), 2000 + Math.random() * 2000);
+      }
+      btns.forEach(move);
+    });
+  </script>
+</body>
+</html>
