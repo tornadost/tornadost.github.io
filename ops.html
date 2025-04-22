@@ -106,16 +106,17 @@
 
     /* ============================
        Updated Top Navigation Styles
-       (full-width, no box, neon underline)
+       (15% side margins, neon underline)
     ============================ */
     .top-nav {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      padding: 1em;
+      top: 0;
+      left: 15%;        /* start 15% in from left */
+      right: 15%;       /* end 15% before right */
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 1em 0;
       z-index: 3;
       background: transparent;
     }
@@ -169,7 +170,7 @@
     })();
   </script>
 
-  <!-- Updated Top Navigation -->
+  <!-- Updated Top Navigation (15% margins each side) -->
   <nav class="top-nav">
     <a href="#" id="link1">Link1</a>
     <a href="#" id="link2">Link2</a>
