@@ -1,162 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cache Vault ~ Matrix Pro</title>
-<style>
-/* Base Styles */
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #000;
-  font-family: 'Courier New', monospace;
-}
-
-/* Matrix Canvases */
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  pointer-events: none;
-  z-index: 1;
-  transition: opacity 0.6s ease, filter 1.2s ease;
-}
-
-/* Main Content */
-.container {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
-/* Glitch Title */
-h1.glitch {
-  font-size: 4em;
-  color: #0f0;
-  text-transform: uppercase;
-  text-shadow: 0 0 8px #0f0, 0 0 20px #0f0;
-  animation: flicker 2s infinite alternate;
-  position: relative;
-}
-
-h1.glitch::before, h1.glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  opacity: 0.7;
-  overflow: hidden;
-}
-
-h1.glitch::before {
-  color: #f0f;
-  clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
-  animation: glitch-top 2s infinite alternate;
-}
-
-h1.glitch::after {
-  color: #0f0;
-  clip-path: polygon(0 66%, 100% 66%, 100% 100%, 0 100%);
-  animation: glitch-bottom 3s infinite alternate;
-}
-
-/* Buttons */
-.links a {
-  position: absolute;
-  padding: 0.7em 1.5em;
-  color: #0f0;
-  text-decoration: none;
-  font-size: 1.2em;
-  border: 1px solid #0f0;
-  opacity: 0.8;
-  background: transparent;
-  transition: all 0.4s ease;
-  box-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
-  z-index: 2;
-}
-
-.links a:hover {
-  opacity: 1;
-  transform: scale(1.1) rotate(1deg);
-}
-
-/* Top Navigation */
-.top-nav {
-  position: fixed;
-  top: 0;
-  left: 10%;
-  right: 10%;
-  display: flex;
-  justify-content: space-around;
-  padding: 1em 0;
-  z-index: 3;
-}
-
-.top-nav a {
-  color: #0f0;
-  font-size: 1.2em;
-  text-decoration: none;
-  transition: all 0.3s;
-}
-
-.top-nav a:hover {
-  transform: scale(1.05);
-  text-shadow: 0 0 5px #0f0;
-}
-
-/* Animations */
-@keyframes flicker {
-  0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
-  20%,24%,55% { opacity: 0.4; }
-}
-
-@keyframes glitch-top {
-  0% { transform: translate(0, 0); }
-  50% { transform: translate(2px, -2px); }
-  100% { transform: translate(0, 0); }
-}
-
-@keyframes glitch-bottom {
-  0% { transform: translate(0, 0); }
-  50% { transform: translate(-2px, 2px); }
-  100% { transform: translate(0, 0); }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>~cache vault</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+    }
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+      transition: opacity 1s ease, filter 1.5s ease;
+    }
+    .container {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    h1.glitch {
+      font-size: 4em;
+      color: #0f0;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 8px #0f0, 0 0 16px #0f0;
+      position: relative;
+      animation: flicker 3s infinite alternate;
+    }
+    @keyframes flicker {
+      0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
+      20%,24%,55% { opacity: 0.7; }
+    }
+    nav.top-nav {
+      position: fixed;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      z-index: 3;
+      display: flex;
+      justify-content: space-around;
+      padding: 1em 0;
+    }
+    nav.top-nav a {
+      color: #0f0;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 1.1em;
+      text-shadow: 0 0 5px #0f0;
+      transition: 0.3s ease;
+    }
+    nav.top-nav a:hover {
+      transform: scale(1.05);
+      text-shadow: 0 0 10px #0f0;
+    }
+    .links a {
+      position: absolute;
+      color: #0f0;
+      font-size: 1.1em;
+      padding: 0.6em 1em;
+      text-decoration: none;
+      background: transparent;
+      border: 1px solid #0f0;
+      box-shadow: 0 0 5px #0f0;
+      transition: all 0.3s;
+      opacity: 0.8;
+      z-index: 2;
+    }
+    .links a:hover {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- Navigation -->
 <nav class="top-nav">
-  <a href="/index">Index</a>
-  <a href="/vault">Vault</a>
-  <a href="/star">Star</a>
-  <a href="/blog">Blog</a>
-  <a href="/secret">Secret</a>
-  <a href="/games">Games</a>
+  <a href="/index">index</a>
+  <a href="/vault">vault</a>
+  <a href="/star">star</a>
+  <a href="/blog">blog</a>
+  <a href="/secret">secret</a>
+  <a href="/games">games</a>
 </nav>
 
-<!-- Matrix Canvases -->
-<canvas id="matrixCanvas1"></canvas>
-<canvas id="matrixCanvas2"></canvas>
+<canvas id="matrixCanvas"></canvas>
 
-<!-- Main Title -->
 <div class="container">
   <h1 class="glitch" data-text="CACHE VAULT">CACHE VAULT</h1>
 </div>
 
-<!-- Floating Links -->
 <div class="links">
   <a href="/snake">Snake</a>
   <a href="/tetris">Tetris</a>
@@ -165,7 +110,7 @@ h1.glitch::after {
 </div>
 
 <script>
-// Check login
+// --- Authentication Check ---
 (function() {
   const cookies = document.cookie.split('; ');
   if (!cookies.some(c => c.startsWith('is_logged_in='))) {
@@ -173,83 +118,79 @@ h1.glitch::after {
   }
 })();
 
-// Matrix Rain Class
+// --- Matrix Rain Class ---
 class MatrixRain {
-  constructor(canvas, charset) {
-    this.canvas = canvas;
-    this.ctx = canvas.getContext('2d');
-    this.chars = charset;
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    this.katakana = 'アィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチッヂヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲン'.split('');
+    this.latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split('');
+    this.chars = [...this.katakana, ...this.latin];
     this.columns = [];
-    this.init();
-  }
-
-  init() {
     this.resize();
-    window.addEventListener('resize', () => {
-      clearTimeout(this.resizeTimer);
-      this.resizeTimer = setTimeout(() => this.resize(), 200);
-    });
+    window.addEventListener('resize', () => this.resize());
   }
 
   resize() {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
     const cols = Math.floor(this.canvas.width / 18);
-    this.columns = Array.from({ length: cols }, () => Math.random() * -this.canvas.height);
+    this.columns = Array(cols).fill(0).map(() => Math.random() * -this.canvas.height);
   }
 
   drawBackground() {
-    this.ctx.fillStyle = 'rgba(0,0,0,0.08)';
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  drawChar(x, y, fontSize, alpha) {
-    const char = this.chars[Math.floor(Math.random() * this.chars.length)];
-    this.ctx.font = `${fontSize}px 'Courier New'`;
-    this.ctx.fillStyle = `hsla(120,100%,50%,${alpha})`;
-    this.ctx.fillText(char, x, y);
-  }
-
-  animate() {
+  drawMatrix() {
     this.drawBackground();
+    this.ctx.font = '16px monospace';
     this.columns.forEach((y, idx) => {
-      const fontSize = 12 + Math.random() * 8;
-      const alpha = 0.5 + Math.random() * 0.5;
-      this.drawChar(idx * 18, y, fontSize, alpha);
+      const text = this.chars[Math.floor(Math.random() * this.chars.length)];
+      const x = idx * 18;
+      this.ctx.fillStyle = `hsla(120, 100%, 50%, 0.8)`;
+      this.ctx.fillText(text, x, y);
       this.columns[idx] = y > this.canvas.height ? Math.random() * -100 : y + 18;
     });
-
-    if (Math.random() > 0.98) {
-      this.ctx.globalCompositeOperation = 'xor';
-      setTimeout(() => {
-        this.ctx.globalCompositeOperation = 'screen';
-      }, 50);
-    }
-
-    requestAnimationFrame(() => this.animate());
+    requestAnimationFrame(() => this.drawMatrix());
   }
 }
 
-// Initialize Matrix Layers
-const katakana = 'アィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチッヂヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲン'.split('');
-const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()'.split('');
+// --- Initialize Matrix ---
+const matrix = new MatrixRain('matrixCanvas');
+matrix.drawMatrix();
 
-const matrix1 = new MatrixRain(document.getElementById('matrixCanvas1'), latin);
-const matrix2 = new MatrixRain(document.getElementById('matrixCanvas2'), katakana);
-
-// Start animations
-matrix1.animate();
-matrix2.animate();
-
-// Interactive Blur Effect
+// --- Subtle Blur on MouseMove ---
+let fadeTimeout;
 window.addEventListener('mousemove', () => {
-  document.getElementById('matrixCanvas1').style.opacity = '0.3';
-  document.getElementById('matrixCanvas2').style.opacity = '0.3';
-  clearTimeout(window.blurTimeout);
-  window.blurTimeout = setTimeout(() => {
-    document.getElementById('matrixCanvas1').style.opacity = '1';
-    document.getElementById('matrixCanvas2').style.opacity = '1';
-  }, 1800);
+  matrix.canvas.style.opacity = '0.4';
+  matrix.canvas.style.filter = 'blur(2px)';
+  clearTimeout(fadeTimeout);
+  fadeTimeout = setTimeout(() => {
+    matrix.canvas.style.opacity = '1';
+    matrix.canvas.style.filter = 'none';
+  }, 1500);
+});
+
+// --- Moving Buttons ---
+window.addEventListener('DOMContentLoaded', () => {
+  const buttons = Array.from(document.querySelectorAll('.links a'));
+  const moveButton = btn => {
+    const title = document.querySelector('.glitch').getBoundingClientRect();
+    let x, y;
+    do {
+      x = Math.random() * (window.innerWidth - btn.offsetWidth);
+      y = Math.random() * (window.innerHeight - btn.offsetHeight);
+    } while (
+      x < title.right + 20 && x + btn.offsetWidth > title.left - 20 &&
+      y < title.bottom + 20 && y + btn.offsetHeight > title.top - 20
+    );
+    btn.style.left = `${x}px`;
+    btn.style.top = `${y}px`;
+    setTimeout(() => moveButton(btn), 3000 + Math.random() * 3000);
+  };
+  buttons.forEach(moveButton);
 });
 </script>
 
