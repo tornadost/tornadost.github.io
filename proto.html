@@ -1,95 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>~cache vault</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #000;
-      overflow: hidden;
-      font-family: 'Courier New', monospace;
-    }
-    canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 1;
-      transition: opacity 1s ease, filter 1.5s ease;
-    }
-    .container {
-      position: relative;
-      z-index: 2;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-    h1.glitch {
-      font-size: 4em;
-      color: #0f0;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      text-shadow: 0 0 8px #0f0, 0 0 16px #0f0;
-      position: relative;
-      animation: flicker 3s infinite alternate;
-    }
-    @keyframes flicker {
-      0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
-      20%,24%,55% { opacity: 0.7; }
-    }
-    nav.top-nav {
-      position: fixed;
-      top: 0;
-      left: 10%;
-      right: 10%;
-      z-index: 3;
-      display: flex;
-      justify-content: space-around;
-      padding: 1em 0;
-    }
-    nav.top-nav a {
-      color: #0f0;
-      font-weight: bold;
-      text-decoration: none;
-      font-size: 1.1em;
-      text-shadow: 0 0 5px #0f0;
-      transition: 0.3s ease;
-    }
-    nav.top-nav a:hover {
-      transform: scale(1.05);
-      text-shadow: 0 0 10px #0f0;
-    }
-    .links a {
-      position: absolute;
-      color: #0f0;
-      font-size: 1.1em;
-      padding: 0.6em 1em;
-      text-decoration: none;
-      background: transparent;
-      border: 1px solid #0f0;
-      box-shadow: 0 0 5px #0f0;
-      transition: all 0.3s;
-      opacity: 0.8;
-      z-index: 2;
-    }
-    .links a:hover {
-      transform: scale(1.1);
-      opacity: 1;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>~cache vault</title>
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  font-family: 'Courier New', Courier, monospace;
+}
+#matrixCanvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: opacity 0.6s ease, filter 1s ease;
+}
+.container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+h1.glitch {
+  font-size: 4em;
+  color: #0f0;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+  animation: flicker 2s infinite alternate;
+  position: relative;
+  margin: 0;
+}
+h1.glitch::before, h1.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  overflow: hidden;
+  clip: rect(0, 900px, 0, 0);
+}
+h1.glitch::before {
+  left: 2px;
+  text-shadow: -2px 0 #f0f;
+  animation: glitch-top 3s infinite linear;
+}
+h1.glitch::after {
+  left: -2px;
+  text-shadow: -2px 0 #0f0;
+  animation: glitch-bottom 2.5s infinite linear;
+}
+@keyframes flicker {
+  0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
+  20%,24%,55% { opacity: 0.6; }
+}
+@keyframes glitch-top {
+  0%{clip:rect(0,900px,5px,0);} 50%{clip:rect(10px,900px,15px,0);} 100%{clip:rect(0,900px,5px,0);}
+}
+@keyframes glitch-bottom {
+  0%{clip:rect(30px,900px,35px,0);} 50%{clip:rect(40px,900px,45px,0);} 100%{clip:rect(30px,900px,35px,0);}
+}
+nav.top-nav {
+  position: fixed;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1em 0;
+  z-index: 3;
+}
+nav.top-nav a {
+  color: #0f0;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 1.2em;
+  text-shadow: 0 0 5px #0f0;
+  transition: all 0.3s;
+}
+nav.top-nav a:hover {
+  transform: scale(1.05);
+  text-shadow: 0 0 10px #0f0;
+}
+.links a {
+  position: absolute;
+  padding: 0.7em 1.2em;
+  color: #0f0;
+  font-size: 1.2em;
+  text-decoration: none;
+  border: 1px solid #0f0;
+  box-shadow: 0 0 8px #0f0;
+  background: transparent;
+  opacity: 0.8;
+  transition: all 0.3s;
+  z-index: 2;
+}
+.links a:hover {
+  transform: scale(1.1);
+  opacity: 1;
+}
+</style>
 </head>
 
 <body>
 
 <nav class="top-nav">
-  <a href="/index">index</a>
-  <a href="/vault">vault</a>
+  <a href="/redacted">index</a>
+  <a href="/cache">vault</a>
   <a href="/star">star</a>
   <a href="/blog">blog</a>
   <a href="/secret">secret</a>
@@ -106,11 +131,11 @@
   <a href="/snake">Snake</a>
   <a href="/tetris">Tetris</a>
   <a href="/wait">?</a>
-  <a href="/cache">Cache</a>
+  <a href="/cache.html">Cache</a>
 </div>
 
 <script>
-// --- Authentication Check ---
+// --- Login Check ---
 (function() {
   const cookies = document.cookie.split('; ');
   if (!cookies.some(c => c.startsWith('is_logged_in='))) {
@@ -118,79 +143,65 @@
   }
 })();
 
-// --- Matrix Rain Class ---
-class MatrixRain {
-  constructor(canvasId) {
-    this.canvas = document.getElementById(canvasId);
-    this.ctx = this.canvas.getContext('2d');
-    this.katakana = 'アィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチッヂヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲン'.split('');
-    this.latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split('');
-    this.chars = [...this.katakana, ...this.latin];
-    this.columns = [];
-    this.resize();
-    window.addEventListener('resize', () => this.resize());
-  }
-
-  resize() {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
-    const cols = Math.floor(this.canvas.width / 18);
-    this.columns = Array(cols).fill(0).map(() => Math.random() * -this.canvas.height);
-  }
-
-  drawBackground() {
-    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-  }
-
-  drawMatrix() {
-    this.drawBackground();
-    this.ctx.font = '16px monospace';
-    this.columns.forEach((y, idx) => {
-      const text = this.chars[Math.floor(Math.random() * this.chars.length)];
-      const x = idx * 18;
-      this.ctx.fillStyle = `hsla(120, 100%, 50%, 0.8)`;
-      this.ctx.fillText(text, x, y);
-      this.columns[idx] = y > this.canvas.height ? Math.random() * -100 : y + 18;
-    });
-    requestAnimationFrame(() => this.drawMatrix());
-  }
-}
-
-// --- Initialize Matrix ---
-const matrix = new MatrixRain('matrixCanvas');
-matrix.drawMatrix();
-
-// --- Subtle Blur on MouseMove ---
-let fadeTimeout;
-window.addEventListener('mousemove', () => {
-  matrix.canvas.style.opacity = '0.4';
-  matrix.canvas.style.filter = 'blur(2px)';
-  clearTimeout(fadeTimeout);
-  fadeTimeout = setTimeout(() => {
-    matrix.canvas.style.opacity = '1';
-    matrix.canvas.style.filter = 'none';
-  }, 1500);
-});
-
-// --- Moving Buttons ---
+// --- Matrix Setup ---
 window.addEventListener('DOMContentLoaded', () => {
-  const buttons = Array.from(document.querySelectorAll('.links a'));
-  const moveButton = btn => {
-    const title = document.querySelector('.glitch').getBoundingClientRect();
-    let x, y;
-    do {
-      x = Math.random() * (window.innerWidth - btn.offsetWidth);
-      y = Math.random() * (window.innerHeight - btn.offsetHeight);
-    } while (
-      x < title.right + 20 && x + btn.offsetWidth > title.left - 20 &&
-      y < title.bottom + 20 && y + btn.offsetHeight > title.top - 20
-    );
-    btn.style.left = `${x}px`;
-    btn.style.top = `${y}px`;
-    setTimeout(() => moveButton(btn), 3000 + Math.random() * 3000);
+  const canvas = document.getElementById('matrixCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // Matrix Character Set: Japanese Katakana + mapped for all systems
+  const katakana = 'アィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチッヂヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲン'.split('');
+
+  let drops = [];
+  const setupMatrix = () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const columns = Math.floor(canvas.width / 16);
+    drops = Array(columns).fill(1);
   };
-  buttons.forEach(moveButton);
+
+  window.addEventListener('resize', setupMatrix);
+  setupMatrix();
+
+  const drawMatrix = () => {
+    ctx.fillStyle = 'rgba(0,0,0,0.06)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.font = '16px "Courier New", Courier, monospace';
+    for (let i = 0; i < drops.length; i++) {
+      const char = katakana[Math.floor(Math.random() * katakana.length)];
+      const x = i * 16;
+      const y = drops[i] * 16;
+      ctx.fillStyle = Math.random() < 0.005 ? '#fff' : '#0f0';
+      ctx.fillText(char, x, y);
+      drops[i] = (y > canvas.height && Math.random() > 0.975) ? 0 : drops[i] + 1;
+    }
+    requestAnimationFrame(drawMatrix);
+  };
+  drawMatrix();
+
+  // --- Mouse Blur Fade ---
+  let fadeTimeout;
+  window.addEventListener('mousemove', () => {
+    canvas.style.opacity = '0.4';
+    canvas.style.filter = 'blur(1.5px)';
+    clearTimeout(fadeTimeout);
+    fadeTimeout = setTimeout(() => {
+      canvas.style.opacity = '1';
+      canvas.style.filter = 'none';
+    }, 1500);
+  });
+
+  // --- Floating Links Smooth Drift ---
+  const buttons = document.querySelectorAll('.links a');
+  buttons.forEach(btn => {
+    const drift = () => {
+      const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+      const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+      btn.style.transform = `translate(${x}px, ${y}px)`;
+      setTimeout(drift, 5000 + Math.random() * 3000);
+    };
+    drift();
+  });
 });
 </script>
 
