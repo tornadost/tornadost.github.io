@@ -2,316 +2,204 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>~cache</title>
   <style>
-    /* ==========================
-       Enhanced Base Styles
-       ========================== */
     :root {
       --neon-green: #0f0;
       --neon-pink: #f0f;
       --matrix-speed: 60;
     }
-
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
+      background: black;
       overflow: hidden;
       font-family: 'Courier New', monospace;
-      background: #000;
       cursor: none;
     }
-
     #matrixCanvas {
       position: fixed;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
-      z-index: 1;
+      top: 0;
+      left: 0;
       opacity: 0.95;
       mix-blend-mode: screen;
-      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1),
-                  filter 1.5s ease;
+      z-index: 1;
+      transition: opacity 1.2s ease, filter 1.5s ease;
     }
-
     .container {
       position: relative;
       z-index: 2;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100%;
-      text-align: center;
-      perspective: 1000px;
+      flex-direction: column;
     }
-
-    /* ==========================
-       Enhanced Glitch Effects
-       ========================== */
-    h1 {
-      position: relative;
-      font-size: 4.2em;
-      color: var(--neon-green);
+    h1.glitch {
+      font-size: 4em;
       text-transform: uppercase;
-      letter-spacing: 0.15em;
-      text-shadow: 0 0 12px var(--neon-green),
-                   0 0 24px var(--neon-green);
-      animation: flicker 2s infinite,
-                 hologram 6s infinite;
-      margin: 0;
-      transform-style: preserve-3d;
+      color: var(--neon-green);
+      text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+      animation: hologram 6s infinite;
+      position: relative;
     }
-
-    h1::before, h1::after {
+    h1.glitch::before, h1.glitch::after {
       content: attr(data-text);
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
+      opacity: 0.7;
       overflow: hidden;
-      opacity: 0.8;
     }
-
-    h1::before {
+    h1.glitch::before {
       color: var(--neon-pink);
-      animation: glitch-top 2.4s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                 chromatic-aberration 4s infinite;
       clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+      animation: glitch-top 2s infinite alternate;
     }
-
-    h1::after {
+    h1.glitch::after {
       color: var(--neon-green);
-      animation: glitch-bottom 2.8s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                 chromatic-aberration 3s infinite reverse;
-      clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+      clip-path: polygon(0 66%, 100% 66%, 100% 100%, 0 100%);
+      animation: glitch-bottom 3s infinite alternate;
     }
-
+    @keyframes glitch-top {
+      0% { transform: translate(0, 0); }
+      50% { transform: translate(2px, -2px); }
+      100% { transform: translate(0, 0); }
+    }
+    @keyframes glitch-bottom {
+      0% { transform: translate(0, 0); }
+      50% { transform: translate(-2px, 2px); }
+      100% { transform: translate(0, 0); }
+    }
     @keyframes hologram {
-      0%, 100% { transform: translateZ(0) rotateX(0) rotateY(0); }
-      25% { transform: translateZ(20px) rotateX(2deg) rotateY(1deg); }
-      50% { transform: translateZ(-15px) rotateX(-1deg) rotateY(-2deg); }
-      75% { transform: translateZ(10px) rotateX(1deg) rotateY(1deg); }
+      0%, 100% { transform: translateZ(0) rotateX(0deg) rotateY(0deg); }
+      50% { transform: translateZ(30px) rotateX(2deg) rotateY(2deg); }
     }
-
-    @keyframes chromatic-aberration {
-      0%, 100% { transform: translate(0, 0); }
-      20% { transform: translate(-2px, 1px); }
-      40% { transform: translate(1px, -1px); }
-      60% { transform: translate(1px, 2px); }
-      80% { transform: translate(-1px, -2px); }
-    }
-
-    /* ==========================
-       Enhanced Floating Elements
-       ========================== */
-    .links a {
-      position: absolute;
-      padding: 0.8em 1.8em;
-      color: var(--neon-green);
-      text-decoration: none;
-      font-size: 1.3em;
-      background: rgba(0, 255, 0, 0.05);
-      border: 1px solid var(--neon-green);
-      box-shadow: 0 0 15px rgba(0,255,0,0.4),
-                  inset 0 0 8px rgba(0,255,0,0.2);
-      opacity: 0.9;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-      animation: quantum-float 3s infinite;
-    }
-
-    .links a:hover {
-      opacity: 1;
-      transform: scale(1.15) rotate(1deg);
-      box-shadow: 0 0 25px var(--neon-green),
-                  inset 0 0 12px rgba(0,255,0,0.3);
-      filter: brightness(1.2);
-    }
-
-    @keyframes quantum-float {
-      0%, 100% {
-        transform: translateY(0) rotate(0deg);
-        text-shadow: 0 0 10px var(--neon-green);
-      }
-      33% {
-        transform: translateY(-8px) rotate(0.8deg);
-        text-shadow: 0 0 15px var(--neon-green);
-      }
-      66% {
-        transform: translateY(5px) rotate(-0.5deg);
-        text-shadow: 0 0 20px var(--neon-green);
-      }
-    }
-
-    /* ==========================
-       Matrix Rain Enhancements
-       ========================== */
-    .matrix-layer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-    }
-
-    /* Rest of original styles remain... */
   </style>
 </head>
+
 <body>
-  <!-- Original script and navigation remain unchanged -->
+  <canvas id="matrixCanvas"></canvas>
+  <div class="container">
+    <h1 class="glitch" data-text="~cache">~cache</h1>
+  </div>
 
-  <script>
-    (function() {
-      // Original cookie check remains
-      const cookies = document.cookie.split('; ');
-      const loggedIn = cookies.some(c => c.startsWith('is_logged_in='));
-      if (!loggedIn) window.location.replace('index.html');
-    })();
+<script>
+(function() {
+  const cookies = document.cookie.split('; ');
+  if (!cookies.some(c => c.startsWith('is_logged_in='))) {
+    window.location.href = 'index.html';
+  }
+})();
 
-    // Enhanced Matrix Rain Implementation
-    class MatrixRain {
-      constructor(canvasId) {
-        this.canvas = document.getElementById(canvasId);
-        this.ctx = this.canvas.getContext('2d');
-        this.drops = [];
-        this.charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
-        this.katakana = ['ﾊ','ﾐ','ﾋ','ｰ','ｳ','ｼ','ﾅ','ﾓ','ﾆ','ｻ','ﾜ','ﾂ','ｵ','ﾘ','ｱ','ﾎ','ﾃ','ﾏ','ｹ','ﾒ','ﾕ','ﾗ','ｾ','ﾈ','ｽ','ﾂ','ﾔ'];
-        this.resizeDebounce = null;
-        this.init();
-      }
+class MatrixRain {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    this.columns = 0;
+    this.drops = [];
+    this.katakana = ['ﾊ','ﾐ','ﾋ','ｰ','ｳ','ｼ','ﾅ','ﾓ','ﾆ','ｻ','ﾜ','ﾂ','ｵ','ﾘ','ｱ','ﾎ','ﾃ','ﾏ','ｹ','ﾒ','ﾕ','ﾗ','ｾ','ﾈ','ｽ','ﾔ'];
+    this.charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()'.split('');
+    this.resizeDebounce = null;
+    this.init();
+  }
 
-      init() {
-        this.setDimensions();
+  init() {
+    this.resize();
+    this.createDrops();
+    this.animate();
+    window.addEventListener('resize', () => {
+      clearTimeout(this.resizeDebounce);
+      this.resizeDebounce = setTimeout(() => {
+        this.resize();
         this.createDrops();
-        this.addEventListeners();
-        this.animate();
+      }, 200);
+    }, {passive: true});
+  }
+
+  resize() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    this.columns = Math.floor(this.canvas.width / 20);
+  }
+
+  createDrops() {
+    this.drops = Array(this.columns).fill().map(() => ({
+      y: Math.random() * this.canvas.height,
+      speed: 2 + Math.random() * 3,
+      alpha: 0.4 + Math.random() * 0.5,
+      font: 12 + Math.random() * 8,
+      charSet: Math.random() > 0.7 ? this.katakana : this.charSet
+    }));
+  }
+
+  drawBackground() {
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  drawDrop(drop, x) {
+    const char = drop.charSet[Math.floor(Math.random() * drop.charSet.length)];
+    this.ctx.font = `${drop.font}px 'Courier New', monospace`;
+    this.ctx.fillStyle = `hsla(120, 100%, 50%, ${drop.alpha})`;
+    this.ctx.fillText(char, x, drop.y);
+
+    // Trailing effect
+    const gradient = this.ctx.createLinearGradient(x, drop.y - 50, x, drop.y);
+    gradient.addColorStop(0, 'rgba(0,255,0,0)');
+    gradient.addColorStop(1, `hsla(120, 100%, 50%, ${drop.alpha * 0.2})`);
+    this.ctx.fillStyle = gradient;
+    this.ctx.fillText(char, x, drop.y);
+  }
+
+  animate() {
+    this.drawBackground();
+    this.drops.forEach((drop, i) => {
+      const x = i * 20;
+      this.drawDrop(drop, x);
+      drop.y += drop.speed;
+      if (drop.y > this.canvas.height + 20) {
+        drop.y = -20;
+        drop.alpha = 0.4 + Math.random() * 0.5;
+        drop.speed = 2 + Math.random() * 3;
       }
-
-      setDimensions() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-        this.columns = Math.floor(this.canvas.width / 20);
-        this.dropSpeed = Math.max(1, Math.floor(window.innerHeight / 50));
+      if (Math.random() > 0.98) {
+        drop.charSet = Math.random() > 0.5 ? this.katakana : this.charSet;
       }
+    });
 
-      createDrops() {
-        this.drops = Array(this.columns).fill().map((_,i) => ({
-          y: -Math.random() * this.canvas.height,
-          speed: 0.5 + Math.random() * 1.5,
-          alpha: 0.1 + Math.random() * 0.9,
-          font: 12 + Math.random() * 8,
-          charSet: Math.random() > 0.8 ? this.katakana : this.charSet
-        }));
-      }
-
-      addEventListeners() {
-        window.addEventListener('resize', () => {
-          clearTimeout(this.resizeDebounce);
-          this.resizeDebounce = setTimeout(() => this.setDimensions(), 200);
-        });
-      }
-
-      drawBackground() {
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      }
-
-      drawDrop(drop, x) {
-        const char = this.getRandomChar(drop.charSet);
-        this.ctx.fillStyle = `hsla(120, 100%, 50%, ${drop.alpha})`;
-        this.ctx.font = `${drop.font}px 'Courier New'`;
-        this.ctx.fillText(char, x, drop.y);
-        
-        // Add trailing gradient
-        const gradient = this.ctx.createLinearGradient(x, drop.y - 50, x, drop.y);
-        gradient.addColorStop(0, 'rgba(0,255,0,0)');
-        gradient.addColorStop(1, `hsla(120, 100%, 50%, ${drop.alpha * 0.3})`);
-        this.ctx.fillStyle = gradient;
-        this.ctx.fillText(char, x, drop.y);
-      }
-
-      getRandomChar(set) {
-        return set[Math.floor(Math.random() * set.length)];
-      }
-
-      animate() {
-        this.drawBackground();
-        
-        this.drops.forEach((drop, i) => {
-          const x = i * 20;
-          this.drawDrop(drop, x);
-          
-          if (drop.y > this.canvas.height * 1.2) {
-            drop.y = -20;
-            drop.alpha = 0.1 + Math.random() * 0.9;
-            drop.speed = 0.5 + Math.random() * 1.5;
-          } else {
-            drop.y += drop.speed;
-          }
-
-          // Random character changes
-          if (Math.random() > 0.97) {
-            drop.charSet = Math.random() > 0.7 ? this.katakana : this.charSet;
-          }
-        });
-
-        // Add intermittent glitch effect
-        if (Math.random() > 0.96) {
-          this.ctx.globalCompositeOperation = 'xor';
-          setTimeout(() => {
-            this.ctx.globalCompositeOperation = 'screen';
-          }, 50);
-        }
-
-        requestAnimationFrame(() => this.animate());
-      }
+    // Tiny glitch effect
+    if (Math.random() > 0.985) {
+      this.ctx.globalCompositeOperation = 'xor';
+      setTimeout(() => {
+        this.ctx.globalCompositeOperation = 'screen';
+      }, 60);
     }
 
-    // Initialize enhanced matrix rain
-    window.addEventListener('DOMContentLoaded', () => {
-      const matrix = new MatrixRain('matrixCanvas');
-      
-      // Enhanced mouse interaction
-      let interactionTimeout;
-      window.addEventListener('mousemove', () => {
-        matrix.canvas.style.opacity = '0.2';
-        matrix.canvas.style.filter = 'blur(2px)';
-        clearTimeout(interactionTimeout);
-        interactionTimeout = setTimeout(() => {
-          matrix.canvas.style.opacity = '0.95';
-          matrix.canvas.style.filter = 'blur(0)';
-        }, 1500);
-      });
+    requestAnimationFrame(() => this.animate());
+  }
+}
 
-      // Original button animation logic remains...
-      const buttons = Array.from(document.querySelectorAll('.links a'));
-      const titleEl = document.querySelector('.glitch');
-      
-      const moveButton = btn => {
-        const t = titleEl.getBoundingClientRect();
-        let x, y;
-        do {
-          x = Math.random() * (window.innerWidth - btn.offsetWidth);
-          y = Math.random() * (window.innerHeight - btn.offsetHeight);
-        } while (
-          x < t.right + 40 && x + btn.offsetWidth > t.left - 40 &&
-          y < t.bottom + 40 && y + btn.offsetHeight > t.top - 40
-        );
-        
-        btn.style.transform = `translate(${x}px, ${y}px)`;
-        setTimeout(() => moveButton(btn), 2000 + Math.random() * 3000);
-      };
-      
-      buttons.forEach(btn => {
-        btn.style.position = 'fixed';
-        btn.style.transition = 'transform 1.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
-        moveButton(btn);
-      });
-    });
-  </script>
+document.addEventListener('DOMContentLoaded', () => {
+  const matrix = new MatrixRain('matrixCanvas');
+
+  let blurTimeout;
+  window.addEventListener('mousemove', () => {
+    matrix.canvas.style.opacity = '0.3';
+    matrix.canvas.style.filter = 'blur(2px)';
+    clearTimeout(blurTimeout);
+    blurTimeout = setTimeout(() => {
+      matrix.canvas.style.opacity = '0.95';
+      matrix.canvas.style.filter = 'blur(0)';
+    }, 1200);
+  }, {passive: true});
+});
+</script>
 </body>
 </html>
