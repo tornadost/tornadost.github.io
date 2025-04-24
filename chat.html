@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>~chat</title>
   <style>
-    /* === Reset & Matrix BG === */
     body, html {
       margin: 0; padding: 0;
       width: 100%; height: 100%;
@@ -20,7 +19,6 @@
       transition: opacity 0.5s ease-in-out;
     }
 
-    /* === Centered Chat Container === */
     .container {
       position: relative;
       z-index: 2;
@@ -30,7 +28,6 @@
       min-height: 100vh;
     }
 
-    /* === WidgetBot Embed Styles === */
     widgetbot {
       width: 40vw;
       height: 60vh;
@@ -40,7 +37,6 @@
       overflow: hidden;
     }
 
-    /* === Floating Links === */
     .links a {
       position: absolute;
       padding: 0.8em 1.5em;
@@ -63,7 +59,6 @@
       50%      { box-shadow: 0 0 20px rgba(0,255,0,1); }
     }
 
-    /* === Top Navigation === */
     .top-nav {
       position: fixed;
       top: 0; left: 15%; right: 15%;
@@ -111,7 +106,6 @@
   </style>
 </head>
 <body>
-  <!-- redirect if not logged-in -->
   <script>
     (function() {
       const loggedIn = document.cookie.split('; ').some(c => c.startsWith('is_logged_in='));
@@ -119,7 +113,6 @@
     })();
   </script>
 
-  <!-- Top Nav -->
   <nav class="top-nav">
     <a href="/redacted">index</a>
     <a href="/layer/cache">vault</a>
@@ -129,31 +122,22 @@
     <a href="/games/play">play</a>
   </nav>
 
-  <!-- Matrix Canvas -->
   <canvas id="matrixCanvas"></canvas>
 
-  <!-- Chat Embed -->
   <div class="container">
-    <!--
-      1) Invite WidgetBot: https://widgetbot.io/channels/invite
-      2) Copy your IDs in Dev Mode
-    -->
     <widgetbot
-    server="1339396287061168232"
-    channel="1364145344526553170"
-    width="800"
-    height="600"
-></widgetbot>
-<script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+      server="1339396287061168232"
+      channel="1339432343320137738"
+      width="40vw"
+      height="60vh"
+    ></widgetbot>
+    <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+    <!-- Chat Button with Matrix Glitch Effect -->
+    <div class="links">
+      <a href="/chat" class="chat-btn">chat</a>
+    </div>
   </div>
 
-  <!-- Floating Links -->
-  <div class="links">
-    <a href="/wait" target="_blank">?</a>
-    <a href="/cache.html" target="_blank">Cache</a>
-  </div>
-
-  <!-- Matrix + Link Animation -->
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       const canvas = document.getElementById('matrixCanvas');
@@ -183,7 +167,6 @@
       }
       draw();
 
-      // fade on mousemove
       let ft;
       window.addEventListener('mousemove', () => {
         canvas.style.opacity = 0.3;
@@ -191,7 +174,6 @@
         ft = setTimeout(() => canvas.style.opacity = 1, 2000);
       });
 
-      // floating links avoid chat
       const btns = Array.from(document.querySelectorAll('.links a'));
       const chatBox = document.querySelector('widgetbot');
       function move(b) {
@@ -209,6 +191,17 @@
         setTimeout(() => move(b), 2000 + Math.random() * 2000);
       }
       btns.forEach(move);
+    });
+  </script>
+
+  <!-- PowerGlitch for Chat Button -->
+  <script src="https://unpkg.com/powerglitch/dist/powerglitch.min.js"></script>
+  <script>
+    powerglitch.glitch('.chat-btn', {
+      playMode: 'always',
+      shake: false,
+      glitchTimeSpan: { start: 500, end: 1500 },
+      glitchResultsTimeSpan: { start: 100, end: 400 }
     });
   </script>
 </body>
