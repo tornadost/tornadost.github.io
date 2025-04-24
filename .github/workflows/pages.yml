@@ -1,4 +1,4 @@
-name: Deploy static HTML to GitHub Pages
+name: Deploy to GitHub Pages (HTML)
 
 on:
   push:
@@ -16,9 +16,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Dummy step to fix "v3" reference bug
-      - name: Upload dummy artifact (for GitHub quirk)
-        uses: actions/upload-artifact@v4
+      # 🧼 Compatibility fix for ghost v3 reference
+      - name: Upload dummy artifact to satisfy v3 ref
+        uses: actions/upload-artifact@v3
         with:
           name: dummy
           path: README.md
@@ -26,7 +26,7 @@ jobs:
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: ./ # assuming your HTML is in the root
+          path: ./  # Root of your HTML site
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
