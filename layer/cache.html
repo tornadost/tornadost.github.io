@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Repo Cache</title>
+  <title>Cache Vault</title>
   <style>
     /* Base & Reset */
     body, html {
@@ -15,7 +15,7 @@
       font-family: 'Courier New', monospace;
       background: #000;
     }
-    /* Full-screen matrix canvas */
+    /* Full-screen matrix canvas with fade effect */
     #matrixCanvas {
       position: fixed;
       top: 0;
@@ -23,6 +23,57 @@
       width: 100%;
       height: 100%;
       z-index: 1;
+      transition: opacity 0.5s ease-in-out;
+    }
+    /* Top navigation bar */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 15%;
+      right: 15%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1em 0;
+      z-index: 3;
+      background: transparent;
+    }
+    .top-nav a {
+      position: relative;
+      color: #0f0;
+      text-decoration: none;
+      font-size: 1.2em;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
+      opacity: 0.85;
+      transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+      animation: float 3s ease-in-out infinite, flickerText 4s infinite;
+      padding-bottom: 0.2em;
+    }
+    .top-nav a::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 0; height: 2px;
+      background: #0f0;
+      box-shadow: 0 0 8px #0f0, 0 0 12px #0f0;
+      transition: width 0.3s ease-out;
+    }
+    .top-nav a:hover {
+      transform: scale(1.06) translateY(-2px);
+      opacity: 1;
+    }
+    .top-nav a:hover::after {
+      width: 100%;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0) scale(1) rotate(0); }
+      50%     { transform: translateY(-4px) scale(1.02) rotate(0.5deg); }
+    }
+    @keyframes flickerText {
+      0%,18%,22%,55%,100% { opacity: 0.9; }
+      20%,50%              { opacity: 0.6; }
     }
     /* Content container */
     .container {
@@ -48,11 +99,8 @@
     }
     h1::before, h1::after {
       content: attr(data-text);
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      overflow: hidden;
+      position: absolute; top: 0; left: 0;
+      width: 100%; overflow: hidden;
       clip: rect(0, 900px, 0, 0);
     }
     h1::before {
@@ -66,16 +114,13 @@
       animation: glitch-bottom 2.5s infinite linear;
     }
     @keyframes flicker {
-      0%,19%,21%,23%,25%,54%,56%,100%{opacity:.99;}
-      20%,24%,55%{opacity:.4;}
+      0%,19%,21%,23%,25%,54%,56%,100% { opacity: .99; }
+      20%,24%,55%                 { opacity: .4; }
     }
     @keyframes glitch-top {
-      0%,100%{clip:rect(0,900px,5px,0);}
-    }
+      0%{clip:rect(0,900px,5px,0);} 10%{clip:rect(10px,900px,15px,0);} 20%{clip:rect(20px,900px,25px,0);} 30%{clip:rect(5px,900px,10px,0);} 40%{clip:rect(15px,900px,20px,0);} 50%{clip:rect(25px,900px,30px,0);} 60%{clip:rect(10px,900px,15px,0);} 70%{clip:rect(0,900px,5px,0);} 100%{clip:rect(0,900px,5px,0);}  }
     @keyframes glitch-bottom {
-      0%,100%{clip:rect(30px,900px,35px,0);}
-    }
-
+      0%{clip:rect(30px,900px,35px,0);} 10%{clip:rect(40px,900px,45px,0);} 20%{clip:rect(50px,900px,55px,0);} 30%{clip:rect(35px,900px,40px,0);} 40%{clip:rect(45px,900px,50px,0);} 50%{clip:rect(55px,900px,60px,0);} 60%{clip:rect(40px,900px,45px,0);} 70%{clip:rect(30px,900px,35px,0);} 100%{clip:rect(30px,900px,35px,0);} }
     /* Floating repo links */
     .links a {
       position: absolute;
@@ -83,13 +128,11 @@
       color: #0f0;
       text-decoration: none;
       font-size: 1.2em;
-      background: rgba(0,0,0,0.8);
-      border: 2px solid #0f0;
-      box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
-      opacity: 0.8;
+      background: transparent;
+      box-shadow: 0 0 10px rgba(0,255,0,0.7);
+      opacity: 0.7;
       transition: opacity 0.3s, transform 0.3s;
       z-index: 2;
-      pointer-events: auto;
       animation: pulse 2.5s infinite;
     }
     .links a:hover {
@@ -97,120 +140,100 @@
       transform: scale(1.2) rotate(2deg);
     }
     @keyframes pulse {
-      0%,100%{box-shadow:0 0 5px rgba(0,255,0,0.7);}50%{box-shadow:0 0 20px rgba(0,255,0,1);}  }
-
-    /* Additional styling comments for expansion */
-    /* Add more animations or placeholder sections here to meet 200+ lines */
-    /* =============================================== */
-    /* Placeholder CSS block 1 - empty section comment */
-    /* =============================================== */
-
-    /* =============================================== */
-    /* Placeholder CSS block 2 - empty section comment */
-    /* =============================================== */
+      0%,100%{box-shadow:0 0 5px rgba(0,255,0,0.7);}50%{box-shadow:0 0 20px rgba(0,255,0,1);} }
   </style>
 </head>
 <body>
-  <!-- Cookie-based auth redirect -->
+  <!-- Cookie-based auth guard -->
   <script>
     (function() {
-      const cookies = document.cookie.split('; ');
-      const loggedIn = cookies.some(c => c.startsWith('is_logged_in='));
-      if (!loggedIn) {
-        window.location.replace('index.html');
-      }
+      const loggedIn = document.cookie.split('; ').some(c => c.startsWith('is_logged_in='));
+      if (!loggedIn) window.location.replace('index.html');
     })();
   </script>
 
-  <!-- Matrix background canvas -->
+  <!-- Top navigation bar -->
+  <nav class="top-nav">
+    <a href="/redacted">index</a>
+    <a href="/layer/cache">vault</a>
+    <a href="/layer/star">star</a>
+    <a href="/feed/blog">blog</a>
+    <a href="/layer/archive">secret</a>
+    <a href="/games/play">play</a>
+  </nav>
+
+  <!-- Matrix background -->
   <canvas id="matrixCanvas"></canvas>
-  
-  <!-- Main container -->
+
+  <!-- Main glitch title -->
   <div class="container">
-    <h1 class="glitch" data-text="Repo Cache">Repo Cache</h1>
+    <h1 data-text="CACHE VAULT">CACHE VAULT</h1>
   </div>
-  <div class="links"></div>
 
-  <!-- Scripts for animation and repo fetching -->
+  <!-- Floating links -->
+  <div class="links">
+    <a href="/wait" target="_blank">?</a>
+    <a href="/cache.html" target="_blank">Cache</a>
+  </div>
+
+  <!-- Scripts: matrix, fade on mousemove, floating placement -->
   <script>
-    // Matrix animation setup
-    const canvas = document.getElementById('matrixCanvas');
-    const ctx = canvas.getContext('2d');
-    let cols, drops;
+    window.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('matrixCanvas');
+      const ctx = canvas.getContext('2d');
+      let cols, drops;
+      const setupMatrix = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        cols = Math.floor(canvas.width / 14);
+        drops = Array(cols).fill(1);
+      };
+      window.addEventListener('resize', setupMatrix);
+      setupMatrix();
 
-    function setupMatrix() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      cols = Math.floor(canvas.width / 14);
-      drops = Array(cols).fill(1);
-    }
-    window.addEventListener('resize', setupMatrix);
-    setupMatrix();
+      const drawMatrix = () => {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < drops.length; i++) {
+          const x = i * 14;
+          const y = drops[i] * 14;
+          const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+          ctx.fillStyle = Math.random() < 0.005 ? '#FFF' : '#0F0';
+          ctx.font = (14 + Math.random() * 4) + 'px monospace';
+          ctx.fillText(char, x, y);
+          drops[i] = y > canvas.height && Math.random() > 0.98 ? 0 : drops[i] + 1;
+        }
+        requestAnimationFrame(drawMatrix);
+      };
+      drawMatrix();
 
-    function drawMatrix() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < drops.length; i++) {
-        const x = i * 14;
-        const y = drops[i] * 14;
-        const char = String.fromCharCode(0x30A0 + Math.random() * 96);
-        ctx.fillStyle = (Math.random() < 0.005) ? '#FFF' : '#0F0';
-        ctx.font = (14 + Math.random() * 4) + 'px monospace';
-        ctx.fillText(char, x, y);
-        drops[i] = (y > canvas.height && Math.random() > 0.98) ? 0 : drops[i] + 1;
-      }
-      requestAnimationFrame(drawMatrix);
-    }
-    drawMatrix();
+      // Fade matrix on mousemove
+      let fadeTimeout;
+      window.addEventListener('mousemove', () => {
+        canvas.style.opacity = '0.3';
+        clearTimeout(fadeTimeout);
+        fadeTimeout = setTimeout(() => canvas.style.opacity = '1', 2000);
+      });
 
-    // GitHub repo fetching
-    const GITHUB_USERNAME = "RKeaves";
-    const excludedRepos = [
-      "7612u", "Private-Trackers-Spreadsheet", "RKeaves", "MrScraper",
-      "rkeaves.github.io", "DiscordBee", "Media-Finder", "DropToPTP",
-      "Dasharr", "Gazelle", "proton-vpn-setup-cudy-router", "red", "REDBetter"
-    ];
-
-    async function fetchRepos() {
-      try {
-        const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos`);
-        const repos = await res.json();
-        const container = document.querySelector('.links');
-
-        repos.filter(r => !excludedRepos.includes(r.name)).forEach(repo => {
-          const a = document.createElement('a');
-          a.href = repo.html_url;
-          a.target = "_blank";
-          a.textContent = repo.name;
-          container.appendChild(a);
-
-          // Floating placement logic
-          (function move(el) {
-            const titleRect = document.querySelector('.glitch').getBoundingClientRect();
-            let x, y;
-            do {
-              x = Math.random() * (window.innerWidth - el.offsetWidth);
-              y = Math.random() * (window.innerHeight - el.offsetHeight);
-            } while (
-              x < titleRect.right + 20 && x + el.offsetWidth > titleRect.left - 20 &&
-              y < titleRect.bottom + 20 && y + el.offsetHeight > titleRect.top - 20
-            );
-            el.style.left = x + 'px';
-            el.style.top = y + 'px';
-            setTimeout(() => move(el), 2000 + Math.random() * 2000);
-          })(a);
-        });
-      } catch (err) {
-        console.error("Error loading GitHub repos:", err);
-      }
-    }
-    window.addEventListener('DOMContentLoaded', fetchRepos);
-
-    // Placeholder JS block to increase line count
-    function placeholder() {
-      console.log('Placeholder function for additional lines');
-    }
-    placeholder();
+      // Floating repo links placement
+      const buttons = Array.from(document.querySelectorAll('.links a'));
+      const titleEl = document.querySelector('h1');
+      const moveButton = btn => {
+        const rect = titleEl.getBoundingClientRect();
+        let x, y;
+        do {
+          x = Math.random() * (window.innerWidth - btn.offsetWidth);
+          y = Math.random() * (window.innerHeight - btn.offsetHeight);
+        } while (
+          x < rect.right + 20 && x + btn.offsetWidth > rect.left - 20 &&
+          y < rect.bottom + 20 && y + btn.offsetHeight > rect.top - 20
+        );
+        btn.style.left = x + 'px';
+        btn.style.top = y + 'px';
+        setTimeout(() => moveButton(btn), 2000 + Math.random() * 2000);
+      };
+      buttons.forEach(moveButton);
+    });
   </script>
 </body>
 </html>
