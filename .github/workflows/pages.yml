@@ -1,8 +1,8 @@
-name: Deploy GitHub Pages
+name: Deploy static HTML to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ] # Or your default branch
 
 permissions:
   contents: read
@@ -13,23 +13,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout source code
         uses: actions/checkout@v4
 
-      # Add this only if you build your site from source
-      # - name: Build site
-      #   run: your-build-command-here
-
-      - name: Upload Pages artifact
+      - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: ./ # or ./dist or ./public
-
-      - name: Upload fallback artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: github-pages
-          path: ./ # same folder
+          path: ./ # root of your repo where the HTML files are
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
