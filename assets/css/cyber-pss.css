@@ -16,153 +16,81 @@
 /* ================================================================================== */
 
 /* ===============================================================  
-   1. GLOBAL DESIGN VARIABLES  
+   GLOBAL DESIGN VARIABLES  
 ================================================================= */
 :root {
-    --primary-accent: #0b3d91;
-    --secondary-accent: #d72638;
-    --cyber-magenta: #ff3366;
-    --cyber-cyan: #33c1ff;
-    --dark-base: #070b14;
-    --surface-01: #0f1624;
-    --surface-02: #1a2233;
-    --text-primary: #cadcff;
-    --text-secondary: #9ca7c2;
-    --quick-search-input-offset: 0px;
-    --content-max-width: 1200px;
-    --content-padding: 20px;
-    --data-table-th-bg: #0f1624;
-    --subforum-listing-odd-bg: #162439;
-    --panel-bg: #0f1624;
-    --panel-head-bg: transparent !important;
-    --user-stat-card-bg: #212a3e;
-  }
-  
-  
-  /* ===============================================================  
-     2. QUICK SEARCH INPUT OVERRIDE  
-  ================================================================= */
-  .quick-search__input {
-    width: 100% !important;
-    height: 35px !important;
-    line-height: 42px !important;
-    padding: 0 15px !important;
-    font-size: 15px !important;
-    color: #fff !important;
-    background: linear-gradient(145deg, #1c273a, #121a28) !important;
-    border: 2px solid var(--primary-accent) !important;
-    border-radius: 8px !important;
-    box-shadow: 0 0 8px rgba(11, 61, 145, 0.8) !important;
-    outline: none;
-    position: relative;
-    top: var(--quick-search-input-offset);
-  }
- 
-
-  /* ===============================================================  
-     3. GLOBAL TRANSITION & RESET  
-  ================================================================= */
-  * {
-    transition: all 0.4s ease;
-    box-sizing: border-box;
-  }
-  
-  
-  /* ===============================================================  
-     4. BODY & MAIN CONTENT CONTAINER  
-  ================================================================= */
-  body {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 14px;
-    color: var(--text-primary);
-    background: var(--dark-base);
-    margin: 0;
-    padding: 0;
-  }
-  .content-container {
-    max-width: var(--content-max-width);
-    margin: 0 auto;
-    padding: 0 var(--content-padding);
-  }
-  
-  
-  /* ===============================================================  
-     5. NAVIGATION & HEADER COMPONENTS (Full-Width Top Bar)  
-  ================================================================= */
-  .top-nav {
-    background: linear-gradient(145deg, #10182b 0%, #1a2233 100%);
-    border-bottom: 2px solid var(--primary-accent);
-  }
-  .top-nav:hover {
-    filter: drop-shadow(0 4px 12px rgba(11, 61, 145, 0.6));
-  }
-  .top-nav__left,
-  .top-nav__right,
-  .top-nav__main-menus,
-  .top-nav__icon-bar {
-    align-items: center;
-  }
-  .top-nav__branding {
-    font-family: 'Orbitron', monospace;
-    font-size: 18px;
-    color: var(--text-primary);
-  }
-
-
-
-  .top-nav__site-logo {
-    background-image: radial-gradient(circle at 65% 35%, #fff 25%, #fff 60%, #fff 90%);
-    background-color: rgba(11, 61, 145, 0.2);
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-family: 'Orbitron', monospace;
-    text-shadow: 0 0 10px #ff3366, 0 0 20px #33c1ff;
-    transition: text-shadow 0.3s ease, filter 0.3s ease;
-  }
-  .top-nav__site-logo:hover {
-    filter: drop-shadow(0 0 5px var(--primary-accent));
-    text-shadow: 0 0 20px var(--cyber-magenta), 0 0 30px var(--cyber-magenta);
-  }
-
-
-
-  .secondary-nav {
-    background: linear-gradient(to right, #10182b 0%, #1a2233 50%, #10182b 100%);
-    border-color: var(--primary-accent);
-  }
-  .top-nav__dropdown ul,
-  .nav-tab-menu__items {
-    background: var(--surface-02);
-  }
-  
-  
-/* ============================================================================
-   Stats Box (Ratio Bar)
-   ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-   Shared styles + hover transform
-============================================================================ */
-
-
-.top-nav__ratio-bar {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 0 !important;
-  font-size: 1rem;
-  background: var(--surface-01);
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid #82B1FF;            /* ice blue */
-  transition:
-    transform 0.5s ease,                /* smooth 0.5s scale on hover */  
-    box-shadow 0.3s ease;               /* existing glow transition */  
+  --primary-accent: #0b3d91;
+  --secondary-accent: #ac3535;
+  --cyber-magenta: #ac3535;
+  --cyber-cyan: #33c1ff;
+  --dark-base: #070b14;
+  --surface-01: #0f1624;
+  --surface-02: #1a2233;
+  --text-primary: #cadcff;
+  --text-secondary: #9ca7c2;
+  --quick-search-input-offset: 0px;
+  --content-max-width: 1200px;
+  --content-padding: 20px;
+  --data-table-th-bg: #0f1624;
+  --subforum-listing-odd-bg: #162439;
+  --panel-bg: #0f1624;
+  --panel-head-bg: transparent !important;
+  --user-stat-card-bg: #212a3e;
+  --quick-search-bg: #444757;
+  --top-nav-icon-bar-icon-hover-bg: #ac3535;
+  --top-nav-dropdown-menu-item-icon-bg: #ac3535;
+  --top-nav-icon-bar-icon-bg: transparent !important;
+  --top-nav-icon-bar-icon-hover-fg: #fff;
+  --top-nav-icon-bar-icon-fg: #b7b7b7;
+  --data-table-tr-even-bg: #1c1c1c;
+  --data-table-tr-hover-bg: #ac35350f;
+  --data-table-tr-odd-bg: #1a2233;
+  --post-bg: #23344d91;
+  --post-aside-bg: #161e30;
+  --post-toolbar-bg: #161e30;
 }
 
-.top-nav__ratio-bar::before {
+
+
+
+
+/* ===============================================================  
+   1. QUICK SEARCH INPUT OVERRIDE  
+================================================================= */
+/* Quick search input styling */
+.quick-search__input {
+  width: 100% !important;
+  height: 35px !important;
+  line-height: 42px !important;
+  padding: 0 15px !important;
+  font-size: 15px !important;
+  color: #fff !important;
+  background: linear-gradient(145deg, #1c273a, #121a28) !important;
+  border-radius: 6px !important; /* Matching border radius */
+  border: 1px solid #82B1FF !important; /* Ice blue border matching .top-nav__ratio-bar */
+  transition: transform 0.5s ease, box-shadow 0.3s ease, border-color 0.3s ease; /* Adding transitions */
+  position: relative;
+  top: var(--quick-search-input-offset);
+}
+
+/* Add glowing effect and scale transformation on hover */
+.quick-search__input:hover {
+  transform: scale(1.05); /* Slight scale on hover */
+  box-shadow: 0 0 6px rgba(68,138,255,0.6), inset 0 0 4px rgba(130,177,255,0.6); /* Glowing effect */
+  border-color: #33c1ff; /* Glowing border effect */
+}
+
+/* Add focus effect to highlight the input */
+.quick-search__input:focus {
+  border-color: #33c1ff; /* Highlight the border on focus */
+  box-shadow: 0 0 10px rgba(51, 193, 255, 0.6); /* Glow on focus */
+}
+
+/* Optional: add a similar animated effect to .top-nav__ratio-bar */
+.quick-search__input::before {
   content: "";
-  position: absolute; inset: 0;
-  );
+  position: absolute;
+  inset: 0;
   filter: blur(12px);
   mix-blend-mode: screen;
   background-size: 400% 400%;
@@ -170,550 +98,931 @@
   z-index: -2;
 }
 
-.top-nav__ratio-bar::after {
+.quick-search__input::after {
   content: "";
-  position: absolute; inset: 0;
-  background-image: repeating-linear-gradient(
-    to right,
-    rgba(255,255,255,0.02) 0,
-    rgba(255,255,255,0.02) 1px,
-    transparent 1px,
-    transparent 3px
-  );
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(to right, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 3px);
   animation: matrixLines 5s linear infinite;
   pointer-events: none;
   z-index: 1;
 }
 
+/* Keyframes for the liquid shift effect */
+@keyframes liquidShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Slow, subtle drift of vertical matrix lines */
+@keyframes matrixLines {
+  0% { background-position: 0 0; }
+  100% { background-position: 100px 0; }
+}
+
+ /* ===============================================================  
+   2. SIDE BAR PROFILE  
+================================================================= */
+
+
+.key-value__group:nth-child(2n+1) {
+  background-color: #2b2f35a3 !important;
+}
+
+
+/* ===============================================================  
+   3. GLOBAL TRANSITION & RESET  
+================================================================= */
+* {
+  transition: all 0.4s ease;
+  box-sizing: border-box;
+}
+
+
+/* ===============================================================  
+   FOOTER
+================================================================= */
+
+/* Apply styles to the footer section title */
+.footer__section-title {
+  position: relative; /* Establish a positioning context for the pseudo-element */
+  display: inline-block; /* Ensure the element behaves like an inline element */
+  padding-left: 55px; /* Adjust space for the background image */
+  margin-top: -10px; /* Adjust space for the background image */
+}
+
+/* Add a background image only to the first footer section */
+.footer__wrapper > .footer__section:first-child .footer__section-title::before {
+  content: ''; /* Required for pseudo-elements */
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%); /* Vertically center the image */
+  width: 55px; /* Set the width of the background image */
+  height: 55px; /* Set the height of the background image */
+  background-image: url('https://i.ibb.co/6R4KKM1H/pss-logo3.png'); /* Replace with your desired image URL */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Hide any img tags inside .footer__section-title */
+.footer__section-title img {
+  display: none; /* Hide any img tag inside */
+}
+
+
+/* Center the footer list items */
+.footer__section-list {
+  display: block;
+  text-align: left;
+  padding-left: 20px;
+}
+
+/* Align the section titles */
+.footer__section-title {
+  padding-left: 50px;
+  padding-bottom: 2px;
+  margin-top: 0px;
+  font-size: 1.55rem; /* Set a consistent font size */
+}
+
+/* Adjust the list under the title to keep consistent */
+.footer__section-list {
+  padding-left: 50px; /* Adjust to make it consistent */
+  list-style-type: none;
+  margin: 0;
+}
+
+
+
+
+/* ===============================================================  
+   4. BODY & MAIN CONTENT CONTAINER  
+================================================================= */
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--dark-base);
+  margin: 0;
+  padding: 0;
+}
+.content-container {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
+}
+
+
+/* ===============================================================  
+   5. NAVIGATION & HEADER COMPONENTS (Full-Width Top Bar)  
+================================================================= */
+
+.top-nav__branding::before {
+content: '';
+background-image: url('https://i.ibb.co/6R4KKM1H/pss-logo3.png');
+background-size: contain;
+background-repeat: no-repeat;
+background-position: left center;
+height: 65px;
+width: 65px;
+margin-right: -14px; /* space between logo and text */  
+margin-bottom: -4px;
+transition: transform 0.2s ease, box-shadow 0.2s ease; /* smooth transition for transform and shadow */
+}
+
+/* Add hover effect to .top-nav__branding */
+.top-nav__branding:hover::before {
+transform: scale(1.0611);
+
+margin-top: -0.43px;
+}
+
+.top-nav__branding::before {
+/* existing styles */
+transition: transform 0.5s ease;
+}
+
+
+
+.top-nav__branding img {
+display: none; /* Hide any img tag inside */
+}
+
+.top-nav {
+  background: linear-gradient(145deg, #10182b 0%, #1a2233 100%);
+  border-bottom: 2px solid var(--primary-accent);
+}
+
+.top-nav {
+position: relative;
+transition: filter 0.2s ease-in-out;
+}
+
+.top-nav:hover {
+filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.8));
+}
+
+
+.top-nav__left,
+.top-nav__right,
+.top-nav__main-menus,
+.top-nav__icon-bar {
+  align-items: center;
+}
+.top-nav__branding {
+  font-family: 'Orbitron', monospace;
+  font-size: 18px;
+  color: var(--text-primary);
+}
+
+
+
+@keyframes cleanStatic {
+0% { text-shadow: 2px 2px 4px rgba(255, 51, 102, 0.7), -2px -2px 4px rgba(51, 193, 255, 0.7); }
+25% { text-shadow: -2px 2px 4px rgba(255, 51, 102, 0.7), 2px -2px 4px rgba(51, 193, 255, 0.7); }
+50% { text-shadow: 2px 2px 4px rgba(255, 51, 102, 0.7), -2px -2px 4px rgba(51, 193, 255, 0.7); }
+100% { text-shadow: 2px 2px 4px rgba(255, 51, 102, 0.7), -2px -2px 4px rgba(51, 193, 255, 0.7); }
+}
+
+.top-nav__site-logo {
+font-family: 'Orbitron', monospace;
+background-image: radial-gradient(circle at 65% 35%, #fff 25%, #fff 60%, #fff 90%);
+background-color: rgba(11, 61, 145, 0.2);
+padding: 5px 10px;
+border-radius: 4px;
+color: white;
+animation: cleanStatic 2s infinite ease-in-out;
+text-shadow: 2px 2px 4px rgba(255, 51, 102, 0.7), -2px -2px 4px rgba(51, 193, 255, 0.7);
+transition: text-shadow 0.3s ease, filter 0.3s ease;
+}
+
+
+.top-nav__site-logo:hover {
+  filter: drop-shadow(0 0 5px var(--primary-accent));
+  text-shadow: 0 0 20px var(--cyber-magenta), 0 0 30px var(--cyber-magenta);
+}
+
+
+
+.secondary-nav {
+  background: linear-gradient(to right, #10182b 0%, #1a2233 50%, #10182b 100%);
+  border-color: var(--primary-accent);
+  box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.7);
+}
+
+.top-nav__dropdown ul,
+.nav-tab-menu__items {
+  background: #161e30;
+}
+
+
+/* Apply a subtle black drop shadow to dropdown menus */
+.top-nav__dropdown ul,
+.nav-tab-menu__items {
+background: #161e30; /* Dark background */
+/*! box-shadow: 0 8px 20px rgba(0, 0, 0, 0.76); */ /* Adjusted shadow */
+border-radius: 8px; /* Optional: rounded corners for a modern look */
+transition: box-shadow 0.2s ease; /* Smooth transition for hover effect */
+}
+
+/* Enhance shadow on hover */
+.top-nav__dropdown ul:hover,
+.nav-tab-menu__items:hover {
+box-shadow: 0 8px 21px rgba(0, 0, 0, 0.76); /* Slightly increased spread */
+}
+
+
+
+
+
+/* ============================================================================
+ Stats Box (Ratio Bar)
+ ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+ Shared styles + hover transform
+============================================================================ */
+
+
+.top-nav__ratio-bar {
+position: relative;
+display: inline-flex;
+align-items: center;
+gap: 8px;
+padding: 4px 0 !important;
+font-size: 1rem;
+background: var(--surface-01);
+border-radius: 6px;
+overflow: hidden;
+border: 1px solid #82B1FF;            /* ice blue */
+transition:
+  transform 0.5s ease,                /* smooth 0.5s scale on hover */  
+  box-shadow 0.3s ease;               /* existing glow transition */  
+}
+
+.top-nav__ratio-bar::before {
+content: "";
+position: absolute; inset: 0;
+filter: blur(12px);
+mix-blend-mode: screen;
+background-size: 400% 400%;
+animation: liquidShift 4s ease-in-out infinite;
+z-index: -2;
+}
+
+.top-nav__ratio-bar::after {
+content: "";
+position: absolute; inset: 0;
+background-image: repeating-linear-gradient(
+  to right,
+  rgba(255,255,255,0.02) 0,
+  rgba(255,255,255,0.02) 1px,
+  transparent 1px,
+  transparent 3px
+);
+animation: matrixLines 5s linear infinite;
+pointer-events: none;
+z-index: 1;
+}
+
 .top-nav__ratio-bar:hover {
-  transform: scale(1.1);                 /* scale up 10% on hover */
-  box-shadow:
-    0 0 6px rgba(68,138,255,0.6),
-    inset 0 0 4px rgba(130,177,255,0.6);
+transform: scale(1.1);                 /* scale up 10% on hover */
+box-shadow:
+  0 0 6px rgba(68,138,255,0.6),
+  inset 0 0 4px rgba(130,177,255,0.6);
 }
 
 /* keyframes for the gradient motion */
 @keyframes liquidShift {
-  0%,100% { background-position: 0% 50%; }
-  50%     { background-position: 100% 50%; }
+0%,100% { background-position: 0% 50%; }
+50%     { background-position: 100% 50%; }
 }
 
 /* slow, subtle drift of vertical matrix lines */
 @keyframes matrixLines {
-  0%   { background-position: 0 0; }
-  100% { background-position: 100px 0; }
+0%   { background-position: 0 0; }
+100% { background-position: 100px 0; }
 }
 
 
 
 
 .top-nav__ratio-bar:hover {
-  transform: scale(1.005);
+transform: scale(1.005);
 }
 
 @media (max-width: 768px) {
-  .top-nav__ratio-bar {
-    display: grid;
-    grid-auto-flow: column;
-    grid-gap: 0.5rem;
-    font-size: 0.9rem;
-  }
-
-  .top-nav__ratio-bar::before,
-  .top-nav__ratio-bar::after {
-    content: "";
-    position: absolute;
-    top: 0; 
-    bottom: 0;
-    width: 15px;
-    pointer-events: none;
-  }
-  
-  .top-nav__ratio-bar::before { left: 0; }
-  .top-nav__ratio-bar::after  { right: 0; }
+.top-nav__ratio-bar {
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 0.5rem;
+  font-size: 0.9rem;
 }
 
+.top-nav__ratio-bar::before,
+.top-nav__ratio-bar::after {
+  content: "";
+  position: absolute;
+  top: 0; 
+  bottom: 0;
+  width: 15px;
+  pointer-events: none;
+}
 
-
-
+.top-nav__ratio-bar::before { left: 0; }
+.top-nav__ratio-bar::after  { right: 0; }
+}
 
 
 
 .top-nav__ratio-bar {
-  padding-left: 15px !important;
-  padding-right: 15px !important;
+padding-left: 15px !important;
+padding-right: 15px !important;
 }
 
 .top-nav__ratio-bar:hover {
-  transform: scale(1.005);
+transform: scale(1.005);
 }
-  
+
+/* ===============================================================  
+   7. USER PROFILE
+================================================================= */
+
+/* Apply hover effect to all images within .panel__body except those with .profile__avatar */
+.panel__body img:not(.profile__avatar) {
+transition: transform 0.35s ease-in-out;
+}
+
+.panel__body img:not(.profile__avatar):hover {
+transform: scale(1.1); /* Increase size by 10% */
+}
 
 
-  /* ===============================================================  
-     7. USER PROFILE HEADER  
-  ================================================================= */
-  .top-nav__username--highresolution,
-  .top-nav--right__icon-link,
-  .top-nav__toggle {
-    color: var(--text-secondary);
-    padding: 0 10px;
-    cursor: pointer;
-    transition: color 0.3s;
-  }
-  .top-nav__username--highresolution:hover,
-  .top-nav--right__icon-link:hover {
-    color: var(--cyber-magenta);
-  }
-  
-  
-  /* ===============================================================  
-     8. QUICK SEARCH  
-  ================================================================= */
-  .quick-search {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-  }
-  .quick-search__inputs {
-    width: 100%;
-    display: flex;
-    align-items: center;
-  }
-  .quick-search__results,
-  .quick-search__result--default,
-  .quick-search__result--empty {
-    background-color: var(--surface-01);
-    color: var(--text-primary);
-    border: 1px solid var(--primary-accent);
-    border-radius: 6px;
-    margin-top: 5px;
-  }
-  .quick-search__result-link {
-    display: flex;
-    align-items: center;
-    padding: 8px 12px;
-    color: var(--text-primary);
-    text-decoration: none;
-  }
-  .quick-search__result-link:hover {
-    background-color: var(--surface-02);
-    color: var(--cyber-magenta);
-  }
-  .quick-search__image {
-    width: 32px;
-    height: 32px;
-    margin-right: 10px;
-  }
-  .quick-search__result-text {
-    display: flex;
-    flex-direction: column;
-  }
-  .quick-search__result-name {
-    font-weight: bold;
-  }
-  .quick-search__result-year,
-  .quick-search__result-type {
-    font-size: 12px;
-    color: var(--text-secondary);
-  }
-  
-  
-  /* ===============================================================  
-     9. PANELS, CARDS, FORMS, BUTTONS  
-  ================================================================= */
-  /* Panels */
-  .panelV2 {
-    background: var(--surface-01);
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
-  }
-  .panelV2:hover {
-    filter: drop-shadow(0 0 4px var(--cyber-cyan));
-  }
-  .panel__header,
-  .panel__heading {
-    padding: 1rem;
-    font-family: 'Orbitron', monospace;
-    font-size: 1.1rem;
-    color: var(--text-primary);
-    background: var(--surface-02);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    /*! border-bottom: 1px solid var(--primary-accent); */
-  }
-  .panel__body {
-    padding: 1rem;
-    color: var(--text-primary);
-  }
-  
-  /* Cards */
-  .torrent-card {
-    background: linear-gradient(135deg, var(--surface-02), #0e1a30);
-    border: 1px solid var(--primary-accent);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  }
-  .torrent-card:hover {
-    filter: drop-shadow(0 0 4px var(--cyber-cyan));
-  }
-  .torrent-card__header,
-  .torrent-card__footer {
-    background: var(--surface-01);
-    padding: 0.5rem 1rem;
-    border-top: 1px solid var(--primary-accent);
-    color: var(--text-primary);
-    display: flex;
-    justify-content: space-between;
-  }
-  .torrent-card__title {
-    font-weight: bold;
-    font-size: 1rem;
-    color: var(--cyber-cyan);
-  }
-  .torrent-card__genre,
-  .torrent-card__rating {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-  }
-  .torrent-card__plot {
-    padding: 0.5rem 1rem;
-    color: var(--text-primary);
-    font-size: 0.9rem;
-    animation: subtlePulse 6s ease-in-out infinite;
-  }
-  
-  /* Forms & Buttons */
-  .form__button--filled,
-  button {
-    background: var(--primary-accent);
-    color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 2px 4px rgba(11, 61, 145, 0.4);
-  }
-  .form__button--filled:hover,
-  button:hover {
-    background: var(--secondary-accent);
-    box-shadow: 0 2px 6px rgba(215, 38, 56, 0.4);
-  }
-  input,
-  textarea,
-  select {
-    background: var(--surface-02);
-    color: var(--text-primary);
-    border: 1px solid var(--primary-accent);
-    padding: 8px;
-    border-radius: 4px;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 14px;
-  }
-  input:focus,
-  textarea:focus,
-  select:focus {
-    border-color: var(--cyber-cyan);
-    box-shadow: 0 0 6px var(--cyber-cyan);
-  }
-  
-  
-  /* ===============================================================  
-     10. DATA TABLES  
-  ================================================================= */
-  .data-table th {
-    background: var(--surface-02);
-    color: var(--text-primary);
-    border-bottom: 2px solid var(--primary-accent);
-  }
-  .data-table th:hover {
-    filter: drop-shadow(0 0 4px var(--cyber-cyan));
-  }
-  
-  
-  /* ===============================================================  
-     11. TYPOGRAPHY  
-  ================================================================= */
-  h1, h2, h3, h4 {
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--text-primary);
-  }
-  h1:hover, h2:hover, h3:hover, h4:hover {
-    filter: drop-shadow(0 0 3px var(--cyber-cyan));
-  }
-  .text-info {
-    color: var(--text-secondary);
-  }
-  .text-info:hover {
-    color: var(--cyber-magenta);
-  }
-  
-  
-  /* ===============================================================  
-     12. CHATBOX & MESSAGES  
-  ================================================================= */
+/* Profile avatar styling */
+.profile__avatar {
+display: inline-block;
+border-radius: 50%;
+border: 3px solid transparent;
+transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease, border-color 0.3s ease;
+animation: subtle-float 5s ease-in-out infinite;
+}
+
+/* Subtle floating animation */
+@keyframes subtle-float {
+0%, 100% {
+  transform: translateY(0);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+50% {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+}
+
+/* Hover effect */
+.profile__avatar:hover {
+filter: brightness(1.1);
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+border-color: #003366; /* Darker blue border */
+}
+
+
+
+
+
+
+/* ===============================================================  
+   7. USER PROFILE HEADER  
+================================================================= */
+.top-nav__username--highresolution,
+.top-nav--right__icon-link,
+.top-nav__toggle {
+  color: var(--text-secondary);
+  padding: 0 10px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.top-nav__username--highresolution:hover,
+.top-nav--right__icon-link:hover {
+  color: var(--cyber-magenta);
+}
+
+
+.user-search__avatar {
+transition: transform 0.3s ease-in-out;
+}
+
+.user-search__avatar:hover {
+transform: scale(1.1); /* Increase size by 10% */
+}
+
+
+
+
+/* ===============================================================  
+   8. QUICK SEARCH  
+================================================================= */
+.quick-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.quick-search__inputs {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.quick-search__results,
+.quick-search__result--default,
+.quick-search__result--empty {
+  background-color: #2c2c2c !important;
+  color: var(--text-primary);
+  border-radius: 4px;
+  margin-top: 17px;
+}
+.quick-search__result-link {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.quick-search__result-link:hover {
+  background-color: var(--surface-02);
+  color: var(--cyber-magenta);
+}
+.quick-search__image {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.quick-search__result-year,
+.quick-search__result-type {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+
+/* ===============================================================  
+   9. PANELS, CARDS, FORMS, BUTTONS  
+================================================================= */
+
+/* Panels */
+.panelV2 {
+  background: #272727;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+.panelV2:hover {
+  filter: drop-shadow(0 0 4px var(--cyber-cyan));
+}
+.panel__header,
+.panel__heading {
+  padding: 1rem;
+  font-family: 'Orbitron', monospace;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  background: var(--surface-02);
+  display: flex;
+  align-items: center;
+  /*! justify-content: space-between; */
+  /*! border-bottom: 1px solid var(--primary-accent); */
+}
+.panel__body {
+  padding: 1rem;
+  color: var(--text-primary);
+}
+
+/* Cards */
+.torrent-card {
+  background: linear-gradient(135deg, var(--surface-02), #0e1a30);
+  border: 1px solid var(--primary-accent);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+.torrent-card:hover {
+  filter: drop-shadow(0 0 4px var(--cyber-cyan));
+}
+.torrent-card__header,
+.torrent-card__footer {
+  background: var(--surface-01);
+  padding: 0.5rem 1rem;
+  border-top: 1px solid var(--primary-accent);
+  color: var(--text-primary);
+  display: flex;
+  justify-content: space-between;
+}
+.torrent-card__title {
+  font-weight: bold;
+  font-size: 1rem;
+  color: var(--cyber-cyan);
+}
+.torrent-card__genre,
+.torrent-card__rating {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+.torrent-card__plot {
+  padding: 0.5rem 1rem;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  animation: subtlePulse 6s ease-in-out infinite;
+}
+
+/* Forms & Buttons */
+.form__button--filled,
+button {
+  background: var(--primary-accent);
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  /*! box-shadow: 0 2px 4px rgba(11, 61, 145, 0.4); */
+}
+
+/* Apply hover effect to all buttons except the specified ones */
+.form__button--filled:hover,
+button:not(.form__standard-icon-button):hover {
+background: var(--secondary-accent);
+box-shadow: 0 2px 6px rgba(215, 38, 56, 0.4);
+}
+
+
+/* Glow effect for the arrow icon */
+button.form__standard-icon-button:hover i {
+text-shadow: 0 0 8px #ffffff, 0 0 15px #ffffff, 0 0 25px #ffffff; /* White glow */
+transition: text-shadow 0.3s ease;
+}
+
+/* Apply the same effect only to buttons with the arrow icon */
+button:not(.form__standard-icon-button):hover i {
+text-shadow: none; /* Remove text-shadow for non-arrow buttons */
+}
+
+/* Exclude these specific buttons from the white shadow effect */
+button.form__button.form__standard-icon-button.form__standard-icon-button--skinny:hover i,
+button[title="Toggle typing notifications"]:hover i,
+button[title="Toggle typing notifications"] i.fa-bell:hover {
+text-shadow: none; /* Remove text-shadow */
+}
+
+
+/* Exclude specific buttons from the hover effect */
+button.form__button.form__standard-icon-button.form__standard-icon-button--skinny:hover,
+button[title="Toggle typing notifications"]:hover,
+button[title="Toggle typing notifications"] i.fa-bell:hover {
+background: none;
+box-shadow: none;
+}
+
+input,
+textarea,
+select {
+  background: var(--surface-02);
+  color: var(--text-primary);
+  border: 1px solid var(--primary-accent);
+  padding: 8px;
+  border-radius: 4px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+}
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--cyber-cyan);
+  box-shadow: 0 0 6px var(--cyber-cyan);
+}
+
+
+/* ===============================================================  
+   10. DATA TABLES  
+================================================================= */
+.data-table th {
+  background: var(--surface-02);
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--primary-accent);
+}
+
+
+/* ===============================================================  
+   11. TYPOGRAPHY  
+================================================================= */
+h1, h2, h3, h4 {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-primary);
+}
+
+h1:not(.panel__heading):hover,
+h2:not(.panel__heading):hover,
+h3:not(.panel__heading):hover,
+h4:not(.panel__heading):hover {
+filter: drop-shadow(0 0 3px var(--cyber-cyan));
+}
+
+
+.text-info {
+  color: var(--text-secondary);
+}
+.text-info:hover {
+  color: var(--cyber-magenta);
+}
+
+
+/* ===============================================================  
+   TORRENT DESCRIPTION  
+================================================================= */
+
+/* Apply the same texture to the panel__body and bbcode-rendered sections */
+.panel__body,
+.bbcode-rendered {
+  background: url('https://i.ibb.co/Ps1zwDBD/black-linen.png') repeat;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8); /* Black drop shadow */
+}
+
+
+
+/* ===============================================================  
+   12. CHATBOX & MESSAGES  
+================================================================= */
+
+
 .chatbox__chatroom {
-    background: var(--surface-01);
-    border: 1px solid var(--primary-accent);
-    padding: 10px;
-    border-radius: 8px;
-    max-height: 60vh;
-    line-height: 0.9 !important;
-    background-color: #1c1c1c;
+background-color: #0c0c0f; /* Solid background color */
+position: relative;
+padding: 6px;
+border-radius: 8px;
+border: 0px solid var(--primary-accent);
+max-height: 60vh;
+line-height: 0.9 !important;
+background: url('https://i.ibb.co/Ps1zwDBD/black-linen.png') repeat;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8); /* Black drop shadow */
+}
+
+
+
+@media (max-height: 500px) {
+  .chatbox__chatroom {
+    max-height: 50vh;
   }
-  @media (max-height: 500px) {
-    .chatbox__chatroom {
-      max-height: 50vh;
-    }
-  }
-  .chatbox--fullscreen .chatbox__chatroom {
-    max-height: calc(100vh - 36px - 37px);
-  }
-  .panel__tabs {
-    background-color: #1c1c1c;
-  }
-  #chatbox__messages-create {
-    margin-bottom: 9px;
-  }
-  
+}
+.chatbox--fullscreen .chatbox__chatroom {
+  max-height: calc(100vh - 36px - 37px);
+}
+.panel__tabs {
+  background-color: #0b101c;
+}
+#chatbox__messages-create {
+  margin-bottom: 9px;
+}
+
+.chatbox-message,
+.chatbox-message:before {
+  background-color: transparent;
+  border: none;
+  font-size: 14px !important;
+  white-space: normal !important;
+  max-width: 60vw !important;
+}
+@media (max-width: 992px) {
   .chatbox-message,
   .chatbox-message:before {
-    background-color: transparent;
-    border: none;
-    font-size: 14px !important;
-    white-space: normal !important;
-    max-width: 60vw !important;
+    max-width: 70vw !important;
   }
-  @media (max-width: 992px) {
-    .chatbox-message,
-    .chatbox-message:before {
-      max-width: 70vw !important;
-    }
+}
+@media (max-width: 768px) {
+  .chatbox-message,
+  .chatbox-message:before {
+    max-width: 75vw !important;
   }
-  @media (max-width: 768px) {
-    .chatbox-message,
-    .chatbox-message:before {
-      max-width: 75vw !important;
-    }
+}
+@media (max-width: 576px) {
+  .chatbox-message,
+  .chatbox-message:before {
+    max-width: 85vw !important;
   }
-  @media (max-width: 576px) {
-    .chatbox-message,
-    .chatbox-message:before {
-      max-width: 85vw !important;
-    }
-  }
-  .chatbox-message:has(aside > figure > i) {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  .chatbox-message__address.user-tag:has(a[title=Bot]) {
-    padding: 0 !important;
-  }
-  .chatbox-message__aside {
-    bottom: auto;
-    top: 4px;
-  }
-  .chatbox-message__header > div,
-  .chatbox-message__content > div {
-    color: #d5cede !important;
-    font-family: Calibri, sans-serif !important;
-    font-style: normal !important;
-  }
-  .chatbox-message__header > div {
-    font-size: 13px !important;
-  }
-  .chatbox-message__content {
-    font-family: Calibri, sans-serif;
-    color: #ded7e8;
-    transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
-  }
-  .chatbox-message__content:hover {
-    color: #fff;
-    text-shadow: 0 0 4px rgba(255, 255, 255, 0.37), 0 0 6px rgba(255, 255, 255, 0.045);
-  }
-  .chatbox-message__time {
-    padding: 0;
-    font-size: 10px !important;
-    color: rgba(170, 170, 170, 0.5019607843) !important;
-  }
-  a[href="/users/System"],
-  i[title="System Notification"] {
-    display: none;
-  }
-  
-/*────────────────────────────────────────────────────────────────────
-  1) Hide any horizontal scrollbar in the chatroom
-────────────────────────────────────────────────────────────────────*/
-.chatbox__chatroom {
-  overflow-x: hidden !important;   /* kill the horizontal track */
-  overflow-y: auto   !important;   /* keep vertical scroll */
+}
+.chatbox-message:has(aside > figure > i) {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.chatbox-message__address.user-tag:has(a[title=Bot]) {
+  padding: 0 !important;
+}
+.chatbox-message__aside {
+  bottom: auto;
+  top: 4px;
+}
+.chatbox-message__header > div,
+.chatbox-message__content > div {
+  color: #d5cede !important;
+  font-family: Calibri, sans-serif !important;
+  font-style: normal !important;
+}
+.chatbox-message__header > div {
+  font-size: 13px !important;
+}
+.chatbox-message__content {
+  font-family: Calibri, sans-serif;
+  color: #ded7e8;
+  transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+.chatbox-message__content:hover {
+  color: #fff;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.37), 0 0 6px rgba(255, 255, 255, 0.045);
+}
+.chatbox-message__time {
+  padding: 0;
+  font-size: 10px !important;
+  color: rgba(170, 170, 170, 0.5019607843) !important;
+}
+
+ a[href="/users/System"] {
+  margin-right: 10px;
+}
+
+ i[title="System Notification"] {
+  display: none;
 }
 
 /*────────────────────────────────────────────────────────────────────
-  2) Force long words/URLs to wrap inside each message
+1) Hide any horizontal scrollbar in the chatroom
+────────────────────────────────────────────────────────────────────*/
+.chatbox__chatroom {
+overflow-x: hidden !important;   /* kill the horizontal track */
+overflow-y: auto   !important;   /* keep vertical scroll */
+}
+
+/*────────────────────────────────────────────────────────────────────
+2) Force long words/URLs to wrap inside each message
 ────────────────────────────────────────────────────────────────────*/
 .chatbox-message,
 .chatbox-message__content,
 .chatbox-message__header > div,
 .chatbox-message__content > div,
 div[style*="white-space: nowrap"] {
-  white-space: pre-wrap      !important; /* honor newlines, then wrap */
-  overflow-wrap: break-word  !important; /* break long words/URLs */
-  word-break: break-word     !important; /* ensure wrapping on every browser */
+white-space: pre-wrap      !important; /* honor newlines, then wrap */
+overflow-wrap: break-word  !important; /* break long words/URLs */
+word-break: break-word     !important; /* ensure wrapping on every browser */
 }
 
 .chatbox-message {
-  margin-top: 1px !important;
-  margin-bottom: 1px !important;
+margin-top: 1px !important;
+margin-bottom: 1px !important;
 }
 
 .chatbox-message__header {
-  margin-top: 0.1px !important;     /* small space before the header */
-  margin-bottom: 0.1px !important;  /* space after it before the message text */
-  line-height: 15px !important; /* ~160% of the font size */
+margin-top: 0.1px !important;     /* small space before the header */
+margin-bottom: 0.1px !important;  /* space after it before the message text */
+line-height: 15px !important; /* ~160% of the font size */
 }
 
 
 
-  /* ===============================================================  
-     13. COLLAPSIBLE PANELS  
-  ================================================================= */
-  details.panel {
-    border: 1px solid var(--primary-accent);
-    border-radius: 8px;
-    margin: 1rem 0;
-    overflow: hidden;
-    background: var(--surface-01);
-    transition: box-shadow 0.3s ease;
-  }
-  .panel__heading {
-    list-style: none;
-    padding: 0.75rem 1rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1.25rem;
-    color: var(--text-primary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    position: relative;
-    transition: box-shadow 0.3s ease;
-  }
-  .panel__heading i {
-    margin-right: 0.5rem;
-  }
-  .panel__heading::-webkit-details-marker {
-    display: none;
-  }
-  details.panel[open] .panel__heading::after {
-    content: "-";
-  }
-  .panel__content {
-    padding: 1rem;
-    background: var(--surface-02);
-    color: var(--text-primary);
-    transition: max-height 0.3s ease;
-  }
-  
-  
-  /* ===============================================================  
-     14. AVATAR GLOW EFFECTS & TOOLTIP  
-  ================================================================= */
-  img.user-search__avatar,
-  img.user-stat-card__avatar,
-  img.chatbox-message__avatar {
-    position: relative;
-    transition: box-shadow 0.3s ease;
-  }
-  img.user-search__avatar:hover,
-  img.user-stat-card__avatar:hover,
-  img.chatbox-message__avatar:hover {
-    box-shadow: 0 0 8px var(--cyber-cyan);
-  }
-  img.user-search__avatar::after,
-  img.user-stat-card__avatar::after,
-  img.chatbox-message__avatar::after {
-    content: "ifn oksut";
-    position: absolute;
-    bottom: -1.5em;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--cyber-cyan);
-    color: var(--dark-base);
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-  }
-  img.user-search__avatar:hover::after,
-  img.user-stat-card__avatar:hover::after,
-  img.chatbox-message__avatar:hover::after {
-    opacity: 1;
-  }
-  
-
-  .user-stat-card {
-    background-color: var(--user-stat-card-bg);
-    border-radius: 10px;                     /* rounded corners :contentReference[oaicite:0]{index=0} */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); /* drop-shadow behind the box :contentReference[oaicite:1]{index=1} */
-    overflow: hidden;                       /* ensure child content follows the rounding */
-    position: relative;
-    padding: 7px; /* for border thickness */
+/* ===============================================================  
+   13. COLLAPSIBLE PANELS  
+================================================================= */
+details.panel {
+  border: 1px solid var(--primary-accent);
+  border-radius: 8px;
+  margin: 1rem 0;
+  overflow: hidden;
+  background: var(--surface-01);
+  transition: box-shadow 0.3s ease;
 }
-  
-
-
-  
-  /* ===============================================================  
-     15. ANIMATIONS  
-  ================================================================= */
-  @keyframes subtlePulse {
-    0%   { opacity: 0.95; }
-    50%  { opacity: 1; }
-    100% { opacity: 0.95; }
-  }
-  .torrent-card__plot {
-    animation: subtlePulse 6s ease-in-out infinite;
-  }
-  @keyframes cyberFlicker {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.6; }
-  }
-  .cyber-icon.glow {
-    animation: cyberFlicker 1.5s infinite;
-  }
-  
-  
-  /* ===============================================================  
-     16. CYBER ICON STYLE  
-  ================================================================= */
-  .cyber-icon {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    background: var(--surface-02);
-    border: 2px solid var(--primary-accent);
-    border-radius: 50%;
-    text-align: center;
-    line-height: 40px;
-    font-size: 1.2rem;
-    color: var(--text-primary);
-    box-shadow: 0 0 8px var(--cyber-cyan);
-  }
-  .cyber-icon:hover {
-    filter: drop-shadow(0 0 3px var(--cyber-cyan));
-  }
-  
+.panel__heading {
+  list-style: none;
+  padding: 0.75rem 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+.panel__heading i {
+  margin-right: 0.5rem;
+}
+.panel__heading::-webkit-details-marker {
+  display: none;
+}
+details.panel[open] .panel__heading::after {
+  content: "-";
+}
+.panel__content {
+  padding: 1rem;
+  background: var(--surface-02);
+  color: var(--text-primary);
+  transition: max-height 0.3s ease;
+}
 
 
 
+/* ===============================================================
+ 14. AVATAR GLOW EFFECTS & TOOLTIP
+================================================================ */
+img.user-search__avatar,
+img.user-stat-card__avatar,
+img.chatbox-message__avatar {
+position: relative;
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-  /*# sourceMappingURL=chat.css.map */
-  
+img.user-search__avatar:hover,
+img.user-stat-card__avatar:hover,
+img.chatbox-message__avatar:hover {
+transform: scale(1.1); /* Enlarges the image by 10% */
+}
+
+img.user-search__avatar::after,
+img.user-stat-card__avatar::after,
+img.chatbox-message__avatar::after {
+content: "ifn oksut";
+position: absolute;
+bottom: -1.5em;
+left: 50%;
+transform: translateX(-50%);
+background: var(--cyber-cyan);
+color: var(--dark-base);
+padding: 2px 4px;
+border-radius: 3px;
+font-size: 0.8rem;
+white-space: nowrap;
+opacity: 0;
+transition: opacity 0.3s ease;
+pointer-events: none;
+}
+
+img.user-search__avatar:hover::after,
+img.user-stat-card__avatar:hover::after,
+img.chatbox-message__avatar:hover::after {
+opacity: 1;
+}
+
+.user-stat-card {
+background-color: var(--user-stat-card-bg);
+border-radius: 10px;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+overflow: hidden;
+position: relative;
+padding: 7px;
+}
+
+
+
+/* ===============================================================  
+   15. ANIMATIONS  
+================================================================= */
+@keyframes subtlePulse {
+  0%   { opacity: 0.95; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.95; }
+}
+.torrent-card__plot {
+  animation: subtlePulse 6s ease-in-out infinite;
+}
+@keyframes cyberFlicker {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+.cyber-icon.glow {
+  animation: cyberFlicker 1.5s infinite;
+}
+
+
+/* ===============================================================  
+   16. CYBER ICON STYLE  
+================================================================= */
+.cyber-icon {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background: var(--surface-02);
+  border: 2px solid var(--primary-accent);
+  border-radius: 50%;
+  text-align: center;
+  line-height: 40px;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  box-shadow: 0 0 8px var(--cyber-cyan);
+}
+.cyber-icon:hover {
+  filter: drop-shadow(0 0 3px var(--cyber-cyan));
+}
+
+
+
+
+
+
+
+
+/*# sourceMappingURL=chat.css.map */
+
