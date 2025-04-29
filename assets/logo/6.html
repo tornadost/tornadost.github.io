@@ -1,0 +1,67 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PSS Neon SVG Logo</title>
+  <!-- Include the Pacifico font for consistency -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    /* Center the SVG logo */
+    body {
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    /* No external CSS needed for SVG as styles are embedded */
+  </style>
+</head>
+<body>
+  <!-- Inline SVG for the neon text -->
+  <svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
+    <title>P S S neon logo</title>
+    <defs>
+      <!-- Define the glow filter -->
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <!-- Embedded CSS for animation and colors -->
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+        text {
+          font-family: 'Pacifico', cursive;
+          font-size: 150px;
+          fill: #33CCFF; /* default to blue, overwritten for pink */
+          filter: url(#glow);
+          animation: flicker 2.5s infinite alternate;
+        }
+        .pink { fill: #FF66CC; } /* pink color for 'P' */
+        .blue { fill: #33CCFF; } /* cyan color for 'S' letters */
+        /* Flicker animation toggles glow and opacity */
+        @keyframes flicker {
+          0%, 60%, 100% {
+            filter: url(#glow);
+            fill-opacity: 1;
+          }
+          30% {
+            filter: none;
+            fill-opacity: 0.7;
+          }
+        }
+      </style>
+    </defs>
+    <!-- Neon text with two <tspan> for color control -->
+    <text x="300" y="130" text-anchor="middle">
+      <tspan class="pink">P</tspan>
+      <tspan class="blue">SS</tspan>
+    </text>
+  </svg>
+</body>
+</html>
