@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PSS Infinite Neon Draw</title>
+
+  <!-- Pacifico cursive font -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    /* Fade-in for the static outline */
+    .static {
+      opacity: 0;
+      transition: opacity 1s ease-out;
+    }
+    .static.visible {
+      opacity: 1;
+    }
+
+    /* Dash animation */
+    @keyframes draw {
+      to { stroke-dashoffset: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Container -->
+  <svg viewBox="0 0 600 200" width="80%" xmlns="http://www.w3.org/2000/svg">
+
+    <defs>
+      <!-- Neon gradient -->
+      <linearGradient id="neonGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#FF5ECF"/>
+        <stop offset="50%" stop-color="#D16BA5"/>
+        <stop offset="100%" stop-color="#00CFFF"/>
+      </linearGradient>
+
+      <!-- Glow filter: two-pass gaussian blur -->
+      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b1"/>
+        <feGaussianBlur in="b1" stdDeviation="6" result="b2"/>
+        <feMerge>
+          <feMergeNode in="b2"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+
+    <!-- Static outline (fades in) -->
+    <text
+      class="static"
+      x="50%" y="55%"
+      text-anchor="middle"
+      font-family="Pacifico, cursive"
+      font-size="150"
+      fill="none"
+      stroke="url(#neonGrad)"
+      stroke-width="2"
+    >PSS</text>
+
+    <!-- Animated draw + glow -->
+    <text
+      x="50%" y="55%"
+      text-anchor="middle"
+      font-family="Pacifico, cursive"
+      font-size="150"
+      fill="none"
+      stroke="url(#neonGrad)"
+      stroke-width="4"
+      filter="url(#glow)"
+      stroke-dasharray="1000"
+      stroke-dashoffset="1000"
+      style="animation: draw 3s linear infinite;"
+    >PSS</text>
+
+  </svg>
+
+  <script>
+    // Reveal the static outline
+    window.addEventListener('load', () => {
+      document.querySelector('.static').classList.add('visible');
+    });
+  </script>
+
+</body>
+</html>
