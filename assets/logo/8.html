@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSS Infinite Neon Draw</title>
+
+  <!-- Pacífico cursive font for exact shape match -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    /**********************************************/
+    /*               GLOBAL SETTINGS             */
+    /**********************************************/
+    :root {
+      /* Neon gradient colors */
+      --neon-color-start: #ff5ecf;
+      --neon-color-mid:   #d16ba5;
+      --neon-color-end:   #00cfff;
+
+      /* Animation durations */
+      --draw-duration: 3s;
+      --fade-duration: 1s;
+
+      /* Font size control */
+      --font-size: 150px;
+    }
+
+    /* Reset & body styling */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #111; /* Dark background to pop neon */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: 'Pacifico', cursive; /* Ensure Pacifico loaded */
+    }
+
+    /* Hide overflow during animation */
+    svg {
+      overflow: visible;
+    }
+
+    /**********************************************/
+    /*            TEXT OUTLINE LAYER             */
+    /**********************************************/
+    .outline {
+      /* Initially hidden, then fades in */
+      opacity: 0;
+      stroke-width: 2;
+      fill: none;
+      stroke: url(#neonGradient);
+      transition: opacity var(--fade-duration) ease-out;
+    }
+    .outline.visible {
+      opacity: 1;
+    }
+
+    /**********************************************/
+    /*            DRAW & GLOW LAYER              */
+    /**********************************************/
+    .draw {
+      /* No fill, thick stroke for glow */
+      fill: none;
+      stroke: url(#neonGradient);
+      stroke-width: 4;
+      /* Initial dash setup */
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      /* Apply glow filter */
+      filter: url(#neonGlow);
+      /* Infinite draw animation */
+      animation: draw var(--draw-duration) linear infinite;
+    }
+
+    /* Keyframes for the continuous draw */
+    @keyframes draw {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    /**********************************************/
+    /*         ACCESSIBILITY & REDUCED MOTION     */
+    /**********************************************/
+    @media (prefers-reduced-motion: reduce) {
+      .draw {
+        animation: none;
+        stroke-dashoffset: 0; /* show fully drawn */
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- SVG container -->
+  <svg
+    viewBox="0 0 800 300"
+    width="80%"
+    preserveAspectRatio="xMidYMid meet"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-labelledby="title desc"
+    role="img"
+  >
+    <title id="title">PSS neon logo animation</title>
+    <desc id="desc">
+      Infinite neon draw animation with hot-pink to cyan gradient and glow filter.
+    </desc>
+
+    <defs>
+      <!-- Linear gradient definition -->
+      <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%"  stop-color="var(--neon-color-start)" />
+        <stop offset="50%" stop-color="var(--neon-color-mid)" />
+        <stop offset="100%" stop-color="var(--neon-color-end)" />
+      </linearGradient>
+
+      <!-- Glow filter with two gaussian blur passes -->
+      <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur1"/>
+        <feGaussianBlur in="blur1" stdDeviation="6" result="blur2"/>
+        <feMerge>
+          <feMergeNode in="blur2"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+
+    <!-- Static outline text (fades in) -->
+    <text
+      class="outline"
+      x="50%" y="55%"
+      text-anchor="middle"
+      dominant-baseline="middle"
+      font-size="var(--font-size)"
+    >PSS</text>
+
+    <!-- Animated draw + glow text -->
+    <text
+      class="draw"
+      x="50%" y="55%"
+      text-anchor="middle"
+      dominant-baseline="middle"
+      font-size="var(--font-size)"
+    >PSS</text>
+  </svg>
+
+  <script>
+    // On window load, reveal the outline layer
+    window.addEventListener('load', () => {
+      document.querySelector('.outline').classList.add('visible');
+    });
+  </script>
+</body>
+</html>
