@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PSS Neon Logo</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Font for that cursive look -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
+  <style>
+    /* Dash animation (unused here, but kept from before) */
+    @keyframes dash {
+      to { stroke-dashoffset: 0; }
+    }
+  </style>
+</head>
+<body class="bg-gray-200 flex items-center justify-center min-h-screen">
+
+  <div class="relative">
+    <!-- Glow layers: two blurred shadows -->
+    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 600 300" fill="none">
+      <defs>
+        <filter id="neon-glow">
+          <!-- two passes of blur for a stronger glow -->
+          <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur1"/>
+          <feGaussianBlur in="blur1" stdDeviation="8" result="blur2"/>
+          <feMerge>
+            <feMergeNode in="blur2"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+
+        <linearGradient id="pink-to-blue" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#FF69B4" />
+          <stop offset="50%" stop-color="#D16BA5" />
+          <stop offset="100%" stop-color="#00CFFF" />
+        </linearGradient>
+      </defs>
+
+      <text
+        x="50%" y="60%"
+        text-anchor="middle"
+        font-family="Pacifico, cursive"
+        font-size="200"
+        fill="url(#pink-to-blue)"
+        filter="url(#neon-glow)"
+        stroke="none"
+      >
+        PSS
+      </text>
+    </svg>
+
+    <!-- Crisp top-layer outline -->
+    <svg class="relative" viewBox="0 0 600 300" fill="none">
+      <text
+        x="50%" y="60%"
+        text-anchor="middle"
+        font-family="Pacifico, cursive"
+        font-size="200"
+        fill="none"
+        stroke="url(#pink-to-blue)"
+        stroke-width="2"
+      >
+        PSS
+      </text>
+    </svg>
+  </div>
+
+</body>
+</html>
