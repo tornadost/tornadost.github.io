@@ -3,61 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PSS Neon Logo with Infinite Circular Border</title>
+  <title>PSS Neon Logo with Smooth Glow Ring</title>
 
-  <!-- Pacifico cursive font for exact PSS shapes -->
+  <!-- Pacifico font for exact “PSS” shape -->
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet"/>
 
   <style>
     /***************************************************/
-    /*                  CSS VARIABLES                  */
+    /*                CSS VARIABLES                    */
     /***************************************************/
     :root {
-      /* Neon gradient stops (purple → blue) */
-      --color-start: #7B68EE; /* Medium Slate Blue */ :contentReference[oaicite:6]{index=6}
+      --color-start: #7B68EE;   /* Medium Slate Blue */ :contentReference[oaicite:6]{index=6}
       --color-mid:   #7B68EE;
-      --color-end:   #3498DB; /* Light Sea Blue */
+      --color-end:   #3498DB;   /* Light Sea Blue */
 
-      /* Animation timings */
-      --draw-speed:     3s;    /* PSS draw */
-      --border-speed:   6s;    /* circular border */
-      --glow-blur1:     4;     /* first blur pass */ :contentReference[oaicite:7]{index=7}
-      --glow-blur2:     6;     /* second blur pass */
-      --scanline-speed: 0.5s;  /* scanline effect */ :contentReference[oaicite:8]{index=8}
+      --draw-duration:   3s;    /* Text draw loop */ :contentReference[oaicite:7]{index=7}
+      --ring-duration:   6s;    /* Ring rotate & dash */ :contentReference[oaicite:8]{index=8}
+      --blur-std1:       4;     /* Glow blur passes */ :contentReference[oaicite:9]{index=9}
+      --blur-std2:       6;
 
-      /* Font & SVG sizing */
-      --font-size: 160px;
-      --svg-width: 90vw;
+      --font-size:       160px; /* Size of PSS text */
+      --svg-width:       90vw;  /* Responsive width */
     }
 
     /***************************************************/
-    /*               GLOBAL RESET                      */
+    /*                    RESET                        */
     /***************************************************/
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; width: 100%; }
     body {
-      background: #0c0c0c;
+      background: #0c0c0c;              /* Dark background */
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       overflow: hidden;
-      font-family: 'Pacifico', cursive;
+      font-family: 'Pacifico', cursive; /* Ensure correct font */ :contentReference[oaicite:10]{index=10}
     }
 
     /***************************************************/
-    /*              SCANLINE OVERLAY                   */
+    /*              SCAN-LINE OVERLAY                  */
     /***************************************************/
     .scanlines {
       position: absolute; inset: 0;
       background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
       background-size: 100% 3px;
       pointer-events: none;
-      animation: scan var(--scanline-speed) steps(2) infinite; :contentReference[oaicite:9]{index=9}
+      animation: scan 0.5s steps(2) infinite; :contentReference[oaicite:11]{index=11}
     }
     @keyframes scan { to { background-position-y: 3px; } }
 
     /***************************************************/
-    /*                SVG CONTAINER                   */
+    /*                  SVG STYLING                    */
     /***************************************************/
     .logo-svg {
       width: var(--svg-width);
@@ -66,91 +62,93 @@
     }
 
     /***************************************************/
-    /*            NEON GLOW FILTER                     */
+    /*             GRADIENT & FILTER DEFS              */
     /***************************************************/
-    /* dual-pass gaussian blur for realistic glow */
-    filter#neonGlow feGaussianBlur { stdDeviation: var(--glow-blur1); } 
-    filter#neonGlow feGaussianBlur[in="b1"] { stdDeviation: var(--glow-blur2); } :contentReference[oaicite:10]{index=10}
+    /* Purple→blue neon gradient */ 
+    /* (CSS-Tricks encourages color control via variables) */ :contentReference[oaicite:12]{index=12}
+    linearGradient#neonGrad stop:nth-child(1) { stop-color: var(--color-start); }
+    linearGradient#neonGrad stop:nth-child(2) { stop-color: var(--color-mid); }
+    linearGradient#neonGrad stop:nth-child(3) { stop-color: var(--color-end); }
+
+    /* Dual-pass blur for strong glow */
+    filter#neonGlow feGaussianBlur { stdDeviation: var(--blur-std1); } 
+    filter#neonGlow feGaussianBlur[in="b1"] { stdDeviation: var(--blur-std2); } :contentReference[oaicite:13]{index=13}
 
     /***************************************************/
-    /*            TEXT OUTLINE & DRAW LAYERS           */
+    /*               TEXT OUTLINE LAYER                */
     /***************************************************/
     .outline {
       fill: none;
       stroke: url(#neonGrad);
       stroke-width: 2;
       opacity: 0;
-      transition: opacity 1s ease-out;
+      transition: opacity 1s ease-out; 
     }
     .outline.visible { opacity: 1; }
 
+    /***************************************************/
+    /*             TEXT DRAW + GLOW LAYER              */
+    /***************************************************/
     .draw {
       fill: none;
       stroke: url(#neonGrad);
       stroke-width: 4;
-      stroke-dasharray: 1000;
-      stroke-dashoffset: 1000; /* start fully hidden */ :contentReference[oaicite:11]{index=11}
+      stroke-dasharray: 1000;         /* Full path length */ :contentReference[oaicite:14]{index=14}
+      stroke-dashoffset: 1000;        /* Start hidden */
       filter: url(#neonGlow);
-      animation: draw var(--draw-speed) linear infinite;
+      animation: draw var(--draw-duration) linear infinite;
     }
     @keyframes draw { to { stroke-dashoffset: 0; } }
 
     /***************************************************/
-    /*           CIRCULAR BORDER ANIMATION             */
+    /*            CIRCULAR RING ANIMATION              */
     /***************************************************/
-    .border-group {
-      transform-origin: center center;
-      animation: rotate var(--border-speed) linear infinite; :contentReference[oaicite:12]{index=12}
+    .ring-group {
+      transform-origin: center;
+      animation: rotate-ring var(--ring-duration) linear infinite; :contentReference[oaicite:15]{index=15}
     }
-    .border-path {
+    .ring-path {
       fill: none;
       stroke: url(#neonGrad);
       stroke-width: 3;
-      stroke-dasharray: 8 8;       /* dash pattern */
+      stroke-dasharray: 8 8; 
       stroke-dashoffset: 0;
-      animation: dash 1s linear infinite; /* seamless dash movement */ :contentReference[oaicite:13]{index=13}
+      animation: dash-ring 1s linear infinite; :contentReference[oaicite:16]{index=16}
     }
-    @keyframes rotate { to { transform: rotate(360deg); } }
-    @keyframes dash   { to { stroke-dashoffset: -16; } }
+    @keyframes rotate-ring { to { transform: rotate(360deg); } }
+    @keyframes dash-ring { to { stroke-dashoffset: -16; } }
 
     /***************************************************/
-    /*         REDUCED MOTION SUPPORT                  */
+    /*        PREFER-REDUCED-MOTION SUPPORT            */
     /***************************************************/
     @media (prefers-reduced-motion: reduce) {
-      .draw, .border-group, .scanlines { animation: none; }
+      .draw, .ring-group, .scanlines { animation: none; }
       .draw { stroke-dashoffset: 0; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Scan-line overlay -->
+  <!-- CRT scanline overlay -->
   <div class="scanlines"></div>
 
-  <!-- SVG Logo -->
-  <svg
-    class="logo-svg"
-    viewBox="0 0 800 400"
-    preserveAspectRatio="xMidYMid meet"
-    role="img"
-    aria-labelledby="title desc"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <title id="title">PSS Neon Logo with Circular Border</title>
-    <desc id="desc">Infinite neon draw animation around “PSS” plus rotating dashed border.</desc>
+  <!-- SVG containing ring + text -->
+  <svg class="logo-svg" viewBox="0 0 800 400"
+       xmlns="http://www.w3.org/2000/svg"
+       role="img" aria-labelledby="title desc">
+    <title id="title">PSS Neon with Smooth Glow Ring</title>
+    <desc id="desc">Infinite looping glow ring around neon “PSS” text.</desc>
 
     <defs>
-      <!-- Neon gradient -->
       <linearGradient id="neonGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%"  stop-color="var(--color-start)" /> :contentReference[oaicite:14]{index=14}
-        <stop offset="50%" stop-color="var(--color-mid)" />
-        <stop offset="100%" stop-color="var(--color-end)" /> :contentReference[oaicite:15]{index=15}
+        <stop offset="0%"/>
+        <stop offset="50%"/>
+        <stop offset="100%"/>
       </linearGradient>
 
-      <!-- Glow filter -->
       <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation="var(--glow-blur1)" result="b1"/>
-        <feGaussianBlur in="b1" stdDeviation="var(--glow-blur2)" result="b2"/>
+        <feGaussianBlur in="SourceGraphic" stdDeviation="var(--blur-std1)" result="b1"/>
+        <feGaussianBlur in="b1" stdDeviation="var(--blur-std2)" result="b2"/>
         <feMerge>
           <feMergeNode in="b2"/>
           <feMergeNode in="SourceGraphic"/>
@@ -158,39 +156,26 @@
       </filter>
     </defs>
 
-    <!-- Circular border group -->
-    <g class="border-group">
-      <circle
-        class="border-path"
-        cx="400" cy="200" r="180"
-      />
+    <!-- Rotating dashed ring -->
+    <g class="ring-group">
+      <circle class="ring-path" cx="400" cy="200" r="180"/>
     </g>
 
-    <!-- Static outline -->
-    <text
-      class="outline"
-      x="50%" y="45%"
-      text-anchor="middle"
-      dominant-baseline="middle"
-      font-size="var(--font-size)"
-    >
+    <!-- Static outline fades in -->
+    <text class="outline" x="50%" y="45%" font-size="var(--font-size)"
+          text-anchor="middle" dominant-baseline="middle">
       PSS
     </text>
 
-    <!-- Animated draw + glow -->
-    <text
-      class="draw"
-      x="50%" y="45%"
-      text-anchor="middle"
-      dominant-baseline="middle"
-      font-size="var(--font-size)"
-    >
+    <!-- Infinite draw + glow -->
+    <text class="draw" x="50%" y="45%" font-size="var(--font-size)"
+          text-anchor="middle" dominant-baseline="middle">
       PSS
     </text>
   </svg>
 
   <script>
-    // Fade in the outline on load
+    // Fade in the outline when loaded
     window.addEventListener('load', () => {
       document.querySelector('.outline').classList.add('visible');
     });
