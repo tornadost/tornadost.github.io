@@ -1,0 +1,87 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PSS Neon Logo</title>
+  <!-- Include the Pacifico font -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    /* Container to center the logo */
+    body {
+      background: radial-gradient(circle, #444 0%, #111 80%); /* dark gradient background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    /* Neon text styling */
+    .neon-text {
+      font-family: 'Pacifico', cursive;
+      font-size: 8rem; /* adjust as needed */
+      color: currentColor; /* base color will come from classes */
+      /* initial text-shadow for continuous glow */
+      text-shadow:
+        0 0 2px #fff,
+        0 0 5px currentColor,
+        0 0 10px currentColor,
+        0 0 20px currentColor,
+        0 0 30px currentColor;
+    }
+    /* Pink neon for 'P' */
+    .pink {
+      color: #FF66CC;
+      animation: flickerP 1.8s infinite alternate;
+    }
+    /* Blue neon for 'S' letters */
+    .blue {
+      color: #33CCFF;
+      animation: flickerS 2.1s infinite alternate;
+    }
+    /* Flicker animation for pink letter */
+    @keyframes flickerP {
+      0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        text-shadow:
+          0 0 2px #fff,
+          0 0 5px #fff,
+          0 0 10px #FF66CC,
+          0 0 20px #FF66CC,
+          0 0 30px #FF66CC;
+        opacity: 1;
+      }
+      20%, 24%, 55% {
+        text-shadow: none;
+        opacity: 0.7; /* dim when flickering off */
+      }
+    }
+    /* Flicker animation for blue letters */
+    @keyframes flickerS {
+      0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        text-shadow:
+          0 0 2px #fff,
+          0 0 5px #fff,
+          0 0 10px #33CCFF,
+          0 0 20px #33CCFF,
+          0 0 30px #33CCFF;
+        opacity: 1;
+      }
+      20%, 24%, 55% {
+        text-shadow: none;
+        opacity: 0.7;
+      }
+    }
+    /* Accessibility: disable animation for reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .pink, .blue {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="neon-text" aria-label="P S S">
+    <span class="pink">P</span><span class="blue">S</span><span class="blue">S</span>
+  </h1>
+</body>
+</html>
