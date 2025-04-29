@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PSS Cyberpunk Neon (Custom Colors)</title>
+
+  <!-- Pacifico font for the cursive “PSS” shapes -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet"/>
+
+  <style>
+    /*********************************************************/
+    /*                   CSS VARIABLES                       */
+    /*********************************************************/
+    :root {
+      /* 🎨 Updated to match original site branding */
+      --cyber-color-start: #7B68EE;  /* purple */
+      --cyber-color-mid:   #7B68EE;  /* purple */
+      --cyber-color-end:   #3498DB;  /* blue */
+
+      /* Animation durations */
+      --draw-time:     4s;
+      --fade-time:     1s;
+
+      /* Font size */
+      --font-size:     160px;
+    }
+
+    /*********************************************************/
+    /*                   GLOBAL RESET                        */
+    /*********************************************************/
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+    }
+    html, body {
+      height: 100%; width: 100%;
+    }
+    body {
+      background: #0c0c0c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: 'Pacifico', cursive;
+    }
+
+    /*********************************************************/
+    /*                SVG CONTAINER STYLING                  */
+    /*********************************************************/
+    .logo-svg {
+      width: 90vw;
+      max-width: 800px;
+      height: auto;
+      overflow: visible;
+    }
+
+    /*********************************************************/
+    /*                  SCAN-LINE OVERLAY                    */
+    /*********************************************************/
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 100% 3px;
+      pointer-events: none;
+      animation: scan 0.5s steps(2) infinite;
+    }
+    @keyframes scan {
+      to { background-position-y: 3px; }
+    }
+
+    /*********************************************************/
+    /*            STATIC OUTLINE LAYER                       */
+    /*********************************************************/
+    .outline {
+      fill: none;
+      stroke-width: 2;
+      stroke: url(#cyberGrad);
+      opacity: 0;
+      transition: opacity var(--fade-time) ease-out;
+    }
+    .outline.visible {
+      opacity: 1;
+    }
+
+    /*********************************************************/
+    /*         DRAW (GLOW) ANIMATED LAYER                    */
+    /*********************************************************/
+    .draw {
+      fill: none;
+      stroke: url(#cyberGrad);
+      stroke-width: 6;
+      stroke-dasharray: 1200;
+      stroke-dashoffset: 1200;
+      filter: url(#cyberGlow);
+      animation: draw var(--draw-time) linear infinite;
+    }
+    @keyframes draw {
+      to { stroke-dashoffset: 0; }
+    }
+
+    /*********************************************************/
+    /*          ACCESSIBILITY / REDUCED MOTION               */
+    /*********************************************************/
+    @media (prefers-reduced-motion: reduce) {
+      .draw { animation: none; stroke-dashoffset: 0; }
+      .scanlines { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Scan-line overlay -->
+  <div class="scanlines"></div>
+
+  <!-- SVG Logo -->
+  <svg
+    class="logo-svg"
+    viewBox="0 0 800 300"
+    preserveAspectRatio="xMidYMid meet"
+    role="img"
+    aria-labelledby="title desc"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <title id="title">PSS Cyberpunk Neon Logo</title>
+    <desc id="desc">Infinite neon draw animation in purple→blue gradient.</desc>
+
+    <defs>
+      <!-- Gradient now matches your original palette -->
+      <linearGradient id="cyberGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%"  stop-color="var(--cyber-color-start)"/>
+        <stop offset="50%" stop-color="var(--cyber-color-mid)"/>
+        <stop offset="100%" stop-color="var(--cyber-color-end)"/>
+      </linearGradient>
+
+      <!-- Glow filter with two blur passes -->
+      <filter id="cyberGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b1"/>
+        <feGaussianBlur in="b1" stdDeviation="8" result="b2"/>
+        <feMerge>
+          <feMergeNode in="b2"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+
+    <!-- Static outline (fades in) -->
+    <text
+      class="outline"
+      x="50%" y="55%"
+      text-anchor="middle"
+      dominant-baseline="middle"
+      font-size="var(--font-size)"
+    >PSS</text>
+
+    <!-- Animated draw + glow -->
+    <text
+      class="draw"
+      x="50%" y="55%"
+      text-anchor="middle"
+      dominant-baseline="middle"
+      font-size="var(--font-size)"
+    >PSS</text>
+  </svg>
+
+  <script>
+    // Reveal the outline once everything's loaded
+    window.addEventListener('load', () => {
+      document.querySelector('.outline').classList.add('visible');
+    });
+  </script>
+</body>
+</html>
