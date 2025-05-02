@@ -139,14 +139,14 @@
       const canvas = document.getElementById('matrixCanvas');
       const ctx = canvas.getContext('2d');
       let cols, drops;
-      const setupMatrix = () => {
+      const setup = () => {
         canvas.width = innerWidth;
         canvas.height = innerHeight;
         cols = Math.floor(innerWidth / 14);
         drops = Array(cols).fill(1);
       };
-      window.addEventListener('resize', setupMatrix);
-      setupMatrix();
+      window.addEventListener('resize', setup);
+      setup();
 
       function draw() {
         ctx.fillStyle = 'rgba(0,0,0,0.07)';
