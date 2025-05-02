@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CyberBlogX – Post {{ID}}</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <title>CyberBlogX – Post</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap"
+    rel="stylesheet"
+  >
   <style>
     /* ========== ROOT & RESET ================================================= */
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -45,6 +48,8 @@
     #top.visible{opacity:1;visibility:visible}
     #top svg{width:24px;height:24px;fill:var(--bg-dark)}
   </style>
+  <!-- marked.js for Markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
   <!-- HEADER -->
@@ -89,22 +94,32 @@
     });
 
     /* BACK TO TOP BTN */
-    const topBtn = document.getElementById('top');
+    const topBtn=document.getElementById('top');
     window.addEventListener('scroll',()=>window.scrollY>300?topBtn.classList.add('visible'):topBtn.classList.remove('visible'));
     topBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
 
     /* LOAD POST */
-    const m = window.location.pathname.match(/\/posts\/feed\/(\d+)\/(\d+)\.html$/);
-    if(!m || m[1]!==m[2]){
+    const m=window.location.pathname.match(/\/posts\/feed\/(\d+)\/(\d+)\.html$/);
+    if(!m||m[1]!==m[2]){
       document.getElementById('body').textContent='Invalid URL';
     } else {
       const id=m[1];
+      // first fetch JSON
       fetch(`./${id}.json`)
         .then(r=>r.ok? r.json(): Promise.reject())
         .then(j=>{
           document.getElementById('title').textContent=j.title;
           document.getElementById('cover').src=`/posts/assets/cover/${id}.png`;
-          document.getElementById('body').innerHTML=j.content;
+          if(j.markdown){
+            // fetch and render Markdown
+            fetch(`./${id}.md`)
+              .then(r=>r.ok? r.text(): Promise.reject())
+              .then(md=>document.getElementById('body').innerHTML=marked.parse(md))
+              .catch(_=>document.getElementById('body').textContent='Content not found.');
+          } else {
+            // inject HTML from JSON
+            document.getElementById('body').innerHTML=j.content||'';
+          }
         })
         .catch(_=>{document.getElementById('body').textContent='Post not found.';});
     }
