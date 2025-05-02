@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CyberBlogX – Post</title>
+  <title>CyberBlog – Post 1</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
+    /* Minimal reset & container */
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Roboto',sans-serif;background:#000;color:#eee;padding:2rem}
     .post-cover{max-width:800px;margin:0 auto}
@@ -26,17 +27,18 @@
   </article>
 
   <script>
+    // grab “1” from the filename
     const match = window.location.pathname.match(/\/posts\/(\d+)\.html$/);
-    const id = match ? match[1] : null;
+    const id = match && match[1];
     if (!id) {
       document.getElementById('body').textContent = 'Invalid post URL';
     } else {
       fetch(`/posts/feed/${id}.json`)
         .then(r=>{
-          if (!r.ok) throw new Error('Not found');
+          if (!r.ok) throw new Error();
           return r.json();
         })
-        .then(j => {
+        .then(j=>{
           document.getElementById('title').textContent = j.title;
           document.getElementById('cover').src = `/posts/assets/cover/${id}.png`;
           document.getElementById('body').innerHTML = j.content;
