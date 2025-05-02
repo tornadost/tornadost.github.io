@@ -114,12 +114,12 @@
   </script>
 
   <nav class="top-nav">
-    <a href="/redacted">index</a>
-    <a href="/layer/cache">vault</a>
-    <a href="/layer/star">star</a>
-    <a href="/feed/blog">blog</a>
-    <a href="/layer/archive">secret</a>
-    <a href="/games/play">play</a>
+    <a href="/redacted" id="link1">index</a>
+    <a href="/layer/cache" id="link2">vault</a>
+    <a href="/layer/star" id="link3">star</a>
+    <a href="/feed/blog" id="link4">blog</a>
+    <a href="/layer/archive" id="link5">secret</a>
+    <a href="/chat" id="link6">chat</a>
   </nav>
 
   <canvas id="matrixCanvas"></canvas>
@@ -139,14 +139,14 @@
       const canvas = document.getElementById('matrixCanvas');
       const ctx = canvas.getContext('2d');
       let cols, drops;
-      const setup = () => {
+      const setupMatrix = () => {
         canvas.width = innerWidth;
         canvas.height = innerHeight;
         cols = Math.floor(innerWidth / 14);
         drops = Array(cols).fill(1);
       };
-      window.addEventListener('resize', setup);
-      setup();
+      window.addEventListener('resize', setupMatrix);
+      setupMatrix();
 
       function draw() {
         ctx.fillStyle = 'rgba(0,0,0,0.07)';
