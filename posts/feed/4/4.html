@@ -129,20 +129,22 @@
       <div class="logo"><a href="/">CyberBlogX</a></div>
       <ul class="nav-links">
         <li><a href="/#posts">Posts</a></li>
-        <li><a href="/#contact">Contact</a></li>
-        <!-- Unmute/Mute -->
+        <li><a href="/#contact">✉️ Message</a></li>
         <li>
-          <button id="audio-toggle" class="btn neon-flicker" title="Unmute Music">
+          <button id="audio-toggle" class="btn neon-flicker" title="Mute/Unmute">
             🔈 Unmute
           </button>
         </li>
-        <!-- Play/Pause -->
         <li>
-          <button id="audio-playpause" class="btn neon-flicker" title="Pause Music">
+          <button id="audio-playpause" class="btn neon-flicker" title="Play/Pause">
             ⏸ Pause
           </button>
         </li>
-        <li><a id="theme-btn" href="#" class="btn">Toggle Theme</a></li>
+        <li>
+          <button id="theme-btn" class="btn" title="Toggle Light/Dark">
+            💡
+          </button>
+        </li>
       </ul>
       <button class="nav-toggle" aria-label="Toggle navigation">
         <span class="hamburger"></span>
@@ -155,7 +157,7 @@
     <h1 id="title">Loading…</h1>
     <div id="body">Please wait.</div>
 
-    <!-- Video (paused) -->
+    <!-- Video (paused by default) -->
     <section id="video-section" style="display:none; margin-top:2rem;">
       <h2>Featured Video</h2>
       <iframe
@@ -165,7 +167,7 @@
       </iframe>
     </section>
 
-    <!-- Audio (autoplay, muted) -->
+    <!-- Audio (autoplay muted) -->
     <section id="audio-section" style="display:none; margin-top:2rem;">
       <h2>Background Audio</h2>
       <audio
@@ -193,7 +195,7 @@
     applyTheme();
     document.getElementById('theme-btn').addEventListener('click', e => {
       e.preventDefault();
-      theme = theme === 'dark' ? 'light' : 'dark';
+      theme = (theme === 'dark') ? 'light' : 'dark';
       applyTheme();
     });
 
@@ -206,9 +208,7 @@
     // BACK TO TOP
     const topBtn = document.getElementById('top');
     window.addEventListener('scroll', () => {
-      window.scrollY > 300
-        ? topBtn.classList.add('visible')
-        : topBtn.classList.remove('visible');
+      topBtn.classList.toggle('visible', window.scrollY > 300);
     });
     topBtn.addEventListener('click', () =>
       window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -219,7 +219,6 @@
     const toggleBtn = document.getElementById('audio-toggle');
     const playpauseBtn = document.getElementById('audio-playpause');
 
-    // Mute / Unmute
     toggleBtn.addEventListener('click', () => {
       audio.muted = !audio.muted;
       toggleBtn.innerHTML = audio.muted ? '🔈 Unmute' : '🔊 Mute';
@@ -228,7 +227,6 @@
       toggleBtn.classList.add('neon-flicker');
     });
 
-    // Play / Pause
     playpauseBtn.addEventListener('click', () => {
       if (audio.paused) {
         audio.play();
@@ -251,7 +249,6 @@
       fetch(`./${id}.json`)
         .then(r => r.ok ? r.json() : Promise.reject())
         .then(j => {
-          // Title & Content
           document.getElementById('title').textContent = j.title;
           if (j.markdown) {
             fetch(`./${id}.md`)
@@ -266,7 +263,6 @@
             document.getElementById('body').innerHTML = j.content || '';
           }
 
-          // Video (paused)
           if (j.video_url) {
             const vs = document.getElementById('video-section');
             const vf = document.getElementById('video-frame');
@@ -274,12 +270,11 @@
             vs.style.display = 'block';
           }
 
-          // Audio (autoplay, muted by default)
           if (j.audio_url) {
             const as = document.getElementById('audio-section');
             as.style.display = 'block';
             audio.src = j.audio_url;
-            audio.play().catch(()=>{/* gesture required */});
+            audio.play().catch(() => {/* user gesture required */});
           }
         })
         .catch(() => {
