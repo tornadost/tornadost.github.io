@@ -99,18 +99,20 @@
     <h1 id="title">Loading…</h1>
     <div id="body">Please wait.</div>
 
-    <!-- Video Section (injected dynamically) -->
+    <!-- Video Section (no autoplay) -->
     <section id="video-section" style="display:none; margin-top:2rem;">
       <h2>Featured Video</h2>
       <iframe id="video-frame" width="560" height="315"
-        frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen>
+        src="" title="YouTube video player" frameborder="0"
+        allow="encrypted-media; fullscreen" allowfullscreen>
       </iframe>
     </section>
 
-    <!-- Audio Section (injected dynamically) -->
+    <!-- Audio Section (autoplay) -->
     <section id="audio-section" style="display:none; margin-top:2rem;">
       <h2>Background Audio</h2>
-      <audio id="audio-player" controls loop style="width:100%;margin-top:0.5rem;">
+      <audio id="audio-player" controls autoplay loop style="width:100%;margin-top:0.5rem;">
+        <source src="" type="audio/flac">
         Your browser does not support the HTML5 Audio element.
       </audio>
     </section>
@@ -153,7 +155,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' })
     );
 
-    // LOAD POST + Markdown + Video/Audio injection
+    // LOAD POST + Markdown + Media
     const m = window.location.pathname.match(/\/posts\/feed\/(\d+)\/\1\.html$/);
     if (!m) {
       document.getElementById('body').textContent = 'Invalid post URL';
@@ -179,7 +181,7 @@
             document.getElementById('body').innerHTML = j.content || '';
           }
 
-          // Video
+          // Video (no autoplay)
           if (j.video_url) {
             const vs = document.getElementById('video-section');
             const vf = document.getElementById('video-frame');
@@ -187,7 +189,7 @@
             vs.style.display = 'block';
           }
 
-          // Audio
+          // Audio (autoplay)
           if (j.audio_url) {
             const as = document.getElementById('audio-section');
             const ap = document.getElementById('audio-player');
