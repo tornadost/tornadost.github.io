@@ -1,0 +1,8 @@
+{
+    "title": "My Very First Blog Post",
+    "excerpt": "An in-depth guide to writing your first Markdown-powered CyberBlogX post.",
+    "date": "2025-05-02",
+    "read": 10,
+    "tags": ["markdown", "guide", "tutorial", "media", "formatting"],
+    "markdown": true
+  }
