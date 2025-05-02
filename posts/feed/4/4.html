@@ -31,6 +31,7 @@
       padding:.7rem 1.4rem; border:1px solid var(--neon); color:var(--neon);
       background:transparent; border-radius:var(--radius); letter-spacing:.05em;
       transition: background var(--speed), color var(--speed), box-shadow var(--speed);
+      margin-left:1rem;
     }
     .btn:hover {
       background:var(--neon); color:var(--bg-dark);
@@ -55,10 +56,10 @@
       text-decoration:none; text-shadow:0 0 4px var(--neon);
     }
     .nav-links { list-style:none; }
-    .nav-links li { display:inline-block; margin-left:1rem; }
+    .nav-links li { display:inline-block; }
     .nav-links a, .nav-links button {
-      color:var(--neon); text-decoration:none; position:relative; background:none;
-      border:none; cursor:pointer; font-family:var(--font-mono);
+      color:var(--neon); text-decoration:none; position:relative;
+      background:none; border:none; cursor:pointer; font-family:var(--font-mono);
     }
     .nav-links a::after, .nav-links button::after {
       content:''; position:absolute; bottom:-4px; left:0; width:0; height:2px;
@@ -75,9 +76,7 @@
     .hamburger::before, .hamburger::after { content:''; position:absolute; left:0; }
     .hamburger::before { top:-8px; } .hamburger::after { top:8px; }
     .hamburger.open { transform:rotate(45deg); }
-    .hamburger.open::before {
-      top:0; transform:rotate(90deg);
-    }
+    .hamburger.open::before { top:0; transform:rotate(90deg); }
     .hamburger.open::after { top:0; opacity:0; }
     @media(max-width:768px){
       .nav-toggle { display:block; }
@@ -131,9 +130,16 @@
       <ul class="nav-links">
         <li><a href="/#posts">Posts</a></li>
         <li><a href="/#contact">Contact</a></li>
+        <!-- Unmute/Mute -->
         <li>
           <button id="audio-toggle" class="btn neon-flicker" title="Unmute Music">
             🔈 Unmute
+          </button>
+        </li>
+        <!-- Play/Pause -->
+        <li>
+          <button id="audio-playpause" class="btn neon-flicker" title="Pause Music">
+            ⏸ Pause
           </button>
         </li>
         <li><a id="theme-btn" href="#" class="btn">Toggle Theme</a></li>
@@ -149,16 +155,17 @@
     <h1 id="title">Loading…</h1>
     <div id="body">Please wait.</div>
 
-    <!-- Video Section (paused) -->
+    <!-- Video (paused) -->
     <section id="video-section" style="display:none; margin-top:2rem;">
       <h2>Featured Video</h2>
       <iframe
         id="video-frame" width="560" height="315"
         src="" title="YouTube video player" frameborder="0"
-        allow="encrypted-media; fullscreen" allowfullscreen></iframe>
+        allow="encrypted-media; fullscreen" allowfullscreen>
+      </iframe>
     </section>
 
-    <!-- Audio Section (autoplay, muted) -->
+    <!-- Audio (autoplay, muted) -->
     <section id="audio-section" style="display:none; margin-top:2rem;">
       <h2>Background Audio</h2>
       <audio
@@ -207,21 +214,32 @@
       window.scrollTo({ top: 0, behavior: 'smooth' })
     );
 
-    // AUDIO MUTE/UNMUTE BUTTON
-    const audioToggle = document.getElementById('audio-toggle');
+    // AUDIO CONTROLS
     const audio = document.getElementById('audio-player');
-    audioToggle.addEventListener('click', () => {
-      if (audio.muted) {
-        audio.muted = false;
-        audioToggle.innerHTML = '🔊 Mute';
+    const toggleBtn = document.getElementById('audio-toggle');
+    const playpauseBtn = document.getElementById('audio-playpause');
+
+    // Mute / Unmute
+    toggleBtn.addEventListener('click', () => {
+      audio.muted = !audio.muted;
+      toggleBtn.innerHTML = audio.muted ? '🔈 Unmute' : '🔊 Mute';
+      toggleBtn.classList.remove('neon-flicker');
+      void toggleBtn.offsetWidth;
+      toggleBtn.classList.add('neon-flicker');
+    });
+
+    // Play / Pause
+    playpauseBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+        playpauseBtn.innerHTML = '⏸ Pause';
       } else {
-        audio.muted = true;
-        audioToggle.innerHTML = '🔈 Unmute';
+        audio.pause();
+        playpauseBtn.innerHTML = '▶️ Play';
       }
-      // flash effect
-      audioToggle.classList.remove('neon-flicker');
-      void audioToggle.offsetWidth;
-      audioToggle.classList.add('neon-flicker');
+      playpauseBtn.classList.remove('neon-flicker');
+      void playpauseBtn.offsetWidth;
+      playpauseBtn.classList.add('neon-flicker');
     });
 
     // LOAD POST + Markdown + Media
@@ -259,10 +277,9 @@
           // Audio (autoplay, muted by default)
           if (j.audio_url) {
             const as = document.getElementById('audio-section');
-            const ap = document.getElementById('audio-player');
-            ap.src = j.audio_url;
             as.style.display = 'block';
-            ap.play().catch(()=>{/* user gesture may be needed */});
+            audio.src = j.audio_url;
+            audio.play().catch(()=>{/* gesture required */});
           }
         })
         .catch(() => {
