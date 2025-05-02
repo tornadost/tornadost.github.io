@@ -109,7 +109,7 @@
       </iframe>
     </section>
 
-    <!-- Audio Section (autoplay, muted until play succeeds) -->
+    <!-- Audio Section (autoplay, muted until play) -->
     <section id="audio-section" style="display:none; margin-top:2rem;">
       <h2>Background Audio</h2>
       <audio id="audio-player" controls autoplay loop muted style="width:100%;margin-top:0.5rem;">
@@ -183,7 +183,7 @@
           if (j.video_url) {
             const vs = document.getElementById('video-section');
             const vf = document.getElementById('video-frame');
-            vf.src = j.video_url;  // no ?autoplay=1
+            vf.src = j.video_url;
             vs.style.display = 'block';
           }
 
@@ -193,8 +193,12 @@
             const ap = document.getElementById('audio-player');
             ap.src = j.audio_url;
             as.style.display = 'block';
-            // Unmute after a brief delay to hope browser allows autoplay
-            ap.play().then(()=>ap.muted = false).catch(()=>{/*user gesture needed*/});
+            ap.play().then(() => {
+              // Unmute once playback starts
+              ap.muted = false;
+            }).catch(() => {
+              // Autoplay prevented—user interaction needed
+            });
           }
         })
         .catch(() => {
