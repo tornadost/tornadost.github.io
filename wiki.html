@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberBlogX Wiki: Publishing a New Post</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: Roboto, Arial, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; line-height: 1.6; background: #111; color: #eee; }
+    h1, h2, h3 { color: #0f0; }
+    code, pre { background: #222; padding: .3rem .5rem; border-radius: 4px; }
+    pre { overflow-x: auto; }
+    ol, ul { margin-left: 1.2rem; }
+    section { margin-top: 2rem; }
+    a { color: #39ff14; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>📝 CyberBlogX: How to Publish a New Post</h1>
+
+  <section>
+    <h2>Overview</h2>
+    <p>This guide explains how to add a new article to CyberBlogX by creating three files:</p>
+    <ul>
+      <li><code>N.png</code> – cover image</li>
+      <li><code>posts/feed/N/N.json</code> – metadata & content</li>
+      <li><code>posts/feed/N/N.html</code> – HTML loader</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>1. Add Cover Image</h2>
+    <p>Place your image in:</p>
+    <pre>/posts/assets/cover/</pre>
+    <p>Name it exactly <code>N.png</code>, where <code>N</code> is the post ID (e.g. <code>3.png</code>).</p>
+  </section>
+
+  <section>
+    <h2>2. Create Post Folder & JSON</h2>
+    <p>Inside <code>/posts/feed/</code>, create a folder named <code>N</code>. Then create <code>N.json</code> with:</p>
+    <pre>{
+  "title":   "My Awesome Idea",
+  "excerpt": "A short teaser.",
+  "date":    "2025-05-29",
+  "read":    4,
+  "tags":    ["tag1","tag2"],
+  "content": "&lt;p&gt;Full HTML content here&lt;/p&gt;"
+}</pre>
+    <p>Optionally, add <code>"markdown": true</code> and write full content in <code>N.md</code>.</p>
+  </section>
+
+  <section>
+    <h2>3. Duplicate HTML Template</h2>
+    <p>Copy <code>posts/feed/1/1.html</code> to <code>posts/feed/N/N.html</code>. The script will auto-detect <code>N</code> from the filename.</p>
+  </section>
+
+  <section>
+    <h2>4. Verify & Publish</h2>
+    <ol>
+      <li>Ensure JSON is valid (no trailing commas).</li>
+      <li>Cover image path: <code>/posts/assets/cover/N.png</code>.</li>
+      <li>Commit & push to GitHub Pages.</li>
+    </ol>
+    <p>The home page will auto-fetch new JSONs and display the post card. Visiting <code>/posts/feed/N/N.html</code> loads your article.</p>
+  </section>
+
+  <section>
+    <h2>Troubleshooting</h2>
+    <ul>
+      <li><strong>Blank article:</strong> Check JSON syntax and that <code>content</code> or <code>.md</code> file exists.</li>
+      <li><strong>Image 404:</strong> Confirm <code>N.png</code> name and path are correct.</li>
+      <li><strong>Post missing on grid:</strong> Ensure <code>N.json</code> was created under <code>/posts/feed/N/</code>.</li>
+    </ul>
+  </section>
+</body>
+</html>
