@@ -1,0 +1,8 @@
+{
+  "title":   "My New Post",
+  "excerpt": "Short teaser…",
+  "date":    "2025-05-11",
+  "read":    5,
+  "tags":    ["tag1","tag2"],
+  "content": "<p>Your full HTML content…</p>"
+}
