@@ -99,11 +99,12 @@
     <h1 id="title">Loading…</h1>
     <div id="body">Please wait.</div>
 
-    <!-- Video Section (no autoplay) -->
+    <!-- Video Section (paused on load) -->
     <section id="video-section" style="display:none; margin-top:2rem;">
       <h2>Featured Video</h2>
       <iframe id="video-frame" width="560" height="315"
-        src="" title="YouTube video player" frameborder="0"
+        src=""
+        title="YouTube video player" frameborder="0"
         allow="encrypted-media; fullscreen" allowfullscreen>
       </iframe>
     </section>
@@ -144,7 +145,7 @@
       document.querySelector('.hamburger').classList.toggle('open');
     });
 
-    // BACK TO TOP
+    // BACK TO TOP BTN
     const topBtn = document.getElementById('top');
     window.addEventListener('scroll', () => {
       window.scrollY > 300
@@ -164,7 +165,6 @@
       fetch(`./${id}.json`)
         .then(r => r.ok ? r.json() : Promise.reject())
         .then(j => {
-          // Title
           document.getElementById('title').textContent = j.title;
 
           // Content
@@ -181,11 +181,11 @@
             document.getElementById('body').innerHTML = j.content || '';
           }
 
-          // Video (no autoplay)
+          // Video (paused)
           if (j.video_url) {
             const vs = document.getElementById('video-section');
             const vf = document.getElementById('video-frame');
-            vf.src = j.video_url;
+            vf.src = j.video_url; // no autoplay param
             vs.style.display = 'block';
           }
 
