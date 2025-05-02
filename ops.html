@@ -1,527 +1,298 @@
 <!DOCTYPE html>
-<!--
-  CyberBlogX 2.0 – Single‑file template (~680 lines)
-
-  • Features ....................................................... Section #
-      1.  Font imports & root CSS vars (easy theme tweaking) ..........  30‑90
-      2.  Responsive navigation with hamburger ........................ 100‑160
-      3.  Hero banner w/ glitch neon .................................. 170‑230
-      4.  Search bar + tag chips UI ................................... 240‑310
-      5.  Posts grid card styles (hover, glow) ........................ 320‑430
-      6.  Pagination + infinite scroll sentinel ....................... 440‑470
-      7.  Contact form ............................................... 480‑520
-      8.  Footer & social icons ...................................... 530‑560
-      9.  Utility animations / keyframes ............................. 570‑630
-     10.  JS: fetch posts, build cards, lunr search, filters, SW ..... 640‑EOF
-
-  • External deps
-      - posts.json   : store your post meta & markdown file paths
-      - lunr.min.js  : search (CDN)
-      - marked.min.js: markdown parser (CDN)
-      - sw.js        : optional service‑worker (see inline template)
-
-  👉  Count lines if you need: every section header shows the running total.
--->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CyberBlogX</title>
-
-<!-- ===== Google Fonts ===== -->
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 
-<!-- ===== External libraries (CDN) ===== -->
-<script defer src="https://unpkg.com/lunr/lunr.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
 <style>
-/* ------------------------------------------------------------------
-   01. RESET & ROOT VARIABLES   (≈ 60 lines)
------------------------------------------------------------------- */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100%;height:100%;scroll-behavior:smooth;overflow-x:hidden;
-  font-family:'Roboto',sans-serif;background:var(--bg-dark);color:var(--text);}
-:root{
-  --neon:#0f0;                     /* primary neon */
-  --neon-b:#39ff14;                /* accent neon  */
-  --bg-dark:#000; --bg-light:#111; /* themes       */
-  --text:#eee;
-  --radius:8px;
-  --speed:.3s;
-  --max:1200px;
-  --gap:2rem;
-  --font-mono:'Press Start 2P',cursive;
-}
-/* Light mode variables (overridden via JS) */
-:root.light{
-  --bg-dark:#fafafa;--bg-light:#fff;
-  --neon:#05f;--neon-b:#0ff;
-  --text:#222;
-}
+/* ========== ROOT & RESET ================================================= */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;width:100%;scroll-behavior:smooth;overflow-x:hidden;
+  background:var(--bg-dark);color:var(--text);font-family:'Roboto',sans-serif}
+:root{--neon:#0f0;--neon-b:#39ff14;--bg-dark:#000;--bg-light:#111;--text:#eee;
+  --radius:8px;--speed:.3s;--max:1200px;--font-mono:'Press Start 2P',cursive}
+:root.light{--bg-dark:#fafafa;--bg-light:#fff;--text:#222;--neon:#05f;--neon-b:#0ff}
 
-/* ------------------------------------------------------------------
-   02. GENERIC UTILITIES (flex helpers, btn, container) (≈ 30 lines)
------------------------------------------------------------------- */
-.container{max-width:var(--max);margin:0 auto;padding:1rem;}
-.flex{display:flex;align-items:center;}
-.just-between{justify-content:space-between;}
-.mt{margin-top:1rem;}
-.hidden{display:none!important;}
-
+/* ========== UTILITIES ==================================================== */
+.container{max-width:var(--max);margin:0 auto;padding:1rem}
+.flex{display:flex;align-items:center}.just-between{justify-content:space-between}
 .btn{display:inline-block;font-family:var(--font-mono);text-transform:uppercase;
-  padding:.75rem 1.5rem;border:1px solid var(--neon);color:var(--neon);
+  padding:.7rem 1.4rem;border:1px solid var(--neon);color:var(--neon);
   background:transparent;border-radius:var(--radius);letter-spacing:.05em;
-  transition:background var(--speed),color var(--speed),box-shadow var(--speed);}
+  transition:background var(--speed),color var(--speed),box-shadow var(--speed)}
 .btn:hover{background:var(--neon);color:var(--bg-dark);
-  box-shadow:0 0 10px var(--neon),0 0 20px var(--neon-b);}
+  box-shadow:0 0 8px var(--neon),0 0 16px var(--neon-b)}
 
-/* ------------------------------------------------------------------
-   03. HEADER & NAVIGATION  (≈ 60 lines)
------------------------------------------------------------------- */
+/* ========== HEADER ======================================================= */
 header{position:fixed;top:0;left:0;width:100%;background:rgba(0,0,0,.8);
-  backdrop-filter:blur(6px);z-index:100;transition:background var(--speed);}
-.navbar{max-width:var(--max);margin:0 auto;padding:1rem;}
+  backdrop-filter:blur(6px);z-index:100}
+.navbar{max-width:var(--max);margin:0 auto;padding:1rem}
 .logo a{font-family:var(--font-mono);font-size:1.5rem;color:var(--neon);
-  text-decoration:none;text-shadow:0 0 5px var(--neon);}
-.nav-links{list-style:none;}
-.nav-links li{display:inline-block;margin-left:2rem;}
-.nav-links a{color:var(--neon);text-decoration:none;position:relative;}
+  text-decoration:none;text-shadow:0 0 4px var(--neon)}
+.nav-links{list-style:none}.nav-links li{display:inline-block;margin-left:2rem}
+.nav-links a{color:var(--neon);text-decoration:none;position:relative}
 .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;
-  height:2px;background:var(--neon-b);transition:width var(--speed);}
-.nav-links a:hover::after{width:100%;}
-/* hamburger */
-.nav-toggle{display:none;background:none;border:none;cursor:pointer;}
-.hamburger,.hamburger::before,.hamburger::after{width:28px;height:3px;
-  background:var(--neon);display:block;position:relative;transition:all var(--speed);}
-.hamburger::before,.hamburger::after{content:'';position:absolute;left:0;}
+  height:2px;background:var(--neon-b);transition:width var(--speed)}
+.nav-links a:hover::after{width:100%}
+.nav-toggle{display:none;background:none;border:none;cursor:pointer}
+.hamburger,.hamburger::before,.hamburger::after{width:28px;height:3px;background:var(--neon);
+  display:block;position:relative;transition:all var(--speed)}
+.hamburger::before,.hamburger::after{content:'';position:absolute;left:0}
 .hamburger::before{top:-8px}.hamburger::after{top:8px}
 .hamburger.open{transform:rotate(45deg)}.hamburger.open::before{top:0;transform:rotate(90deg)}
 .hamburger.open::after{top:0;opacity:0}
 @media(max-width:768px){
   .nav-toggle{display:block}
-  .nav-links{display:none;flex-direction:column;position:fixed;top:60px;right:0;width:200px;height:calc(100% - 60px);
-    background:var(--bg-light);padding:2rem;}
-  .nav-links.show{display:flex}
-  .nav-links li{margin:1rem 0}
+  .nav-links{display:none;flex-direction:column;position:fixed;top:60px;right:0;width:200px;
+    height:calc(100% - 60px);background:var(--bg-light);padding:2rem}
+  .nav-links.show{display:flex}.nav-links li{margin:1rem 0}
 }
 
-/* ------------------------------------------------------------------
-   04. HERO SECTION  (≈ 60 lines)
------------------------------------------------------------------- */
+/* ========== HERO ========================================================= */
 .hero{height:70vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
   background:url('assets/images/hero-bg.jpg') center/cover no-repeat;position:relative;margin-top:60px}
 .hero::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.6)}
-.hero-title{font-size:3.5rem;color:var(--neon);font-family:var(--font-mono);
-  z-index:1;animation:flicker 2s infinite}
-.hero-sub{font-size:1.2rem;color:#ccc;margin-top:1rem;z-index:1;animation:fadeIn 3s}
+.hero-title{font-size:3.2rem;color:var(--neon);font-family:var(--font-mono);z-index:1;animation:flicker 2s infinite}
+.hero-sub{font-size:1.1rem;color:#ccc;margin-top:1rem;z-index:1}
 .hero .btn{margin-top:2rem;z-index:1;animation:pulse 2s infinite}
-/* flicker */
-@keyframes flicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,24%,55%{opacity:.4}}
-@keyframes pulse{0%{box-shadow:0 0 5px var(--neon)}50%{box-shadow:0 0 20px var(--neon-b)}100%{box-shadow:0 0 5px var(--neon)}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-/* fade-out for Explore */
+@keyframes flicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,24%,55%{opacity:.35}}
+@keyframes pulse{0%{box-shadow:0 0 4px var(--neon)}50%{box-shadow:0 0 14px var(--neon-b)}100%{box-shadow:0 0 4px var(--neon)}}
 @keyframes fadeOut{to{opacity:0;visibility:hidden}}
 .hero.hidden{animation:fadeOut .8s forwards}
 
-/* ------------------------------------------------------------------
-   05. SEARCH BAR & TAG FILTERS  (≈ 70 lines)
------------------------------------------------------------------- */
-.search-wrap{margin:2rem 0 0 0;display:grid;grid-template-columns:1fr auto;
-  gap:1rem;align-items:center}
-#search-input{width:100%;padding:.75rem;border:1px solid var(--neon);border-radius:var(--radius);
+/* ========== SEARCH & TAGS =============================================== */
+.search-bar{margin:2rem 0 0;display:grid;grid-template-columns:1fr auto;gap:1rem}
+#search{width:100%;padding:.7rem;border:1px solid var(--neon);border-radius:var(--radius);
   background:var(--bg-light);color:var(--text)}
-.tag-chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
-.tag-chips button{padding:.35rem .8rem;border:1px solid var(--neon-b);
-  background:transparent;border-radius:var(--radius);color:var(--neon-b);
-  font-size:.8rem;cursor:pointer;transition:background var(--speed)}
-.tag-chips button.active, .tag-chips button:hover{background:var(--neon-b);color:var(--bg-dark)}
-/* reset button */
-#clear-filter{margin-left:auto}
+.tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.tags button{padding:.3rem .8rem;border:1px solid var(--neon-b);background:transparent;
+  color:var(--neon-b);border-radius:var(--radius);cursor:pointer;font-size:.8rem;
+  transition:background var(--speed)}
+.tags button.active,.tags button:hover{background:var(--neon-b);color:var(--bg-dark)}
 
-/* ------------------------------------------------------------------
-   06. POSTS GRID & CARDS (≈ 110 lines inc. lazy shimmer)
------------------------------------------------------------------- */
-.posts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--gap);margin-top:var(--gap)}
-.post-card{background:var(--bg-light);border:1px solid var(--neon);border-radius:var(--radius);overflow:hidden;
-  position:relative;transition:transform var(--speed),box-shadow var(--speed)}
-.post-card:hover{transform:translateY(-8px);box-shadow:0 0 10px var(--neon-b)}
-.post-thumbnail{position:relative;overflow:hidden}
-.post-thumbnail img{width:100%;display:block;transition:transform .6s;will-change:transform}
+/* ========== POSTS GRID =================================================== */
+.posts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:2rem}
+.post-card{background:var(--bg-light);border:1px solid var(--neon);border-radius:var(--radius);
+  overflow:hidden;transition:transform var(--speed),box-shadow var(--speed)}
+.post-card:hover{transform:translateY(-6px);box-shadow:0 0 8px var(--neon-b)}
+.post-thumbnail img{width:100%;display:block;object-fit:cover;min-height:160px;transition:transform .6s;will-change:transform}
 .post-card:hover .post-thumbnail img{transform:scale(1.05)}
-.post-content{padding:1rem}
-.post-title{font-size:1.25rem;margin-bottom:.5rem;color:var(--neon-b)}
-.post-excerpt{color:#ccc;line-height:1.6;margin-bottom:1rem}
-.post-meta{font-size:.8rem;color:#888}
-/* skeleton shimmer when loading  */
-.skeleton{background:linear-gradient(90deg,#333 25%,#444 50%,#333 75%);background-size:200% 100%;animation:skeleton 1.2s infinite}
-@keyframes skeleton{0%{background-position:200%}100%{background-position:-200%}}
+.post-content{padding:1rem}.post-title{font-size:1.2rem;color:var(--neon-b);margin-bottom:.4rem}
+.post-excerpt{color:#ccc;font-size:.95rem;line-height:1.55;margin-bottom:.8rem}
+.post-meta{font-size:.75rem;color:#888}
+.skeleton{background:linear-gradient(90deg,#333 25%,#444 50%,#333 75%);background-size:200% 100%;
+  animation:skeleton 1.25s infinite}@keyframes skeleton{0%{background-position:200%}100%{background-position:-200%}}
+/* lazy reveal */
+.lazy{opacity:0;transform:translateY(20px);transition:opacity .6s ease-out,transform .6s ease-out}
+.lazy.visible{opacity:1;transform:translateY(0)}
 
-/* ------------------------------------------------------------------
-   07. PAGINATION + INFINITE SCROLL  (≈ 40 lines)
------------------------------------------------------------------- */
-.pagination{display:flex;justify-content:center;align-items:center;margin:3rem 0;gap:1rem}
+/* ========== PAGINATION =================================================== */
+.pagination{display:flex;justify-content:center;align-items:center;gap:1rem;margin:3rem 0}
 .pagination a{color:var(--neon);text-decoration:none;position:relative;padding-bottom:2px}
-.pagination a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--neon);transition:width var(--speed)}
-.pagination a:hover::after{width:100%}
-/* sentinel for IO */
-#sentinel{width:100%;height:1px}
+.pagination a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--neon);
+ transition:width var(--speed)}.pagination a:hover::after{width:100%}
 
-/* ------------------------------------------------------------------
-   08. CONTACT FORM  (≈ 40 lines)
------------------------------------------------------------------- */
-.contact-section{margin:4rem 0}
-.contact-form{background:var(--bg-light);padding:2rem;border-radius:var(--radius);
-  box-shadow:0 0 10px rgba(0,0,0,.5);max-width:600px;margin:0 auto}
-.contact-form h2{font-family:var(--font-mono);margin-bottom:1rem}
-.contact-form label{display:block;margin-bottom:.5rem;color:#ccc}
-.contact-form input,.contact-form textarea{width:100%;padding:.75rem;background:#222;border:1px solid #444;color:#eee;border-radius:var(--radius);margin-bottom:1rem}
-.contact-form button{background:var(--neon-b);color:var(--bg-dark);border:none;cursor:pointer;
-  padding:.75rem 1.5rem;border-radius:var(--radius);transition:background var(--speed)}
-.contact-form button:hover{background:var(--neon)}
-
-/* ------------------------------------------------------------------
-   09. FOOTER  (≈ 30 lines)
------------------------------------------------------------------- */
+/* ========== CONTACT & FOOTER ============================================ */
+.contact{margin:4rem 0}.contact form{background:var(--bg-light);padding:2rem;border-radius:var(--radius);
+  box-shadow:0 0 8px rgba(0,0,0,.5);max-width:600px;margin:0 auto}
+.contact h2{font-family:var(--font-mono);margin-bottom:1rem}
+.contact label{display:block;color:#ccc;margin:.4rem 0}
+.contact input,.contact textarea{width:100%;padding:.7rem;background:#222;border:1px solid #444;
+  color:#eee;border-radius:var(--radius);margin-bottom:1rem}
+.contact button{background:var(--neon-b);color:var(--bg-dark);border:none;padding:.7rem 1.4rem;
+  border-radius:var(--radius);cursor:pointer;transition:background var(--speed)}
+.contact button:hover{background:var(--neon)}
 footer{background:rgba(0,0,0,.85);text-align:center;padding:2rem 0;margin-top:4rem}
-.footer-content p{color:#888;font-size:.9rem}
-.social-links{list-style:none;margin-top:1rem}
-.social-links li{display:inline-block;margin:0 .5rem}
-.social-links img{width:28px;filter:invert(1);transition:transform var(--speed)}
-.social-links a:hover img{transform:scale(1.2) rotate(-10deg)}
+footer p{color:#888;font-size:.9rem}.social{list-style:none;margin-top:1rem}
+.social li{display:inline-block;margin:0 .5rem}
+.social img{width:28px;filter:invert(1);transition:transform var(--speed)}
+.social a:hover img{transform:scale(1.15) rotate(-8deg)}
 
-/* ------------------------------------------------------------------
-   10. BACK‑TO‑TOP BUTTON (≈ 20 lines)
------------------------------------------------------------------- */
-#back-to-top{position:fixed;right:1rem;bottom:1rem;width:50px;height:50px;
-  background:var(--neon-b);border-radius:50%;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;opacity:0;visibility:hidden;transition:opacity var(--speed),visibility var(--speed);z-index:1000}
-#back-to-top.visible{opacity:1;visibility:visible}
-#back-to-top svg{width:24px;height:24px;fill:var(--bg-dark)}
+/* ========== BACK TO TOP ================================================== */
+#top{position:fixed;right:1rem;bottom:1rem;width:48px;height:48px;background:var(--neon-b);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  opacity:0;visibility:hidden;transition:opacity var(--speed),visibility var(--speed);z-index:1000}
+#top.visible{opacity:1;visibility:visible}
+#top svg{width:24px;height:24px;fill:var(--bg-dark)}
 </style>
 </head>
 <body>
 
-<!-- =========================  HEADER  ========================= -->
+<!-- ========= HEADER ========= -->
 <header>
   <nav class="navbar flex just-between">
     <div class="logo"><a href="/">CyberBlogX</a></div>
-
     <ul class="nav-links">
-      <li><a href="/">Home</a></li>
-      <li><a href="#posts-wrap">Posts</a></li>
+      <li><a href="#posts">Posts</a></li>
       <li><a href="#contact">Contact</a></li>
-      <li><a id="theme-toggle" href="#">Toggle Theme</a></li>
+      <li><a id="theme-btn" href="#">Toggle Theme</a></li>
     </ul>
-
     <button class="nav-toggle" aria-label="Toggle navigation"><span class="hamburger"></span></button>
   </nav>
 </header>
 
-<!-- =========================  HERO  ========================= -->
+<!-- ========= HERO ========= -->
 <section class="hero" id="hero">
   <h1 class="hero-title">Welcome to CyberBlogX</h1>
   <p class="hero-sub">Diving deep into the Matrix, one post at a time.</p>
-  <a href="#posts-wrap" class="btn" id="explore-btn">Explore Posts</a>
+  <a href="#posts" class="btn" id="explore">Explore Posts</a>
 </section>
 
-<!-- =========================  MAIN / POSTS  ========================= -->
-<main id="posts-wrap" class="container">
-
-  <!-- Search + Filter UI -->
-  <div class="search-wrap">
-    <input type="search" id="search-input" placeholder="Search posts…">
-    <button id="clear-filter" class="btn hidden">Clear</button>
+<!-- ========= MAIN ========= -->
+<main class="container" id="posts">
+  <div class="search-bar">
+    <input id="search" type="search" placeholder="Search posts…">
+    <button id="clear" class="btn hidden">Clear</button>
   </div>
-  <div class="tag-chips" id="tag-chips"></div>
+  <div id="tag-wrap" class="tags"></div>
 
-  <!-- Posts grid -->
-  <section class="posts-grid" id="posts-grid"></section>
-
-  <!-- Pagination & infinite scroll sentinel -->
-  <nav class="pagination" id="pagination"></nav>
-  <div id="sentinel"></div>
-
-  <!-- Contact -->
-  <section class="contact-section" id="contact">
-    <form class="contact-form" id="contact-form">
-      <h2>Get in Touch</h2>
-      <label for="name">Name</label>
-      <input type="text" id="name" required>
-      <label for="email">Email</label>
-      <input type="email" id="email" required>
-      <label for="message">Message</label>
-      <textarea id="message" rows="5" required></textarea>
-      <button type="submit">Send Message</button>
-      <p id="form-status"></p>
-    </form>
-  </section>
+  <section id="grid" class="posts-grid"></section>
+  <nav id="pager" class="pagination"></nav>
 </main>
 
-<!-- =========================  FOOTER  ========================= -->
-<footer>
-  <div class="container footer-content">
-    <p>&copy; <span id="year"></span> CyberBlogX. All Rights Reserved.</p>
-    <ul class="social-links">
-      <li><a href="#"><img src="assets/icons/twitter.svg" alt="Twitter"></a></li>
-      <li><a href="#"><img src="assets/icons/github.svg" alt="GitHub"></a></li>
-      <li><a href="#"><img src="assets/icons/linkedin.svg" alt="LinkedIn"></a></li>
-    </ul>
-  </div>
-</footer>
+<!-- ========= CONTACT ========= -->
+<section class="contact" id="contact">
+  <form>
+    <h2>Get in Touch</h2>
+    <label>Name<input required type="text"></label>
+    <label>Email<input required type="email"></label>
+    <label>Message<textarea required rows="5"></textarea></label>
+    <button type="submit">Send</button>
+    <p id="status"></p>
+  </form>
+</section>
 
-<!-- Back‑to‑top -->
-<div id="back-to-top" title="Back to top">
-  <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h16z"/></svg>
-</div>
+<!-- ========= FOOTER ========= -->
+<footer><div class="container">
+  <p>&copy; <span id="yr"></span> CyberBlogX. All Rights Reserved.</p>
+  <ul class="social">
+    <li><a href="#"><img src="assets/icons/twitter.svg" alt="Twitter"></a></li>
+    <li><a href="#"><img src="assets/icons/github.svg" alt="GitHub"></a></li>
+    <li><a href="#"><img src="assets/icons/linkedin.svg" alt="LinkedIn"></a></li>
+  </ul>
+</div></footer>
 
-<!-- =========================  CORE SCRIPTS  ========================= -->
+<!-- ========= BACK TO TOP ========= -->
+<div id="top" title="Back to top"><svg viewBox="0 0 24 24"><path d="M12 4l-8 8h16z"/></svg></div>
+
+<!-- ========= INLINE POST DATA (edit here) ========= -->
+<script id="post-data" type="application/json">
+[
+  { "id":1,"title":"Matrix Rain Effect","excerpt":"Re‑creating the iconic green drizzle with Canvas.","img":"assets/images/post1.jpg","date":"2025‑05‑01","read":6,"tags":["canvas","fx"] },
+  { "id":2,"title":"CSS Neon Text","excerpt":"Make any heading glow like a Vegas sign.","img":"assets/images/post2.jpg","date":"2025‑05‑02","read":4,"tags":["css","design"] },
+  { "id":3,"title":"Building a JSON‑Powered Blog","excerpt":"No CMS, no build step – just plain JS.","img":"assets/images/post3.jpg","date":"2025‑05‑03","read":5,"tags":["javascript","tutorial"] },
+  { "id":4,"title":"Lazy Load Images with IO","excerpt":"Boost performance using IntersectionObserver.","img":"assets/images/post4.jpg","date":"2025‑05‑04","read":3,"tags":["performance","images"] },
+  { "id":5,"title":"Service‑Worker 101","excerpt":"Cache‑first, network‑fallback strategies.","img":"assets/images/post5.jpg","date":"2025‑05‑05","read":7,"tags":["pwa","offline"] },
+  { "id":6,"title":"Skeleton Screens","excerpt":"Shimmer effects that beat spinners.","img":"assets/images/post6.jpg","date":"2025‑05‑06","read":4,"tags":["ux","css"] },
+  { "id":7,"title":"Tag Filters in Vanilla JS","excerpt":"Chip buttons that toggle content instantly.","img":"assets/images/post7.jpg","date":"2025‑05‑07","read":5,"tags":["javascript","ui"] },
+  { "id":8,"title":"Animate at 60 FPS","excerpt":"GPU‑friendly transforms and will‑change.","img":"assets/images/post8.jpg","date":"2025‑05‑08","read":6,"tags":["performance","css"] },
+  { "id":9,"title":"Markdown in the Browser","excerpt":"Render .md files on the fly with marked.js.","img":"assets/images/post9.jpg","date":"2025‑05‑09","read":5,"tags":["markdown","javascript"] },
+  { "id":10,"title":"Client‑Side Search with Lunr","excerpt":"Add blazing search to static sites.","img":"assets/images/post10.jpg","date":"2025‑05‑10","read":8,"tags":["search","lunr"] }
+]
+</script>
+
+<!-- ========= CORE SCRIPT ========= -->
 <script>
-/* ------------------------------------------------------------------
-   CONSTANTS – tweak here instead of hunting in code
------------------------------------------------------------------- */
-const POSTS_JSON = '/posts.json';   // path to JSON file
-const POSTS_PER_PAGE = 6;           // for pagination
-const LAZY_THRESHOLD = 0.25;        // IO threshold for cards
-/* ------------------------------------------------------------------
-   STATE
------------------------------------------------------------------- */
-let posts = [];                     // all posts loaded
-let page = 1;                       // current page for pagination
-let lunrIndex = null;               // lunr search index
-let currentTag = '';                // active tag filter
+/* ------- CONFIG ------- */
+const PER_PAGE = 6;
 
-/* ------------------------------------------------------------------
-   SERVICE WORKER (optional but nice)
------------------------------------------------------------------- */
-if('serviceWorker' in navigator){
-  // sw.js template caches /, posts.json, assets/images/* and fallback.html
-  navigator.serviceWorker.register('/sw.js').catch(console.error);
-}
+/* ------- THEME TOGGLE ------- */
+const root=document.documentElement, themeBtn=document.getElementById('theme-btn');
+let theme=localStorage.getItem('theme')||'dark';apply(themeBtn);
+themeBtn.addEventListener('click',e=>{e.preventDefault();theme=theme==='dark'?'light':'dark';apply(theme)});
+function apply(btn){root.classList.toggle('light',theme==='light');localStorage.setItem('theme',theme);}
 
-/* ------------------------------------------------------------------
-   THEME TOGGLE
------------------------------------------------------------------- */
-const root = document.documentElement;
-const themeBtn = document.getElementById('theme-toggle');
-let theme = localStorage.getItem('theme') || 'dark';
-applyTheme(theme);
-themeBtn.addEventListener('click',e=>{
-  e.preventDefault();
-  theme = theme==='dark'?'light':'dark';
-  applyTheme(theme);
-});
-function applyTheme(t){
-  if(t==='light'){root.classList.add('light');}else{root.classList.remove('light');}
-  localStorage.setItem('theme',t);
-}
+/* ------- MOBILE NAV ------- */
+document.querySelector('.nav-toggle').addEventListener('click',()=>{
+  document.querySelector('.nav-links').classList.toggle('show');
+  document.querySelector('.hamburger').classList.toggle('open');});
 
-/* ------------------------------------------------------------------
-   NAV TOGGLE (mobile)
------------------------------------------------------------------- */
-const navToggle=document.querySelector('.nav-toggle');
-const navLinks=document.querySelector('.nav-links');
-navToggle.addEventListener('click',()=>{
-  navLinks.classList.toggle('show');
-  document.querySelector('.hamburger').classList.toggle('open');
-});
+/* ------- HERO SCROLL ------- */
+document.getElementById('explore').addEventListener('click',e=>{
+  e.preventDefault();document.getElementById('hero').classList.add('hidden');
+  document.getElementById('posts').scrollIntoView({behavior:'smooth'});});
 
-/* ------------------------------------------------------------------
-   HERO → SCROLL & FADE
------------------------------------------------------------------- */
-const exploreBtn=document.getElementById('explore-btn');
-const hero=document.getElementById('hero');
-exploreBtn.addEventListener('click',e=>{
-  e.preventDefault();
-  hero.classList.add('hidden');
-  document.getElementById('posts-wrap').scrollIntoView({behavior:'smooth'});
-});
+/* ------- BACK TO TOP ------- */
+const topBtn=document.getElementById('top');
+window.addEventListener('scroll',()=>window.scrollY>300?topBtn.classList.add('visible'):topBtn.classList.remove('visible'));
+topBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
 
-/* ------------------------------------------------------------------
-   BACK‑TO‑TOP
------------------------------------------------------------------- */
-const backBtn=document.getElementById('back-to-top');
-window.addEventListener('scroll',()=>{
-  window.scrollY>300?backBtn.classList.add('visible'):backBtn.classList.remove('visible');
-});
-backBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+/* ------- POST RENDER ------- */
+const data = JSON.parse(document.getElementById('post-data').textContent);
+const grid = document.getElementById('grid');
+const pager= document.getElementById('pager');
+const tagWrap=document.getElementById('tag-wrap');
+const searchInput=document.getElementById('search');
+const clearBtn=document.getElementById('clear');
+let page=1, currentTag='', q='';
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}}),{threshold:.3});
+const lazyImg = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){const img=e.target;img.src=img.dataset.src;img.onload=()=>img.classList.remove('skeleton');lazyImg.unobserve(img);}
+  });
+},{rootMargin:'200px'});
+renderTags();draw();
 
-/* ------------------------------------------------------------------
-   CONTACT FORM (fake ajax)
------------------------------------------------------------------- */
-document.getElementById('contact-form').addEventListener('submit',e=>{
-  e.preventDefault();
-  const status=document.getElementById('form-status');
-  status.textContent='Sending…';
-  setTimeout(()=>{status.textContent='Message sent!';e.target.reset();},1500);
-});
+searchInput.addEventListener('input',()=>{q=searchInput.value.trim();page=1;draw()});
+clearBtn.addEventListener('click',()=>{currentTag='';tagWrap.querySelectorAll('button').forEach(b=>b.classList.remove('active'));clearBtn.classList.add('hidden');page=1;draw()});
 
-/* ------------------------------------------------------------------
-   FETCH POSTS + BUILD SEARCH INDEX
------------------------------------------------------------------- */
-fetch(POSTS_JSON)
-  .then(r=>r.json())
-  .then(json=>{
-    posts=json;
-    buildLunr();
-    buildTagChips();
-    renderPage();     // first render
-  })
-  .catch(err=>console.error('posts.json missing?',err));
-
-function buildLunr(){
-  lunrIndex = lunr(function(){
-    this.ref('id'); this.field('title'); this.field('excerpt'); this.field('tags');
-    posts.forEach(p=>this.add(p));
+function renderTags(){
+  const tags=[...new Set(data.flatMap(p=>p.tags))].sort();
+  tags.forEach(t=>{
+    const b=document.createElement('button');b.textContent=t;
+    b.onclick=()=>{currentTag=currentTag===t?'':t;page=1;draw();
+      tagWrap.querySelectorAll('button').forEach(btn=>btn.classList.toggle('active',btn.textContent===currentTag));
+      clearBtn.classList.toggle('hidden',!currentTag);}
+    tagWrap.appendChild(b);
   });
 }
 
-/* ------------------------------------------------------------------
-   SEARCH + TAG FILTER EVENTS
------------------------------------------------------------------- */
-const searchInput=document.getElementById('search-input');
-const clearBtn=document.getElementById('clear-filter');
-searchInput.addEventListener('input',()=>{page=1;renderPage();});
-clearBtn.addEventListener('click',()=>{currentTag='';clearBtn.classList.add('hidden');page=1;renderPage();});
-function buildTagChips(){
-  const wrap=document.getElementById('tag-chips');
-  const tags=[...new Set(posts.flatMap(p=>p.tags))].sort();
-  tags.forEach(tag=>{
-    const btn=document.createElement('button');
-    btn.textContent=tag;
-    btn.addEventListener('click',()=>{
-      currentTag = currentTag===tag ? '' : tag;
-      [...wrap.children].forEach(b=>b.classList.remove('active'));
-      if(currentTag){btn.classList.add('active');clearBtn.classList.remove('hidden');}
-      else{clearBtn.classList.add('hidden');}
-      page=1;renderPage();
-    });
-    wrap.appendChild(btn);
-  });
-}
-
-/* ------------------------------------------------------------------
-   RENDER LOGIC (pagination + filters + search)
------------------------------------------------------------------- */
-const grid=document.getElementById('posts-grid');
-const pager=document.getElementById('pagination');
-const sentinel=document.getElementById('sentinel');
-
-function filterPosts(){
-  let list=[...posts];
-  // tag filter
-  if(currentTag){list=list.filter(p=>p.tags.includes(currentTag));}
-  // search
-  const q=searchInput.value.trim();
-  if(q){
-    const hits=lunrIndex.search(q);
-    const ids=new Set(hits.map(h=>parseInt(h.ref)));
-    list=list.filter(p=>ids.has(p.id));
-  }
+function filter(){
+  let list=[...data];
+  if(currentTag)list=list.filter(p=>p.tags.includes(currentTag));
+  if(q) list=list.filter(p=>p.title.toLowerCase().includes(q.toLowerCase())||p.excerpt.toLowerCase().includes(q.toLowerCase()));
   return list;
 }
 
-function renderPage(){
-  const list=filterPosts();
-  const start=(page-1)*POSTS_PER_PAGE;
-  const end=start+POSTS_PER_PAGE;
-  const slice=list.slice(0,end);
-
-  grid.innerHTML='';
-  slice.forEach(buildCard);
-
-  // pagination buttons (for no‑JS fallback the URL can include ?page=n)
+function draw(){
+  grid.innerHTML='';const list=filter();
+  list.slice(0,page*PER_PAGE).forEach(buildCard);
   pager.innerHTML='';
-  if(page>1){pager.appendChild(pageLink('« Newer',page-1,'prev'));}
-  if(end<list.length){pager.appendChild(pageLink('Older »',page+1,'next'));}
-
-  // if infinite scroll – observe sentinel only when more data to load
-  if(end<list.length){ioScroll.observe(sentinel);}else{ioScroll.unobserve(sentinel);}
+  if(page>1) pager.appendChild(link('« Newer',page-1));
+  if(page*PER_PAGE<list.length) pager.appendChild(link('Older »',page+1));
 }
 
 function buildCard(p){
-  const article=document.createElement('article');
-  article.className='post-card lazy';
-  article.innerHTML=`
-    <a href="${p.url || '#'}">
-      <div class="post-thumbnail"><img data-src="${p.thumb}" alt="${p.title}" class="lazy-img skeleton"></div>
-      <div class="post-content">
-        <h2 class="post-title">${p.title}</h2>
-        <p class="post-excerpt">${p.excerpt}</p>
-        <span class="post-meta">${p.date} • ${p.read} min read</span>
-      </div>
-    </a>`;
-  grid.appendChild(article);
-  ioLazy.observe(article.querySelector('.lazy-img'));
+  const art=document.createElement('article');art.className='post-card lazy';
+  art.innerHTML=`<a href="${p.url||'#'}">
+    <div class="post-thumbnail"><img data-src="${p.img}" alt="${p.title}" class="skeleton"></div>
+    <div class="post-content"><h2 class="post-title">${p.title}</h2>
+    <p class="post-excerpt">${p.excerpt}</p>
+    <span class="post-meta">${p.date} • ${p.read} min read</span></div></a>`;
+  grid.appendChild(art);io.observe(art);lazyImg.observe(art.querySelector('img'));
 }
 
-function pageLink(text,n,cls){
-  const a=document.createElement('a');a.href='#';a.textContent=text;a.className=cls;
-  a.addEventListener('click',e=>{e.preventDefault();page=n;renderPage();});
-  return a;
-}
+function link(label,n){const a=document.createElement('a');a.href='#';a.textContent=label;a.onclick=e=>{e.preventDefault();page=n;draw()};return a;}
 
-/* ------------------------------------------------------------------
-   INTERSECTION OBSERVERS
------------------------------------------------------------------- */
-// 1) Lazy‑load images
-const ioLazy=new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      const img=entry.target;
-      img.src=img.dataset.src;
-      img.onload=()=>img.classList.remove('skeleton');
-      ioLazy.unobserve(img);
-    }
-  });
-},{threshold:LAZY_THRESHOLD});
+document.getElementById('yr').textContent=new Date().getFullYear();
 
-// 2) Infinite scroll sentinel
-const ioScroll=new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      page++;renderPage();
-    }
-  });
-},{rootMargin:'400px'}); // preload earlier
-
-/* ------------------------------------------------------------------
-   MISC
------------------------------------------------------------------- */
-document.getElementById('year').textContent=new Date().getFullYear();
+/* Contact fake send */
+document.querySelector('.contact form').addEventListener('submit',e=>{
+  e.preventDefault();const st=document.getElementById('status');st.textContent='Sending…';
+  setTimeout(()=>st.textContent='Message sent!',1200);
+});
 </script>
 
-<!-- ---------------- Sample posts.json structure ----------------
-[
-  {
-    "id":1,
-    "title":"Building a Matrix Rain Effect",
-    "excerpt":"A step‑by‑step guide to recreating the iconic digital drizzle...",
-    "thumb":"assets/images/post1.jpg",
-    "date":"May 01 2025",
-    "read":5,
-    "tags":["css","canvas"],
-    "url":"/posts/matrix-rain.html"
-  },
-  ...
-]
------------------------------------------------------------------- -->
-
-<!-- ------------- sw.js (save as /sw.js) -------------
-const CACHE = 'cbx-v1';
-const OFFLINE = '/offline.html';
-self.addEventListener('install',e=>{
-  e.waitUntil(caches.open(CACHE).then(c=>c.addAll([
-    '/',OFFLINE,'/posts.json'
-  ])));
-});
-self.addEventListener('fetch',e=>{
-  e.respondWith(
-    caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match(OFFLINE)))
-  );
-});
------------------------------------------------------->
+<!--  Optional service‑worker pattern (uncomment to use)
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js').catch(console.error);
+}
+</script>
+-->
 
 </body>
 </html>
