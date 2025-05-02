@@ -55,8 +55,8 @@
       font-family:var(--font-mono); font-size:1.5rem; color:var(--neon);
       text-decoration:none; text-shadow:0 0 4px var(--neon);
     }
-    .nav-links { list-style:none; }
-    .nav-links li { display:inline-block; }
+    .nav-links { list-style:none; display:flex; align-items:center; gap:1rem; }
+    .nav-links li { display:block; }
     .nav-links a, .nav-links button {
       color:var(--neon); text-decoration:none; position:relative;
       background:none; border:none; cursor:pointer; font-family:var(--font-mono);
@@ -129,20 +129,22 @@
       <div class="logo"><a href="/">CyberBlogX</a></div>
       <ul class="nav-links">
         <li><a href="/#posts">Posts</a></li>
-        <li><a href="/#contact">Contact</a></li>
-        <!-- Unmute/Mute -->
         <li>
           <button id="audio-toggle" class="btn neon-flicker" title="Unmute Music">
             🔈 Unmute
           </button>
         </li>
-        <!-- Play/Pause -->
         <li>
           <button id="audio-playpause" class="btn neon-flicker" title="Pause Music">
             ⏸ Pause
           </button>
         </li>
-        <li><a id="theme-btn" href="#" class="btn">Toggle Theme</a></li>
+        <li>
+          <button id="theme-btn" class="btn" title="Toggle Light/Dark">
+            💡
+          </button>
+        </li>
+        <li><a href="/#contact">📧</a></li>
       </ul>
       <button class="nav-toggle" aria-label="Toggle navigation">
         <span class="hamburger"></span>
