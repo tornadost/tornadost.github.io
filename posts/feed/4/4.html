@@ -11,32 +11,16 @@
     /* ========== ROOT & RESET ================================================= */
     *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
     html,body { height:100%; width:100%; background:var(--bg-dark); color:var(--text);
-      scroll-behavior:smooth; overflow-y:scroll; overflow-x:hidden; font-family:'Roboto',sans-serif; }
+      scroll-behavior:smooth; overflow-x:hidden; font-family:'Roboto',sans-serif; }
     :root {
       --neon: #0f0; --neon-b: #39ff14;
       --bg-dark: #000; --bg-light: #111; --text: #eee;
       --radius: 8px; --speed: .3s; --font-mono: 'Press Start 2P',cursive;
-      --scrollbar-bg: #222; --scrollbar-thumb: #444;
     }
     :root.light {
       --bg-dark: #fafafa; --bg-light: #fff; --text: #222;
       --neon: #05f; --neon-b: #0ff;
-      --scrollbar-bg: #ddd; --scrollbar-thumb: #bbb;
     }
-
-    /* ========== SCROLLBAR ==================================================== */
-    /* WebKit */
-    ::-webkit-scrollbar {
-      width: 8px;
-      background: var(--scrollbar-bg);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: var(--scrollbar-thumb);
-      border-radius: 4px;
-    }
-    /* Firefox */
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
 
     /* ========== UTILITIES ==================================================== */
     .container { max-width: var(--max,1200px); margin:0 auto; padding:1rem; }
@@ -66,26 +50,13 @@
       position:fixed; top:0; left:0; width:100%;
       background:rgba(0,0,0,.8); backdrop-filter:blur(6px); z-index:100;
     }
-    .navbar {
-      max-width:var(--max,1200px);
-      margin:0 auto;
-      padding:1rem;
-      display:flex;
-      align-items:center;
-    }
-    .logo { flex:1; }
+    .navbar { max-width:var(--max,1200px); margin:0 auto; padding:1rem; }
     .logo a {
       font-family:var(--font-mono); font-size:1.5rem; color:var(--neon);
       text-decoration:none; text-shadow:0 0 4px var(--neon);
     }
-    .nav-links {
-      display:flex;
-      align-items:center;
-      gap:1rem;
-      /* push to right */
-      margin-left:auto;
-    }
-    .nav-links li { list-style:none; }
+    .nav-links { list-style:none; display:flex; align-items:center; gap:1rem; }
+    .nav-links li { display:block; }
     .nav-links a, .nav-links button {
       color:var(--neon); text-decoration:none; position:relative;
       background:none; border:none; cursor:pointer; font-family:var(--font-mono);
@@ -107,7 +78,6 @@
     .hamburger.open { transform:rotate(45deg); }
     .hamburger.open::before { top:0; transform:rotate(90deg); }
     .hamburger.open::after { top:0; opacity:0; }
-
     @media(max-width:768px){
       .nav-toggle { display:block; }
       .nav-links {
@@ -139,14 +109,23 @@
     #top.visible { opacity:1; visibility:visible; }
     #top svg { width:24px; height:24px; fill:var(--bg-dark); }
   </style>
+
+  <!-- Marked.js for Markdown rendering + header-ID support -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-    marked.setOptions({gfm:true,headerIds:true,headerPrefix:'',mangle:false});
+    marked.setOptions({
+      gfm: true,
+      headerIds: true,
+      headerPrefix: '',
+      mangle: false
+    });
   </script>
 </head>
+
 <body>
+  <!-- HEADER -->
   <header>
-    <nav class="navbar">
+    <nav class="navbar flex just-between">
       <div class="logo"><a href="/">CyberBlogX</a></div>
       <ul class="nav-links">
         <li><a href="/#posts">Posts</a></li>
@@ -173,21 +152,26 @@
     </nav>
   </header>
 
+  <!-- POST CONTENT -->
   <article class="post-content container">
     <h1 id="title">Loading…</h1>
     <div id="body">Please wait.</div>
 
+    <!-- Video (paused) -->
     <section id="video-section" style="display:none; margin-top:2rem;">
       <h2>Featured Video</h2>
-      <iframe id="video-frame" width="560" height="315"
+      <iframe
+        id="video-frame" width="560" height="315"
         src="" title="YouTube video player" frameborder="0"
         allow="encrypted-media; fullscreen" allowfullscreen>
       </iframe>
     </section>
 
+    <!-- Audio (autoplay, muted) -->
     <section id="audio-section" style="display:none; margin-top:2rem;">
       <h2>Background Audio</h2>
-      <audio id="audio-player" controls autoplay loop muted
+      <audio
+        id="audio-player" controls autoplay loop muted
         style="width:100%; margin-top:.5rem;">
         <source src="" type="audio/flac">
         Your browser does not support the HTML5 Audio element.
@@ -195,6 +179,7 @@
     </section>
   </article>
 
+  <!-- BACK TO TOP -->
   <div id="top" title="Back to top">
     <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h16z"/></svg>
   </div>
@@ -202,78 +187,106 @@
   <script>
     // THEME TOGGLE
     const root = document.documentElement;
-    let theme = localStorage.getItem('theme')||'dark';
-    const applyTheme=()=>{
-      root.classList.toggle('light', theme==='light');
+    let theme = localStorage.getItem('theme') || 'dark';
+    const applyTheme = () => {
+      root.classList.toggle('light', theme === 'light');
       localStorage.setItem('theme', theme);
     };
     applyTheme();
-    document.getElementById('theme-btn').addEventListener('click',e=>{
+    document.getElementById('theme-btn').addEventListener('click', e => {
       e.preventDefault();
-      theme = theme==='dark'?'light':'dark';
+      theme = theme === 'dark' ? 'light' : 'dark';
       applyTheme();
     });
 
     // MOBILE NAV
-    document.querySelector('.nav-toggle').addEventListener('click',()=>{
+    document.querySelector('.nav-toggle').addEventListener('click', () => {
       document.querySelector('.nav-links').classList.toggle('show');
       document.querySelector('.hamburger').classList.toggle('open');
     });
 
     // BACK TO TOP
-    const topBtn=document.getElementById('top');
-    window.addEventListener('scroll',()=>{
-      window.scrollY>300? topBtn.classList.add('visible'): topBtn.classList.remove('visible');
+    const topBtn = document.getElementById('top');
+    window.addEventListener('scroll', () => {
+      window.scrollY > 300
+        ? topBtn.classList.add('visible')
+        : topBtn.classList.remove('visible');
     });
-    topBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+    topBtn.addEventListener('click', () =>
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    );
 
     // AUDIO CONTROLS
-    const audio=document.getElementById('audio-player');
-    const toggleBtn=document.getElementById('audio-toggle');
-    const playpauseBtn=document.getElementById('audio-playpause');
-    toggleBtn.addEventListener('click',()=>{
-      audio.muted=!audio.muted;
-      toggleBtn.innerHTML=audio.muted?'🔈 Unmute':'🔊 Mute';
+    const audio = document.getElementById('audio-player');
+    const toggleBtn = document.getElementById('audio-toggle');
+    const playpauseBtn = document.getElementById('audio-playpause');
+
+    // Mute / Unmute
+    toggleBtn.addEventListener('click', () => {
+      audio.muted = !audio.muted;
+      toggleBtn.innerHTML = audio.muted ? '🔈 Unmute' : '🔊 Mute';
       toggleBtn.classList.remove('neon-flicker');
       void toggleBtn.offsetWidth;
       toggleBtn.classList.add('neon-flicker');
     });
-    playpauseBtn.addEventListener('click',()=>{
-      if(audio.paused){audio.play(); playpauseBtn.innerHTML='⏸ Pause'}
-      else{audio.pause(); playpauseBtn.innerHTML='▶️ Play'}
+
+    // Play / Pause
+    playpauseBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+        playpauseBtn.innerHTML = '⏸ Pause';
+      } else {
+        audio.pause();
+        playpauseBtn.innerHTML = '▶️ Play';
+      }
       playpauseBtn.classList.remove('neon-flicker');
       void playpauseBtn.offsetWidth;
       playpauseBtn.classList.add('neon-flicker');
     });
 
-    // LOAD POST + MD + Media
-    const m=window.location.pathname.match(/\/posts\/feed\/(\d+)\/\1\.html$/);
-    if(!m) document.getElementById('body').textContent='Invalid post URL';
-    else {
-      const id=m[1];
-      fetch(`./${id}.json`).then(r=>r.ok?r.json():Promise.reject())
-      .then(j=>{
-        document.getElementById('title').textContent=j.title;
-        if(j.markdown){
-          fetch(`./${id}.md`).then(r=>r.ok?r.text():Promise.reject())
-          .then(md=>document.getElementById('body').innerHTML=marked.parse(md))
-          .catch(()=>document.getElementById('body').textContent='Content not found.');
-        } else {
-          document.getElementById('body').innerHTML=j.content||'';
-        }
-        if(j.video_url){
-          const vs=document.getElementById('video-section');
-          const vf=document.getElementById('video-frame');
-          vf.src=j.video_url; vs.style.display='block';
-        }
-        if(j.audio_url){
-          const as=document.getElementById('audio-section');
-          as.style.display='block';
-          audio.src=j.audio_url;
-          audio.play().catch(()=>{/* gesture required */});
-        }
-      })
-      .catch(()=>document.getElementById('body').textContent='Post not found.');
+    // LOAD POST + Markdown + Media
+    const m = window.location.pathname.match(/\/posts\/feed\/(\d+)\/\1\.html$/);
+    if (!m) {
+      document.getElementById('body').textContent = 'Invalid post URL';
+    } else {
+      const id = m[1];
+      fetch(`./${id}.json`)
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(j => {
+          // Title & Content
+          document.getElementById('title').textContent = j.title;
+          if (j.markdown) {
+            fetch(`./${id}.md`)
+              .then(r => r.ok ? r.text() : Promise.reject())
+              .then(md => {
+                document.getElementById('body').innerHTML = marked.parse(md);
+              })
+              .catch(() => {
+                document.getElementById('body').textContent = 'Content not found.';
+              });
+          } else {
+            document.getElementById('body').innerHTML = j.content || '';
+          }
+
+          // Video (paused)
+          if (j.video_url) {
+            const vs = document.getElementById('video-section');
+            const vf = document.getElementById('video-frame');
+            vf.src = j.video_url;
+            vs.style.display = 'block';
+          }
+
+          // Audio (autoplay, muted by default)
+          if (j.audio_url) {
+            const as = document.getElementById('audio-section');
+            as.style.display = 'block';
+            audio.src = j.audio_url;
+            audio.play().catch(()=>{/* gesture required */});
+          }
+        })
+        .catch(() => {
+          document.getElementById('body').textContent = 'Post not found.';
+        });
     }
   </script>
 </body>
