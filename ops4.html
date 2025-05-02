@@ -64,15 +64,12 @@ header{position:fixed;top:0;left:0;width:100%;background:rgba(0,0,0,.8);
 .hero.hidden{animation:fadeOut .8s forwards}
 
 /* ========== SEARCH & TAGS =============================================== */
-/* make the search bar sticky below the header */
+/* sticky search bar under header */
 .search-bar{
   margin:2rem 0 0;
   display:grid;grid-template-columns:1fr auto;gap:1rem;
-  position:sticky;
-  top:60px;       /* height of header */
-  background:var(--bg-dark);
-  z-index:90;
-  padding-top:1rem;
+  position:sticky;top:60px;
+  background:var(--bg-dark);z-index:90;padding-top:1rem;
 }
 #search{width:100%;padding:.7rem;border:1px solid var(--neon);border-radius:var(--radius);
   background:var(--bg-light);color:var(--text)}
@@ -85,7 +82,8 @@ header{position:fixed;top:0;left:0;width:100%;background:rgba(0,0,0,.8);
 /* ========== POSTS GRID =================================================== */
 .posts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:2rem}
 .post-card{background:var(--bg-light);border:1px solid var(--neon);border-radius:var(--radius);
-  overflow:hidden;transition:transform var(--speed),box-shadow var(--speed)}
+  overflow:hidden;transition:transform var(--speed),box-shadow var(--speed),opacity .3s}
+.post-card.hidden{opacity:0}
 .post-card:hover{transform:translateY(-6px);box-shadow:0 0 8px var(--neon-b)}
 .post-thumbnail img{width:100%;display:block;object-fit:cover;min-height:160px;transition:transform .6s;will-change:transform}
 .post-card:hover .post-thumbnail img{transform:scale(1.05)}
@@ -99,9 +97,13 @@ header{position:fixed;top:0;left:0;width:100%;background:rgba(0,0,0,.8);
 
 /* ========== PAGINATION =================================================== */
 .pagination{display:flex;justify-content:center;align-items:center;gap:1rem;margin:3rem 0}
-.pagination a{color:var(--neon);text-decoration:none;position:relative;padding-bottom:2px}
-.pagination a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--neon);
- transition:width var(--speed)}.pagination a:hover::after{width:100%}
+.pagination a{color:var(--neon);text-decoration:none;position:relative;padding-bottom:2px;transition:opacity .3s}
+.pagination a:hover::after{width:100%}
+.pagination a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--neon);transition:width var(--speed)}
+/* add fade on page change */
+.pagination a, .pagination span{
+  opacity:1;transition:opacity .3s;
+}
 
 /* ========== CONTACT & FOOTER ============================================ */
 .contact{margin:4rem 0}.contact form{background:var(--bg-light);padding:2rem;border-radius:var(--radius);
@@ -156,7 +158,6 @@ footer p{color:#888;font-size:.9rem}.social{list-style:none;margin-top:1rem}
     <button id="clear" class="btn hidden">Clear</button>
   </div>
   <div id="tag-wrap" class="tags"></div>
-
   <section id="grid" class="posts-grid"></section>
   <nav id="pager" class="pagination"></nav>
 </main>
@@ -185,11 +186,6 @@ footer p{color:#888;font-size:.9rem}.social{list-style:none;margin-top:1rem}
 
 <!-- ========= BACK TO TOP ========= -->
 <div id="top" title="Back to top"><svg viewBox="0 0 24 24"><path d="M12 4l-8 8h16z"/></svg></div>
-
-<!-- ========= INLINE POST DATA ========= -->
-<script id="post-data" type="application/json">
-…your JSON array here…
-</script>
 
 <!-- ========= CORE SCRIPT ========= -->
 <script>
@@ -220,24 +216,18 @@ document.querySelector('.nav-toggle').addEventListener('click', () => {
 /* ------- HERO “Explore” SCROLL ------- */
 document.getElementById('explore').addEventListener('click', e => {
   e.preventDefault();
-  const sb = document.querySelector('.search-bar');
+  const postsSection = document.getElementById('posts');
   const headerH = document.querySelector('header').offsetHeight;
-  window.scrollTo({
-    top: sb.getBoundingClientRect().top + window.pageYOffset - headerH,
-    behavior: 'smooth'
-  });
+  const y = postsSection.getBoundingClientRect().top + window.pageYOffset - headerH;
+  window.scrollTo({ top: y, behavior: 'smooth' });
 });
 
 /* ------- BACK TO TOP ------- */
 const topBtn = document.getElementById('top');
 window.addEventListener('scroll', () => {
-  window.scrollY > 300
-    ? topBtn.classList.add('visible')
-    : topBtn.classList.remove('visible');
+  window.scrollY > 300 ? topBtn.classList.add('visible') : topBtn.classList.remove('visible');
 });
-topBtn.addEventListener('click', () =>
-  window.scrollTo({top:0, behavior:'smooth'})
-);
+topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
 /* ------- CONTACT FAKE SUBMIT ------- */
 document.querySelector('.contact form').addEventListener('submit', e => {
@@ -320,8 +310,7 @@ function renderTags(){
     btn.textContent = t;
     btn.onclick = () => {
       currentTag = currentTag===t ? '' : t;
-      page = 1;
-      draw();
+      page = 1; draw();
       tagWrap.querySelectorAll('button')
         .forEach(b=>b.classList.toggle('active', b.textContent===currentTag));
       clearBtn2.classList.toggle('hidden', !currentTag);
@@ -333,7 +322,7 @@ function renderTags(){
 function filterList(){
   let lst = postsList;
   if(currentTag) lst = lst.filter(p=>p.tags.includes(currentTag));
-  if(q)          lst = lst.filter(p=>
+  if(q) lst = lst.filter(p=>
     p.title.toLowerCase().includes(q) ||
     p.excerpt.toLowerCase().includes(q)
   );
@@ -343,15 +332,23 @@ function filterList(){
 function draw(){
   const list = filterList();
   const slice = list.slice((page-1)*PER_PAGE, page*PER_PAGE);
-  grid.innerHTML = slice.map(cardHTML).join('');
-  grid.querySelectorAll('.lazy').forEach(card => {
-    ioCard.observe(card);
-    ioImg.observe(card.querySelector('img'));
-  });
+  // fade out old cards
+  document.querySelectorAll('.post-card').forEach(c=>c.classList.add('hidden'));
+  setTimeout(()=>{
+    grid.innerHTML = slice.map(cardHTML).join('');
+    grid.querySelectorAll('.lazy').forEach(card=>{
+      ioCard.observe(card);
+      ioImg.observe(card.querySelector('img'));
+    });
+  }, 200);
   pager.innerHTML =
     (page>1 ? `<a href="#" class="prev">« Newer</a>` : '') +
     `<span> Page ${page} </span>` +
     ((page*PER_PAGE<list.length) ? `<a href="#" class="next">Older »</a>` : '');
+  pager.querySelectorAll('a').forEach(a=>{
+    a.style.opacity = '0';
+    setTimeout(()=> a.style.opacity = '1', 200);
+  });
   pager.onclick = e => {
     if(e.target.matches('.prev')){ e.preventDefault(); page--; draw(); }
     if(e.target.matches('.next')){ e.preventDefault(); page++; draw(); }
@@ -367,13 +364,11 @@ loadPosts().then(a => {
 /* search & clear */
 searchIn.addEventListener('input', ()=> {
   q = searchIn.value.trim().toLowerCase();
-  page = 1;
-  draw();
+  page = 1; draw();
 });
 clearBtn2.addEventListener('click', ()=> {
   currentTag = '';
-  page = 1;
-  draw();
+  page = 1; draw();
   clearBtn2.classList.add('hidden');
   tagWrap.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
 });
