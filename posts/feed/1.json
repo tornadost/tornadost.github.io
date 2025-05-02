@@ -1,8 +1,19 @@
 {
-  "title":   "My New Post",
-  "excerpt": "Short teaser…",
-  "date":    "2025-05-11",
-  "read":    5,
+  "title":   "My Awesome Idea",
+  "excerpt": "A single-line teaser.",
+  "date":    "2025-05-29",
+  "read":    4,
   "tags":    ["tag1","tag2"],
-  "content": "<p>Your full HTML content…</p>"
+  "content": "
+Welcome to my post! Here’s the introduction.
+
+\n
+Section heading
+\n
+More text…
+
+\n
+Point one
+Point two
+"
 }
