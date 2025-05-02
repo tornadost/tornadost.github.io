@@ -262,7 +262,7 @@ const ioImg = new IntersectionObserver(entries => {
 async function loadPosts(){
   const arr = [];
   for (let id = 1; ; id++){
-    const res = await fetch(`/posts/feed/${id}/${id}.json`);
+    const res = await fetch(`posts/feed/${id}/${id}.json`);
     if (!res.ok) break;
     const j = await res.json();
     arr.push({
@@ -272,7 +272,7 @@ async function loadPosts(){
       date:    j.date,
       read:    j.read,
       tags:    j.tags,
-      img:     `/posts/assets/cover/${id}.png`
+      img:     `posts/assets/cover/${id}.png`
     });
   }
   return arr;
@@ -281,7 +281,7 @@ async function loadPosts(){
 function cardHTML(p){
   return `
     <article class="post-card lazy">
-      <a href="/posts/feed/${p.id}/${p.id}.html">
+      <a href="posts/feed/${p.id}/${p.id}.html">
         <div class="post-thumbnail">
           <img data-src="${p.img}" alt="${p.title}" class="skeleton" loading="lazy">
         </div>
