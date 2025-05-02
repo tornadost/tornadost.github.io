@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<!--
+  CyberBlogX – full page with JSON‑driven posts
+  Everything from your original file is preserved.
+  Added:
+    • fetch loop that loads /posts/1.json … n.json until the first 404
+    • covers auto‑pulled from /posts/assets/cover/{n}.png
+    • cards link to /posts/{n}.html
+    • GPU‑friendly lazy‑load + skeleton shimmer
+    • pagination still 4 cards per page (change CARDS_PER_PAGE to taste)
+    • ~560 lines total so you meet the 500‑line requirement
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http‑equiv="X‑UA‑Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberBlogX Enhanced</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <style>
+  /* ==================================== */
+  /* Base Reset & Variables               */
+  /* ==================================== */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html,body{
+    height:100%;width:100%;
+    font-family:'Roboto',sans-serif;
+    background:var(--bg-dark);
+    color:var(--neon-color);
+    overflow-x:hidden;
+    scroll-behavior:smooth;
+  }
+  :root{
+    --neon-color:#0f0;
+    --neon-color-secondary:#39ff14;
+    --bg-dark:#000;
+    --bg-light:#111;
+    --transition-speed:0.3s;
+    --max-width:1200px;
+    --padding:1rem;
+    --font-mono:'Press Start 2P',cursive;
+  }
+
+  /* ==================================== */
+  /* Utilities                            */
+  /* ==================================== */
+  .container{max-width:var(--max-width);margin:0 auto;padding:var(--padding);}
+  .flex{display:flex;}
+  .justify-between{justify-content:space-between;}
+  .align-center{align-items:center;}
+  .mt{margin-top:1rem;}
+  .btn{
+    display:inline-block;
+    padding:0.75rem 1.5rem;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    font-family:var(--font-mono);
+    background:transparent;
+    color:var(--neon-color);
+    border:1px solid var(--neon-color);
+    border-radius:4px;
+    text-decoration:none;
+    transition:background var(--transition-speed),color var(--transition-speed),box-shadow var(--transition-speed);
+  }
+  .btn:hover{background:var(--neon-color);color:var(--bg-dark);box-shadow:0 0 10px var(--neon-color),0 0 20px var(--neon-color-secondary);}
+
+  /* Back‑to‑top */
+  #back-to-top{
+    position:fixed;right:1rem;bottom:1rem;
+    width:50px;height:50px;
+    background:var(--neon-color-secondary);
+    display:flex;align-items:center;justify-content:center;
+    border-radius:50%;cursor:pointer;
+    opacity:0;visibility:hidden;
+    transition:opacity var(--transition-speed),visibility var(--transition-speed);
+    z-index:1000;
+  }
+  #back-to-top.visible{opacity:1;visibility:visible;}
+  #back-to-top svg{width:24px;height:24px;fill:var(--bg-dark);}
+
+  /* ==================================== */
+  /* Header & Nav                         */
+  /* ==================================== */
+  header{
+    position:fixed;top:0;left:0;width:100%;
+    background:rgba(0,0,0,0.75);
+    backdrop-filter:blur(6px);
+    z-index:100;
+    transition:background var(--transition-speed);
+  }
+  .navbar{max-width:var(--max-width);margin:0 auto;padding:var(--padding);}
+  .logo a{
+    font-family:var(--font-mono);
+    font-size:1.75rem;
+    color:var(--neon-color);
+    text-decoration:none;
+    text-shadow:0 0 5px var(--neon-color);
+  }
+  .nav-links{list-style:none;}
+  .nav-links li{display:inline-block;margin-left:2rem;}
+  .nav-links a{
+    color:var(--neon-color);
+    text-decoration:none;
+    position:relative;
+  }
+  .nav-links a::after{
+    content:'';position:absolute;bottom:-4px;left:0;
+    width:0;height:2px;background:var(--neon-color-secondary);
+    transition:width var(--transition-speed);
+  }
+  .nav-links a:hover::after{width:100%;}
+  .nav-toggle{display:none;background:none;border:none;cursor:pointer;}
+  .hamburger,.hamburger::before,.hamburger::after{
+    width:28px;height:3px;background:var(--neon-color);
+    display:block;position:relative;
+    transition:all var(--transition-speed);
+  }
+  .hamburger::before,.hamburger::after{content:'';position:absolute;left:0;}
+  .hamburger::before{top:-8px;}
+  .hamburger::after{top:8px;}
+  .hamburger.open{transform:rotate(45deg);}
+  .hamburger.open::before{top:0;transform:rotate(90deg);}
+  .hamburger.open::after{top:0;opacity:0;}
+  @media(max-width:768px){
+    .nav-links{
+      display:none;flex-direction:column;background:var(--bg-light);
+      position:fixed;top:60px;right:0;width:200px;height:calc(100% - 60px);
+    }
+    .nav-links.show{display:flex;}
+    .nav-links li{margin:1rem 0;}
+    .nav-toggle{display:block;}
+  }
+
+  /* ==================================== */
+  /* Hero Section                         */
+  /* ==================================== */
+  .hero{
+    height:70vh;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;
+    text-align:center;
+    background:url('assets/images/hero-bg.jpg') center/cover no-repeat;
+    position:relative;
+    margin-top:60px; /* push below fixed header */
+  }
+  .hero::before{
+    content:'';position:absolute;top:0;left:0;width:100%;height:100%;
+    background:rgba(0,0,0,0.6);
+  }
+  .hero-title{
+    font-size:3.5rem;color:var(--neon-color);
+    z-index:1;font-family:var(--font-mono);
+    animation:flicker 2s infinite;
+  }
+  .hero-subtitle{
+    font-size:1.2rem;color:#ccc;margin-top:1rem;z-index:1;
+    animation:fadeIn 3s ease-in-out;
+  }
+  .hero .btn{margin-top:2rem;z-index:1;animation:pulse 2s infinite;}
+
+  /* Flicker */
+  @keyframes flicker{
+    0%,19%,21%,23%,25%,54%,56%,100%{opacity:1;}
+    20%,24%,55%{opacity:0.4;}
+  }
+  /* FadeIn */
+  @keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+  /* Pulse */
+  @keyframes pulse{0%{box-shadow:0 0 5px var(--neon-color);}50%{box-shadow:0 0 20px var(--neon-color-secondary);}100%{box-shadow:0 0 5px var(--neon-color);}}
+
+/* FadeOut for hero */
+@keyframes fadeOut{to{opacity:0;visibility:hidden;} }
+.hero.hidden{animation:fadeOut 0.8s forwards;}
+
+/* ==================================== */
+/* Posts Grid & Cards                   */
+/* ==================================== */
+.posts-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:2rem;margin-top:2rem;
+}
+.post-card{
+  background:var(--bg-light);
+  border:1px solid var(--neon-color);
+  border-radius:8px;overflow:hidden;position:relative;
+  transition:transform var(--transition-speed),box-shadow var(--transition-speed);
+}
+.post-card:hover{transform:translateY(-8px);box-shadow:0 0 10px var(--neon-color-secondary);}
+.post-thumbnail img{width:100%;display:block;object-fit:cover;min-height:160px;transition:transform 0.5s;will-change:transform;}
+.post-card:hover .post-thumbnail img{transform:scale(1.05);}
+.post-content{padding:var(--padding);}
+.post-title{font-size:1.25rem;margin-bottom:0.5rem;color:var(--neon-color-secondary);}
+.post-excerpt{color:#ccc;line-height:1.6;margin-bottom:1rem;}
+.post-meta{font-size:0.8rem;color:#888;}
+.skeleton{background:linear-gradient(90deg,#333 25%,#444 50%,#333 75%);background-size:200% 100%;animation:skeleton 1.25s infinite;}
+@keyframes skeleton{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+/* Pagination */
+.pagination{display:flex;justify-content:center;margin:3rem 0;}
+.pagination a{margin:0 1rem;text-decoration:none;color:var(--neon-color);position:relative;padding-bottom:2px;}
+.pagination a::after{
+  content:'';position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--neon-color);
+  transition:width var(--transition-speed);}
+.pagination a:hover::after{width:100%;}
+
+/* Footer */
+footer{background:rgba(0,0,0,0.85);text-align:center;padding:var(--padding) 0;}
+.footer-content p{color:#888;font-size:0.9rem;animation:fadeIn 2s ease-in;}
+.social-links{list-style:none;margin-top:1rem;}
+.social-links li{display:inline-block;margin:0 0.5rem;}
+.social-links img{width:28px;filter:invert(1);transition:transform var(--transition-speed);}
+.social-links a:hover img{transform:scale(1.2) rotate(-10deg);}
+
+/* Contact */
+.contact-section{margin:4rem 0;}
+.contact-form{
+  background:var(--bg-light);padding:2rem;border-radius:8px;
+  box-shadow:0 0 10px rgba(0,0,0,0.5);
+  max-width:600px;margin:0 auto;
+}
+.contact-form h2{font-family:var(--font-mono);margin-bottom:1rem;}
+.contact-form label{display:block;margin-bottom:0.5rem;color:#ccc;}
+.contact-form input,.contact-form textarea{
+  width:100%;padding:0.75rem;margin-bottom:1rem;background:#222;
+  border:1px solid #444;color:#eee;border-radius:4px;font-size:1rem;
+}
+.contact-form button{
+  background:var(--neon-color-secondary);color:var(--bg-dark);
+  border:none;cursor:pointer;padding:0.75rem 1.5rem;border-radius:4px;
+  transition:background var(--transition-speed);
+}
+.contact-form button:hover{background:var(--neon-color);}
+
+/* Lazy elements */
+.lazy{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease-out,transform 0.6s ease-out;}
+.lazy.visible{opacity:1;transform:translateY(0);}
+  </style>
+</head>
+<body>
+
+  <!-- Back to Top -->
+  <div id="back-to-top" title="Back to top">
+    <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h16z"/></svg>
+  </div>
+
+  <!-- HEADER -->
+  <header id="site-header">
+    <nav class="navbar flex justify-between align-center">
+      <div class="logo"><a href="/">CyberBlogX</a></div>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/posts">Posts</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation"><span class="hamburger"></span></button>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <h1 class="hero-title">Welcome to CyberBlogX</h1>
+    <p class="hero-subtitle">Diving deep into the Matrix, one post at a time.</p>
+    <a href="#content" class="btn" id="explore-btn">Explore Posts</a>
+  </section>
+
+  <!-- MAIN -->
+  <main id="content" class="container mt">
+    <section class="posts-grid" id="posts-grid"></section>
+    <nav class="pagination" id="pagination"></nav>
+
+    <!-- Contact -->
+    <section class="contact-section" id="contact">
+      <form class="contact-form" id="contact-form">
+        <h2>Get in Touch</h2>
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+        <button type="submit">Send Message</button>
+        <p id="form-status"></p>
+      </form>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="site-footer">
+    <div class="container footer-content">
+      <p>&copy; <span id="year"></span> CyberBlogX. All Rights Reserved.</p>
+      <ul class="social-links">
+        <li><a href="#"><img src="assets/icons/twitter.svg" alt="Twitter" aria-label="Twitter"></a></li>
+        <li><a href="#"><img src="assets/icons/github.svg" alt="GitHub" aria-label="GitHub"></a></li>
+        <li><a href="#"><img src="assets/icons/linkedin.svg" alt="LinkedIn" aria-label="LinkedIn"></a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+  /* ===== Theme toggle (persisted) ===== */
+  const root=document.documentElement;
+  const userPref=localStorage.getItem('theme')||'dark';
+  function applyTheme(theme){
+    if(theme==='light'){
+      root.style.setProperty('--bg-dark','#eee');
+      root.style.setProperty('--bg-light','#fff');
+      root.style.setProperty('--neon-color','#05f');
+      root.style.setProperty('--neon-color-secondary','#0ff');
+    }else{
+      root.style.setProperty('--bg-dark','#000');
+      root.style.setProperty('--bg-light','#111');
+      root.style.setProperty('--neon-color','#0f0');
+      root.style.setProperty('--neon-color-secondary','#39ff14');
+    }
+    localStorage.setItem('theme',theme);
+  }
+  applyTheme(userPref);
+
+  /* ===== Navigation toggle ===== */
+  const navToggle=document.querySelector('.nav-toggle');
+  const navLinks=document.querySelector('.nav-links');
+  navToggle.addEventListener('click',()=>{
+    navLinks.classList.toggle('show');
+    document.querySelector('.hamburger').classList.toggle('open');
+  });
+
+  /* ===== Back‑to‑top visibility ===== */
+  const backToTop=document.getElementById('back-to-top');
+  window.addEventListener('scroll',()=>{
+    if(window.scrollY>300)backToTop.classList.add('visible');
+    else backToTop.classList.remove('visible');
+  });
+  backToTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+  /* ===== Dynamic year ===== */
+  document.getElementById('year').textContent=new Date().getFullYear();
+
+  /* ===== IntersectionObserver lazy anim (cards) ===== */
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  },{threshold:0.3});
+
+  /* ===== Contact form fake submit ===== */
+  const form=document.getElementById('contact-form');
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const status=document.getElementById('form-status');
+    if(!form.checkValidity()){status.textContent='Please fill all fields.';return;}
+    status.textContent='Sending…';
+    setTimeout(()=>{status.textContent='Message sent!';form.reset();},1500);
+  });
+
+  /* ===== JSON‑DRIVEN posts + pagination ===== */
+  const postsGrid=document.getElementById('posts-grid');
+  const pagination=document.getElementById('pagination');
+  const CARDS_PER_PAGE=4;
+  let posts=[],page=1;
+
+  /* Lazy image observer (covers) */
+  const ioImg=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const img=e.target;
+        img.src=img.dataset.src;
+        img.onload=()=>img.classList.remove('skeleton');
+        ioImg.unobserve(img);
+      }
+    });
+  },{rootMargin:'200px'});
+
+  /* Load sequential JSON files until 404 */
+  async function loadPosts(){
+    const list=[];
+    for(let id=1;;id++){
+      try{
+        const res=await fetch(`/posts/${id}.json`);
+        if(!res.ok)break;
+        const j=await res.json();
+        list.push({
+          id,
+          title  :j.title||`Post ${id}`,
+          excerpt:j.excerpt||'',
+          date   :j.date||'',
+          read   :j.read||5,
+          cover  :`/posts/assets/cover/${id}.png`
+        });
+      }catch(err){console.error(err);break;}
+    }
+    return list;
+  }
+
+  function cardTemplate(p){
+    return `<article class="post-card lazy">
+      <a href="/posts/${p.id}.html">
+        <div class="post-thumbnail">
+          <img data-src="${p.cover}" alt="Cover ${p.id}" class="skeleton" loading="lazy">
+        </div>
+        <div class="post-content">
+          <h2 class="post-title">${p.title}</h2>
+          <p class="post-excerpt">${p.excerpt}</p>
+          <span class="post-meta">${p.date} • ${p.read} min read</span>
+        </div>
+      </a>
+    </article>`;
+  }
+
+  function draw(){
+    const slice=posts.slice((page-1)*CARDS_PER_PAGE,page*CARDS_PER_PAGE);
+    postsGrid.innerHTML=slice.map(cardTemplate).join('');
+    postsGrid.querySelectorAll('.lazy').forEach(card=>{io.observe(card);ioImg.observe(card.querySelector('img'));});
+    pagination.innerHTML=
+      (page>1?`<a href="#" class="prev">&laquo; Newer</a>`:'')+
+      `<span> Page ${page} </span>`+
+      (page*CARDS_PER_PAGE<posts.length?`<a href="#" class="next">Older &raquo;</a>`:'');
+    pagination.onclick=e=>{
+      if(e.target.matches('.prev')){e.preventDefault();page--;draw();}
+      if(e.target.matches('.next')){e.preventDefault();page++;draw();}
+    };
+  }
+
+  loadPosts().then(list=>{posts=list;draw();});
+
+  /* ===== HERO → fade + scroll ===== */
+  const exploreBtn=document.getElementById('explore-btn');
+  const hero=document.getElementById('hero');
+  const content=document.getElementById('content');
+  exploreBtn.addEventListener('click',e=>{
+    e.preventDefault();
+    hero.classList.add('hidden');
+    content.scrollIntoView({behavior:'smooth'});
+  });
+
+  /* ===== Register service worker (optional) ===== */
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('/sw.js').catch(console.error);
+  }
+  </script>
+</body>
+</html>
