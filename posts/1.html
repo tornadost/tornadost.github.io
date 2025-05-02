@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CyberBlog – Post 1</title>
+  <title>CyberBlogX – Post</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
-    /* Minimal reset & container */
+    /* your existing minimal post styles here... */
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Roboto',sans-serif;background:#000;color:#eee;padding:2rem}
     .post-cover{max-width:800px;margin:0 auto}
@@ -27,26 +27,29 @@
   </article>
 
   <script>
-    // grab “1” from the filename
-    const match = window.location.pathname.match(/\/posts\/(\d+)\.html$/);
-    const id = match && match[1];
-    if (!id) {
+    // Extract the numeric ID from "1.html"
+    const m = window.location.pathname.match(/\/posts\/(\d+)\.html$/);
+    if (!m) {
       document.getElementById('body').textContent = 'Invalid post URL';
     } else {
-      fetch(`/posts/feed/${id}.json`)
-        .then(r=>{
-          if (!r.ok) throw new Error();
+      const id = m[1];
+      // **Fetch the JSON from the same folder** (/posts/1.json)
+      fetch(`${id}.json`)
+        .then(r => {
+          if (!r.ok) throw new Error('Not found');
           return r.json();
         })
-        .then(j=>{
+        .then(j => {
           document.getElementById('title').textContent = j.title;
-          document.getElementById('cover').src = `/posts/assets/cover/${id}.png`;
+          document.getElementById('cover').src = `${id}.png`;
+          // If you wrote HTML in j.content:
           document.getElementById('body').innerHTML = j.content;
         })
-        .catch(()=>{
+        .catch(() => {
           document.getElementById('body').textContent = 'Post not found.';
         });
     }
   </script>
+
 </body>
 </html>
