@@ -5,12 +5,31 @@
   <title>How to write a new CyberBlogX post</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body{font-family:Roboto,Arial,Helvetica,sans-serif;max-width:780px;margin:4rem auto;padding:0 1rem;line-height:1.65;background:#111;color:#eee}
-    h1,h2{color:#0f0;font-weight:700;margin-top:2.5rem}
-    code,pre{background:#222;padding:.35rem .5rem;border-radius:6px}
-    pre{overflow:auto}
-    ol,ul{margin-left:1.25rem;margin-top:.5rem}
-    a{color:#39ff14}
+    body {
+      font-family: Roboto, Arial, Helvetica, sans-serif;
+      max-width: 780px;
+      margin: 4rem auto;
+      padding: 0 1rem;
+      line-height: 1.65;
+      background: #111;
+      color: #eee;
+    }
+    h1, h2 {
+      color: #0f0;
+      font-weight: 700;
+      margin-top: 2.5rem;
+    }
+    code, pre {
+      background: #222;
+      padding: .35rem .5rem;
+      border-radius: 6px;
+    }
+    pre { overflow: auto; }
+    ol, ul {
+      margin-left: 1.25rem;
+      margin-top: .5rem;
+    }
+    a { color: #39ff14; }
   </style>
 </head>
 <body>
@@ -20,14 +39,14 @@
   <ol>
     <li>
       <strong>Add the cover image</strong><br>
-      Save your banner or thumbnail as <code>N.png</code> inside
+      Save your banner or thumbnail as <code>N.png</code> inside<br>
       <code>/posts/assets/cover/</code>.  
-      Make sure the file name exactly matches the post ID (e.g. <code>3.png</code>).
+      Make sure the filename exactly matches the post ID (e.g. <code>3.png</code>).
     </li>
 
     <li>
       <strong>Create <code>posts/feed/N/N.json</code></strong><br>
-      At minimum, include these fields:
+      It needs at least these fields:
       <pre>{
   "title":   "My Awesome Idea",
   "excerpt": "A single-line teaser for the card.",
@@ -35,28 +54,28 @@
   "read":    4,
   "tags":    ["tag1","tag2"]
 }</pre>
-      This JSON powers both the grid card and the full-post loader.
+      This JSON powers both your homepage card and the full‐post page.
     </li>
 
     <li>
       <strong>Duplicate the HTML template</strong><br>
-      Copy <code>posts/feed/1/1.html</code> → <code>posts/feed/N/N.html</code>.  
-      You don’t need to edit inside—its script auto-detects <code>N</code> from the filename.
+      Copy <code>posts/feed/1/1.html</code> → <code>posts/feed/N/N.html</code>.<br>
+      You don’t need to edit inside—the script auto-detects <code>N</code> from the filename.
     </li>
 
     <li>
       <strong>(Optional) Use Markdown</strong><br>
-      If you prefer writing in Markdown, add <code>posts/feed/N/N.md</code> and include:
+      If you prefer writing in Markdown, add <code>posts/feed/N/N.md</code> and set in your JSON:
       <pre>{
   "markdown": true
 }</pre>
-      in your <code>N.json</code>. The page will convert it on-the-fly.
+      The loader will convert it on-the-fly via marked.js.
     </li>
 
     <li>
       <strong>(Optional) Update inline JSON</strong><br>
-      Only if you’re not using the auto-fetch approach above, add an entry in
-      <code>index.html</code>’s <code>&lt;script id="post-data"&gt;</code> array:
+      If you’re still using the old inline array, add to your <code>index.html</code>’s
+      <code>&lt;script id="post-data"&gt;</code> array:
       <pre>{
   "id":      N,
   "title":   "My Awesome Idea",
@@ -70,14 +89,14 @@
 
     <li>
       <strong>Commit &amp; push</strong><br>
-      Your home page will detect the new JSON, and
-      <code>/posts/feed/N/N.html</code> will render your content.
+      Your home page will auto-fetch any /posts/feed/N/N.json, and
+      <code>/posts/feed/N/N.html</code> will render the full article.
     </li>
   </ol>
 
   <h2>✍️ Writing the post content</h2>
   <p>
-    Inside your <code>posts/feed/N/N.json</code>, you can supply the full HTML for your article using a <code>content</code> field. For example:
+    In <code>posts/feed/N/N.json</code> you can include a full‐HTML body via:
   </p>
   <pre>{
   "title":   "My Awesome Idea",
@@ -85,17 +104,18 @@
   "date":    "2025-05-29",
   "read":    4,
   "tags":    ["tag1","tag2"],
-  "content": "<p>Welcome to my post! Here’s the introduction.</p>\n<h2>Section heading</h2>\n<p>More text…</p>\n<ul><li>Point one</li><li>Point two</li></ul>"
+  "content": "&lt;p&gt;Welcome to my post! Here's the introduction.&lt;/p&gt;\n&lt;h2&gt;Details&lt;/h2&gt;\n&lt;p&gt;More text…&lt;/p&gt;\n&lt;ul&gt;&lt;li&gt;Point one&lt;/li&gt;&lt;li&gt;Point two&lt;/li&gt;&lt;/ul&gt;"
 }</pre>
+
   <p>
-    Or, if you set <code>"markdown": true</code>, you can write <code>posts/feed/N/N.md</code>:
+    Or if you set <code>"markdown": true</code>, write <code>N.md</code> instead:
   </p>
   <pre>
 # My Awesome Idea
 
 Welcome to my post! Here’s the introduction.
 
-## Section heading
+## Details
 
 More text…
 
@@ -103,20 +123,18 @@ More text…
 - Point two
   </pre>
   <p>
-    The loader will convert that Markdown to HTML automatically.  
-    This approach keeps your JSON clean and lets you write in Markdown syntax.
+    Your script will fetch the JSON and, if <code>markdown</code> is true, convert the MD file to HTML automatically.
   </p>
 
   <h2>Troubleshooting</h2>
   <ul>
-    <li><strong>Blank article</strong> – ensure your JSON is valid (no trailing commas) and that the <code>content</code> or <code>markdown</code> field points to existing HTML/MD.</li>
-    <li><strong>404 cover image</strong> – file names on GitHub Pages are case-sensitive; verify <code>/posts/assets/cover/N.png</code> matches exactly.</li>
-    <li><strong>New post missing on grid</strong> – if you’re using auto-fetch, no action is needed; otherwise, confirm you added the object to the inline array with the correct <code>id</code>.</li>
+    <li><strong>Blank article</strong> – check that <code>posts/feed/N/N.json</code> is valid (no trailing commas) and that the MD/HTML body exists.</li>
+    <li><strong>404 cover image</strong> – filenames on GitHub Pages are case-sensitive; verify <code>/posts/assets/cover/N.png</code> exactly.</li>
+    <li><strong>New post missing on grid</strong> – with auto-fetch you shouldn’t need to update index.html; otherwise, confirm the inline JSON entry’s <code>id</code>.</li>
   </ul>
 
   <p style="margin-top:3rem;font-size:.9rem;color:#888">
-    Need more help?  Check out the GitHub Pages docs on JSON hosting,
-    and our repository’s README for advanced tips.
+    Need more help? See the GitHub Pages docs on JSON hosting and our repo README for advanced tips.
   </p>
 </body>
 </html>
