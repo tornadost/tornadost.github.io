@@ -99,7 +99,7 @@
     <h1 id="title">Loading…</h1>
     <div id="body">Please wait.</div>
 
-    <!-- Video Section (paused on load) -->
+    <!-- Video Section (loaded paused) -->
     <section id="video-section" style="display:none; margin-top:2rem;">
       <h2>Featured Video</h2>
       <iframe id="video-frame" width="560" height="315"
@@ -109,10 +109,10 @@
       </iframe>
     </section>
 
-    <!-- Audio Section (autoplay) -->
+    <!-- Audio Section (autoplay, muted until play succeeds) -->
     <section id="audio-section" style="display:none; margin-top:2rem;">
       <h2>Background Audio</h2>
-      <audio id="audio-player" controls autoplay loop style="width:100%;margin-top:0.5rem;">
+      <audio id="audio-player" controls autoplay loop muted style="width:100%;margin-top:0.5rem;">
         <source src="" type="audio/flac">
         Your browser does not support the HTML5 Audio element.
       </audio>
@@ -145,12 +145,11 @@
       document.querySelector('.hamburger').classList.toggle('open');
     });
 
-    // BACK TO TOP BTN
+    // BACK TO TOP
     const topBtn = document.getElementById('top');
     window.addEventListener('scroll', () => {
-      window.scrollY > 300
-        ? topBtn.classList.add('visible')
-        : topBtn.classList.remove('visible');
+      if (window.scrollY > 300) topBtn.classList.add('visible');
+      else topBtn.classList.remove('visible');
     });
     topBtn.addEventListener('click', () =>
       window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -165,9 +164,8 @@
       fetch(`./${id}.json`)
         .then(r => r.ok ? r.json() : Promise.reject())
         .then(j => {
+          // Title & Content
           document.getElementById('title').textContent = j.title;
-
-          // Content
           if (j.markdown) {
             fetch(`./${id}.md`)
               .then(r => r.ok ? r.text() : Promise.reject())
@@ -185,7 +183,7 @@
           if (j.video_url) {
             const vs = document.getElementById('video-section');
             const vf = document.getElementById('video-frame');
-            vf.src = j.video_url; // no autoplay param
+            vf.src = j.video_url;  // no ?autoplay=1
             vs.style.display = 'block';
           }
 
@@ -195,6 +193,8 @@
             const ap = document.getElementById('audio-player');
             ap.src = j.audio_url;
             as.style.display = 'block';
+            // Unmute after a brief delay to hope browser allows autoplay
+            ap.play().then(()=>ap.muted = false).catch(()=>{/*user gesture needed*/});
           }
         })
         .catch(() => {
