@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CyberBlogX – Post</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <title>CyberBlogX – Post 1</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap"
+    rel="stylesheet"
+  >
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Roboto',sans-serif;background:#000;color:#eee;padding:2rem}
@@ -26,14 +29,12 @@
   </article>
 
   <script>
-    // match "/posts/feed/1/1.html"
     const m = window.location.pathname.match(/\/posts\/feed\/(\d+)\/\1\.html$/);
     if (!m) {
       document.getElementById('body').textContent = 'Invalid post URL';
     } else {
       const id = m[1];
-      // fetch from this same folder: "1.json"
-      fetch(`${id}.json`)
+      fetch(`./${id}.json`)
         .then(r => r.ok ? r.json() : Promise.reject())
         .then(j => {
           document.getElementById('title').textContent = j.title;
