@@ -22,11 +22,11 @@
       <strong>Add the cover image</strong><br>
       Save your banner or thumbnail as <code>N.png</code> inside
       <code>/posts/assets/cover/</code>.  
-      Make sure your file name exactly matches the post ID (e.g. <code>3.png</code>).
+      Make sure the file name exactly matches the post ID (e.g. <code>3.png</code>).
     </li>
 
     <li>
-      <strong>Create <code>posts/feed/N.json</code></strong><br>
+      <strong>Create <code>posts/feed/N/N.json</code></strong><br>
       At minimum, include these fields:
       <pre>{
   "title":   "My Awesome Idea",
@@ -40,13 +40,13 @@
 
     <li>
       <strong>Duplicate the HTML template</strong><br>
-      Copy <code>posts/1.html</code> → <code>posts/N.html</code>.  
+      Copy <code>posts/feed/1/1.html</code> → <code>posts/feed/N/N.html</code>.  
       You don’t need to edit inside—its script auto-detects <code>N</code> from the filename.
     </li>
 
     <li>
       <strong>(Optional) Use Markdown</strong><br>
-      If you prefer writing in Markdown, add <code>posts/N.md</code> and include:
+      If you prefer writing in Markdown, add <code>posts/feed/N/N.md</code> and include:
       <pre>{
   "markdown": true
 }</pre>
@@ -54,7 +54,7 @@
     </li>
 
     <li>
-      <strong>(Optional) Update the listing’s inline JSON</strong><br>
+      <strong>(Optional) Update inline JSON</strong><br>
       Only if you’re not using the auto-fetch approach above, add an entry in
       <code>index.html</code>’s <code>&lt;script id="post-data"&gt;</code> array:
       <pre>{
@@ -71,13 +71,13 @@
     <li>
       <strong>Commit &amp; push</strong><br>
       Your home page will detect the new JSON, and
-      <code>/posts/N.html</code> will render your content.
+      <code>/posts/feed/N/N.html</code> will render your content.
     </li>
   </ol>
 
   <h2>✍️ Writing the post content</h2>
   <p>
-    Inside your <code>posts/feed/N.json</code>, you can supply the full HTML for your article using a <code>content</code> field. For example:
+    Inside your <code>posts/feed/N/N.json</code>, you can supply the full HTML for your article using a <code>content</code> field. For example:
   </p>
   <pre>{
   "title":   "My Awesome Idea",
@@ -88,7 +88,7 @@
   "content": "<p>Welcome to my post! Here’s the introduction.</p>\n<h2>Section heading</h2>\n<p>More text…</p>\n<ul><li>Point one</li><li>Point two</li></ul>"
 }</pre>
   <p>
-    Or, if you set <code>"markdown": true</code>, you can write <code>N.md</code>:
+    Or, if you set <code>"markdown": true</code>, you can write <code>posts/feed/N/N.md</code>:
   </p>
   <pre>
 # My Awesome Idea
