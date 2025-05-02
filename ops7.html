@@ -127,8 +127,8 @@
       <div class="logo"><a href="/">CyberBlogX</a></div>
       <ul class="nav-links">
         <li><a href="#posts">Posts</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li><a id="theme-btn" href="#">Toggle Theme</a></li>
+        <li><a href="#contact">📧</a></li>
+        <li><a id="theme-btn" href="#">💡</a></li>
       </ul>
       <button class="nav-toggle" aria-label="Toggle navigation"><span class="hamburger"></span></button>
     </nav>
@@ -138,7 +138,7 @@
   <section class="hero" id="hero">
     <h1 class="hero-title">Welcome!</h1>
     <p class="hero-sub">Diving deep into the Matrix, one post at a time..</p>
-    <a href="#posts" class="btn" id="explore">Explore</a>
+    <a href="#posts" class="btn">Explore</a>
   </section>
 
   <!-- ========= MAIN ========= -->
@@ -198,14 +198,6 @@
     document.querySelector('.nav-toggle').addEventListener('click', () => {
       document.querySelector('.nav-links').classList.toggle('show');
       document.querySelector('.hamburger').classList.toggle('open');
-    });
-
-    document.getElementById('explore').addEventListener('click', e => {
-      e.preventDefault();
-      const postsSection = document.getElementById('posts');
-      const headerH = document.querySelector('header').offsetHeight;
-      const y = postsSection.getBoundingClientRect().top + window.pageYOffset - headerH;
-      window.scrollTo({ top: y, behavior: 'smooth' });
     });
 
     /* ------- BACK TO TOP ------- */
