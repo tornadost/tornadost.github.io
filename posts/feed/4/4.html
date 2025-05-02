@@ -68,6 +68,30 @@
     .nav-links a:hover::after, .nav-links button:hover::after {
       width:100%;
     }
+    /* == Light-bulb & envelope hover just like “Messages” underlines + flicker == */
+    #theme-btn {
+      /* make sure it’s positioned for its own underline */
+      position:relative;
+    }
+    #theme-btn:hover {
+      /* cancel the btn:hover background/glow */
+      background:transparent !important;
+      color:var(--neon) !important;
+      box-shadow:none !important;
+      animation:flicker 1.5s infinite;
+    }
+    #theme-btn::after {
+      content:'';
+      position:absolute; bottom:-4px; left:0;
+      width:0; height:2px;
+      background:var(--neon-b);
+      transition:width var(--speed);
+    }
+    #theme-btn:hover::after {
+      width:100%;
+    }
+    /* envelope link (📧) already underlines on hover via .nav-links a:hover::after */
+
     .nav-toggle { display:none; background:none; border:none; cursor:pointer; }
     .hamburger, .hamburger::before, .hamburger::after {
       width:28px; height:3px; background:var(--neon);
@@ -131,7 +155,6 @@
     });
   </script>
 </head>
-
 <body>
   <!-- HEADER -->
   <header>
@@ -163,7 +186,7 @@
     <div id="progress-container"><div id="progress-bar"></div></div>
   </header>
 
-  <!-- POST CONTENT -->
+  <!-- MAIN CONTENT -->
   <article class="post-content container">
     <h1 id="title">Loading…</h1>
     <div id="body">Please wait.</div>
@@ -200,13 +223,13 @@
     const root = document.documentElement;
     let theme = localStorage.getItem('theme') || 'dark';
     const applyTheme = () => {
-      root.classList.toggle('light', theme === 'light');
+      root.classList.toggle('light', theme==='light');
       localStorage.setItem('theme', theme);
     };
     applyTheme();
-    document.getElementById('theme-btn').addEventListener('click', e => {
+    document.getElementById('theme-btn').addEventListener('click', e=>{
       e.preventDefault();
-      theme = theme === 'dark' ? 'light' : 'dark';
+      theme = theme==='dark'?'light':'dark';
       applyTheme();
     });
 
@@ -218,86 +241,66 @@
 
     // BACK TO TOP
     const topBtn = document.getElementById('top');
-    window.addEventListener('scroll', () => {
-      window.scrollY > 300
-        ? topBtn.classList.add('visible')
-        : topBtn.classList.remove('visible');
+    window.addEventListener('scroll',()=>{
+      topBtn.classList.toggle('visible', window.scrollY>300);
     });
-    topBtn.addEventListener('click', () =>
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    );
+    topBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
 
-    // AUDIO CONTROLS
-    const audio = document.getElementById('audio-player');
-    const toggleBtn = document.getElementById('audio-toggle');
-    const playpauseBtn = document.getElementById('audio-playpause');
+    // AUDIO CONTROLS & PROGRESS
+    const audio = document.getElementById('audio-player'),
+          toggleBtn = document.getElementById('audio-toggle'),
+          pauseBtn  = document.getElementById('audio-playpause');
 
-    // Mute / Unmute
-    toggleBtn.addEventListener('click', () => {
-      audio.muted = !audio.muted;
-      toggleBtn.innerHTML = audio.muted ? '🔈 Unmute' : '🔊 Mute';
+    toggleBtn.addEventListener('click',()=>{
+      audio.muted=!audio.muted;
+      toggleBtn.innerHTML = audio.muted?'🔈 Unmute':'🔊 Mute';
       toggleBtn.classList.remove('neon-flicker');
       void toggleBtn.offsetWidth;
       toggleBtn.classList.add('neon-flicker');
     });
-
-    // Play / Pause
-    playpauseBtn.addEventListener('click', () => {
-      if (audio.paused) {
-        audio.play();
-        playpauseBtn.innerHTML = '⏸ Pause';
-      } else {
-        audio.pause();
-        playpauseBtn.innerHTML = '▶️ Play';
-      }
-      playpauseBtn.classList.remove('neon-flicker');
-      void playpauseBtn.offsetWidth;
-      playpauseBtn.classList.add('neon-flicker');
+    pauseBtn.addEventListener('click',()=>{
+      if(audio.paused){ audio.play(); pauseBtn.innerHTML='⏸ Pause'; }
+      else { audio.pause(); pauseBtn.innerHTML='▶️ Play'; }
+      pauseBtn.classList.remove('neon-flicker');
+      void pauseBtn.offsetWidth;
+      pauseBtn.classList.add('neon-flicker');
     });
-
-    // PROGRESS BAR UPDATE
-    audio.addEventListener('timeupdate', () => {
-      if (audio.duration) {
-        const pct = (audio.currentTime / audio.duration) * 100;
-        document.getElementById('progress-bar').style.width = pct + '%';
+    audio.addEventListener('timeupdate',()=>{
+      if(audio.duration){
+        document.getElementById('progress-bar').style.width =
+          (audio.currentTime/audio.duration*100)+'%';
       }
     });
 
     // LOAD POST + Markdown + Media
     const m = window.location.pathname.match(/\/posts\/feed\/(\d+)\/\1\.html$/);
-    if (!m) {
-      document.getElementById('body').textContent = 'Invalid post URL';
+    if(!m) {
+      document.getElementById('body').textContent='Invalid post URL';
     } else {
-      const id = m[1];
+      const id=m[1];
       fetch(`./${id}.json`)
-        .then(r => r.ok ? r.json() : Promise.reject())
-        .then(j => {
-          document.getElementById('title').textContent = j.title;
-          if (j.markdown) {
+        .then(r=>r.ok?r.json():Promise.reject())
+        .then(j=>{
+          document.getElementById('title').textContent=j.title;
+          if(j.markdown){
             fetch(`./${id}.md`)
-              .then(r => r.ok ? r.text() : Promise.reject())
-              .then(md => {
-                document.getElementById('body').innerHTML = marked.parse(md);
-              })
-              .catch(() => {
-                document.getElementById('body').textContent = 'Content not found.';
-              });
+              .then(r=>r.ok?r.text():Promise.reject())
+              .then(md=>document.getElementById('body').innerHTML=marked.parse(md))
+              .catch(()=>document.getElementById('body').textContent='Content not found.');
           } else {
-            document.getElementById('body').innerHTML = j.content || '';
+            document.getElementById('body').innerHTML=j.content||'';
           }
-          if (j.video_url) {
-            document.getElementById('video-frame').src = j.video_url;
-            document.getElementById('video-section').style.display = 'block';
+          if(j.video_url){
+            document.getElementById('video-frame').src=j.video_url;
+            document.getElementById('video-section').style.display='block';
           }
-          if (j.audio_url) {
-            document.getElementById('audio-section').style.display = 'block';
-            audio.src = j.audio_url;
-            audio.play().catch(() => {/* user gesture required */});
+          if(j.audio_url){
+            document.getElementById('audio-section').style.display='block';
+            audio.src=j.audio_url;
+            audio.play().catch(()=>{/* gesture required */});
           }
         })
-        .catch(() => {
-          document.getElementById('body').textContent = 'Post not found.';
-        });
+        .catch(()=>document.getElementById('body').textContent='Post not found.');
     }
   </script>
 </body>
