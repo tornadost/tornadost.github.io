@@ -138,13 +138,13 @@
   <section class="hero" id="hero">
     <h1 class="hero-title">Welcome!</h1>
     <p class="hero-sub">Diving deep into the Matrix, one post at a time..</p>
-    <a href="#posts" class="btn">Explore Posts</a>
+    <a href="#posts" class="btn" id="explore">Explore</a>
   </section>
 
   <!-- ========= MAIN ========= -->
   <main class="container" id="posts">
     <div class="search-bar">
-      <input id="search" type="search" placeholder="Search posts…">
+      <input id="search" type="search" placeholder="Search..">
       <button id="clear" class="btn hidden">Clear</button>
     </div>
     <div id="tag-wrap" class="tags"></div>
@@ -200,6 +200,13 @@
       document.querySelector('.hamburger').classList.toggle('open');
     });
 
+    document.getElementById('explore').addEventListener('click', e => {
+      e.preventDefault();
+      const postsSection = document.getElementById('posts');
+      const headerH = document.querySelector('header').offsetHeight;
+      const y = postsSection.getBoundingClientRect().top + window.pageYOffset - headerH;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    });
 
     /* ------- BACK TO TOP ------- */
     const topBtn = document.getElementById('top');
