@@ -1,372 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CyberBlogX</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-
-<style>
-/* ========== ROOT & RESET ================================================= */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;width:100%;scroll-behavior:smooth;overflow-x:hidden;
-  background:var(--bg-dark);color:var(--text);font-family:'Roboto',sans-serif}
-:root{--neon:#0f0;--neon-b:#39ff14;--bg-dark:#000;--bg-light:#111;--text:#eee;
-  --radius:8px;--speed:.3s;--max:1200px;--font-mono:'Press Start 2P',cursive}
-:root.light{--bg-dark:#fafafa;--bg-light:#fff;--text:#222;--neon:#05f;--neon-b:#0ff}
-
-/* ========== UTILITIES ==================================================== */
-.container{max-width:var(--max);margin:0 auto;padding:1rem}
-.flex{display:flex;align-items:center}.just-between{justify-content:space-between}
-.btn{display:inline-block;font-family:var(--font-mono);text-transform:uppercase;
-  padding:.7rem 1.4rem;border:1px solid var(--neon);color:var(--neon);
-  background:transparent;border-radius:var(--radius);letter-spacing:.05em;
-  transition:background var(--speed),color var(--speed),box-shadow var(--speed)}
-.btn:hover{background:var(--neon);color:var(--bg-dark);
-  box-shadow:0 0 8px var(--neon),0 0 16px var(--neon-b)}
-
-/* ========== HEADER ======================================================= */
-header{position:fixed;top:0;left:0;width:100%;background:rgba(0,0,0,.8);
-  backdrop-filter:blur(6px);z-index:100}
-.navbar{max-width:var(--max);margin:0 auto;padding:1rem}
-.logo a{font-family:var(--font-mono);font-size:1.5rem;color:var(--neon);
-  text-decoration:none;text-shadow:0 0 4px var(--neon)}
-.nav-links{list-style:none}.nav-links li{display:inline-block;margin-left:2rem}
-.nav-links a{color:var(--neon);text-decoration:none;position:relative}
-.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;
-  height:2px;background:var(--neon-b);transition:width var(--speed)}
-.nav-links a:hover::after{width:100%}
-.nav-toggle{display:none;background:none;border:none;cursor:pointer}
-.hamburger,.hamburger::before,.hamburger::after{width:28px;height:3px;background:var(--neon);
-  display:block;position:relative;transition:all var(--speed)}
-.hamburger::before,.hamburger::after{content:'';position:absolute;left:0}
-.hamburger::before{top:-8px}.hamburger::after{top:8px}
-.hamburger.open{transform:rotate(45deg)}.hamburger.open::before{top:0;transform:rotate(90deg)}
-.hamburger.open::after{top:0;opacity:0}
-@media(max-width:768px){
-  .nav-toggle{display:block}
-  .nav-links{display:none;flex-direction:column;position:fixed;top:60px;right:0;width:200px;
-    height:calc(100% - 60px);background:var(--bg-light);padding:2rem}
-  .nav-links.show{display:flex}.nav-links li{margin:1rem 0}
-}
-
-/* ========== HERO ========================================================= */
-.hero{height:70vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
-  background:url('assets/images/hero-bg.jpg') center/cover no-repeat;position:relative;margin-top:60px}
-.hero::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.6)}
-.hero-title{font-size:3.2rem;color:var(--neon);font-family:var(--font-mono);z-index:1;animation:flicker 2s infinite}
-.hero-sub{font-size:1.1rem;color:#ccc;margin-top:1rem;z-index:1}
-.hero .btn{margin-top:2rem;z-index:1;animation:pulse 2s infinite}
-@keyframes flicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,24%,55%{opacity:.35}}
-@keyframes pulse{0%{box-shadow:0 0 4px var(--neon)}50%{box-shadow:0 0 14px var(--neon-b)}100%{box-shadow:0 0 4px var(--neon)}}
-@keyframes fadeOut{to{opacity:0;visibility:hidden}}
-.hero.hidden{animation:fadeOut .8s forwards}
-
-/* ========== SEARCH & TAGS =============================================== */
-.search-bar{
-  margin:2rem 0 0;display:grid;grid-template-columns:1fr auto;gap:1rem;
-  position:sticky;top:60px;background:var(--bg-dark);z-index:90;padding-top:1rem;
-}
-#search{width:100%;padding:.7rem;border:1px solid var(--neon);border-radius:var(--radius);
-  background:var(--bg-light);color:var(--text)}
-.tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
-.tags button{padding:.3rem .8rem;border:1px solid var(--neon-b);background:transparent;
-  color:var(--neon-b);border-radius:var(--radius);cursor:pointer;font-size:.8rem;
-  transition:background var(--speed)}
-.tags button.active,.tags button:hover{background:var(--neon-b);color:var(--bg-dark)}
-
-/* ========== POSTS GRID =================================================== */
-.posts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:2rem}
-.post-card{background:var(--bg-light);border:1px solid var(--neon);border-radius:var(--radius);
-  overflow:hidden;transition:transform var(--speed),box-shadow var(--speed),opacity .3s}
-.post-card.hidden{opacity:0}
-.post-card:hover{transform:translateY(-6px);box-shadow:0 0 8px var(--neon-b)}
-.post-thumbnail img{width:100%;display:block;object-fit:cover;min-height:160px;transition:transform .6s;will-change:transform}
-.post-card:hover .post-thumbnail img{transform:scale(1.05)}
-.post-content{padding:1rem}.post-title{font-size:1.2rem;color:var(--neon-b);margin-bottom:.4rem}
-.post-excerpt{color:#ccc;font-size:.95rem;line-height:1.55;margin-bottom:.8rem}
-.post-meta{font-size:.75rem;color:#888}
-.skeleton{background:linear-gradient(90deg,#333 25%,#444 50%,#333 75%);background-size:200% 100%;
-  animation:skeleton 1.25s infinite}@keyframes skeleton{0%{background-position:200%}100%{background-position:-200%}}
-.lazy{opacity:0;transform:translateY(20px);transition:opacity .6s ease-out,transform .6s ease-out}
-.lazy.visible{opacity:1;transform:translateY(0)}
-
-/* ========== PAGINATION =================================================== */
-.pagination{display:flex;justify-content:center;align-items:center;gap:1rem;margin:3rem 0}
-.pagination a{color:var(--neon);text-decoration:none;position:relative;padding-bottom:2px;transition:opacity .3s}
-.pagination a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--neon);transition:width var(--speed)}
-.pagination a:hover::after{width:100%}
-
-/* ========== CONTACT & FOOTER ============================================ */
-.contact{margin:4rem 0}.contact form{background:var(--bg-light);padding:2rem;border-radius:var(--radius);
-  box-shadow:0 0 8px rgba(0,0,0,.5);max-width:600px;margin:0 auto}
-.contact h2{font-family:var(--font-mono);margin-bottom:1rem}
-.contact label{display:block;color:#ccc;margin:.4rem 0}
-.contact input,.contact textarea{width:100%;padding:.7rem;background:#222;border:1px solid #444;
-  color:#eee;border-radius:var(--radius);margin-bottom:1rem}
-.contact button{background:var(--neon-b);color:var(--bg-dark);border:none;padding:.7rem 1.4rem;
-  border-radius:var(--radius);cursor:pointer;transition:background var(--speed)}
-.contact button:hover{background:var(--neon)}
-footer{background:rgba(0,0,0,.85);text-align:center;padding:2rem 0;margin-top:4rem}
-footer p{color:#888;font-size:.9rem}.social{list-style:none;margin-top:1rem}
-.social li{display:inline-block;margin:0 .5rem}
-.social img{width:28px;filter:invert(1);transition:transform var(--speed)}
-.social a:hover img{transform:scale(1.15) rotate(-8deg)}
-
-/* ========== BACK TO TOP ================================================== */
-#top{position:fixed;right:1rem;bottom:1rem;width:48px;height:48px;background:var(--neon-b);
-  border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;
-  opacity:0;visibility:hidden;transition:opacity var(--speed),visibility var(--speed);z-index:1000}
-#top.visible{opacity:1;visibility:visible}
-#top svg{width:24px;height:24px;fill:var(--bg-dark)}
-</style>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberBlogX</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+    /* ========== ROOT & RESET ================================================= */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;width:100%;scroll-behavior:smooth;overflow-x:hidden;
+      background:var(--bg-dark);color:var(--text);font-family:'Roboto',sans-serif}
+    :root{--neon:#0f0;--neon-b:#39ff14;--bg-dark:#000;--bg-light:#111;--text:#eee;
+      --radius:8px;--speed:.3s;--max:1200px;--font-mono:'Press Start 2P',cursive}
+    :root.light{--bg-dark:#fafafa;--bg-light:#fff;--text:#222;--neon:#05f;--neon-b:#0ff}
+    /* ========== UTILITIES ==================================================== */
+    .container{max-width:var(--max);margin:0 auto;padding:1rem}
+    .flex{display:flex;align-items:center}.just-between{justify-content:space-between}
+    .btn{display:inline-block;font-family:var(--font-mono);text-transform:uppercase;
+      padding:.7rem 1.4rem;border:1px solid var(--neon);color:var(--neon);
+      background:transparent;border-radius:var(--radius);letter-spacing:.05em;
+      transition:background var(--speed),color var(--speed),box-shadow var(--speed)}
+    .btn:hover{background:var(--neon);color:var(--bg-dark);
+      box-shadow:0 0 8px var(--neon),0 0 16px var(--neon-b)}
+    /* ========== HEADER ======================================================= */
+    header{position:fixed;top:0;left:0;width:100%;background:rgba(0,0,0,.8);
+      backdrop-filter:blur(6px);z-index:100}
+    .navbar{max-width:var(--max);margin:0 auto;padding:1rem}
+    .logo a{font-family:var(--font-mono);font-size:1.5rem;color:var(--neon);
+      text-decoration:none;text-shadow:0 0 4px var(--neon)}
+    .nav-links{list-style:none}.nav-links li{display:inline-block;margin-left:2rem}
+    .nav-links a{color:var(--neon);text-decoration:none;position:relative}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;
+      height:2px;background:var(--neon-b);transition:width var(--speed)}
+    .nav-links a:hover::after{width:100%}
+    .nav-toggle{display:none;background:none;border:none;cursor:pointer}
+    .hamburger,.hamburger::before,.hamburger::after{width:28px;height:3px;background:var(--neon);
+      display:block;position:relative;transition:all var(--speed)}
+    .hamburger::before,.hamburger::after{content:'';position:absolute;left:0}
+    .hamburger::before{top:-8px}.hamburger::after{top:8px}
+    .hamburger.open{transform:rotate(45deg)}.hamburger.open::before{top:0;transform:rotate(90deg)}
+    .hamburger.open::after{top:0;opacity:0}
+    @media(max-width:768px){
+      .nav-toggle{display:block}
+      .nav-links{display:none;flex-direction:column;position:fixed;top:60px;right:0;width:200px;
+        height:calc(100% - 60px);background:var(--bg-light);padding:2rem}
+      .nav-links.show{display:flex}.nav-links li{margin:1rem 0}
+    }
+    /* ========== HERO ========================================================= */
+    .hero{height:70vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+      background:url('assets/images/hero-bg.jpg') center/cover no-repeat;position:relative;margin-top:60px}
+    .hero::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.6)}
+    .hero-title{font-size:3.2rem;color:var(--neon);font-family:var(--font-mono);z-index:1;animation:flicker 2s infinite}
+    .hero-sub{font-size:1.1rem;color:#ccc;margin-top:1rem;z-index:1}
+    .hero .btn{margin-top:2rem;z-index:1;animation:pulse 2s infinite}
+    @keyframes flicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,24%,55%{opacity:.35}}
+    @keyframes pulse{0%{box-shadow:0 0 4px var(--neon)}50%{box-shadow:0 0 14px var(--neon-b)}100%{box-shadow:0 0 4px var(--neon)}}
+    @keyframes fadeOut{to{opacity:0;visibility:hidden}}
+    .hero.hidden{animation:fadeOut .8s forwards}
+    /* ========== SEARCH & TAGS =============================================== */
+    .search-bar{
+      margin:2rem 0 0;display:grid;grid-template-columns:1fr auto;gap:1rem;
+      position:sticky;top:60px;background:var(--bg-dark);z-index:90;padding-top:1rem;
+    }
+    #search{width:100%;padding:.7rem;border:1px solid var(--neon);border-radius:var(--radius);
+      background:var(--bg-light);color:var(--text)}
+    .tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+    .tags button{padding:.3rem .8rem;border:1px solid var(--neon-b);background:transparent;
+      color:var(--neon-b);border-radius:var(--radius);cursor:pointer;font-size:.8rem;
+      transition:background var(--speed)}
+    .tags button.active,.tags button:hover{background:var(--neon-b);color:var(--bg-dark)}
+    /* ========== POSTS GRID =================================================== */
+    .posts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:2rem}
+    .post-card{background:var(--bg-light);border:1px solid var(--neon);border-radius:var(--radius);
+      overflow:hidden;transition:transform var(--speed),box-shadow var(--speed),opacity .3s}
+    .post-card.hidden{opacity:0}
+    .post-card:hover{transform:translateY(-6px);box-shadow:0 0 8px var(--neon-b)}
+    .post-thumbnail img{width:100%;display:block;object-fit:cover;min-height:160px;transition:transform .6s;will-change:transform}
+    .post-card:hover .post-thumbnail img{transform:scale(1.05)}
+    .post-content{padding:1rem}.post-title{font-size:1.2rem;color:var(--neon-b);margin-bottom:.4rem}
+    .post-excerpt{color:#ccc;font-size:.95rem;line-height:1.55;margin-bottom:.8rem}
+    .post-meta{font-size:.75rem;color:#888}
+    .skeleton{background:linear-gradient(90deg,#333 25%,#444 50%,#333 75%);background-size:200% 100%;
+      animation:skeleton 1.25s infinite}@keyframes skeleton{0%{background-position:200%}100%{background-position:-200%}}
+    .lazy{opacity:0;transform:translateY(20px);transition:opacity .6s ease-out,transform .6s ease-out}
+    .lazy.visible{opacity:1;transform:translateY(0)}
+    /* ========== PAGINATION =================================================== */
+    .pagination{display:flex;justify-content:center;align-items:center;gap:1rem;margin:3rem 0}
+    .pagination a{color:var(--neon);text-decoration:none;position:relative;padding-bottom:2px;transition:opacity .3s}
+    .pagination a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--neon);transition:width var(--speed)}
+    .pagination a:hover::after{width:100%}
+    /* ========== CONTACT & FOOTER ============================================ */
+    .contact{margin:4rem 0}.contact form{background:var(--bg-light);padding:2rem;border-radius:var(--radius);
+      box-shadow:0 0 8px rgba(0,0,0,.5);max-width:600px;margin:0 auto}
+    .contact h2{font-family:var(--font-mono);margin-bottom:1rem}
+    .contact label{display:block;color:#ccc;margin:.4rem 0}
+    .contact input,.contact textarea{width:100%;padding:.7rem;background:#222;border:1px solid #444;
+      color:#eee;border-radius:var(--radius);margin-bottom:1rem}
+    .contact button{background:var(--neon-b);color:var(--bg-dark);border:none;padding:.7rem 1.4rem;
+      border-radius:var(--radius);cursor:pointer;transition:background var(--speed)}
+    .contact button:hover{background:var(--neon)}
+    footer{background:rgba(0,0,0,.85);text-align:center;padding:2rem 0;margin-top:4rem}
+    footer p{color:#888;font-size:.9rem}.social{list-style:none;margin-top:1rem}
+    .social li{display:inline-block;margin:0 .5rem}
+    .social img{width:28px;filter:invert(1);transition:transform var(--speed)}
+    .social a:hover img{transform:scale(1.15) rotate(-8deg)}
+    /* ========== BACK TO TOP ================================================== */
+    #top{position:fixed;right:1rem;bottom:1rem;width:48px;height:48px;background:var(--neon-b);
+      border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;
+      opacity:0;visibility:hidden;transition:opacity var(--speed),visibility var(--speed);z-index:1000}
+    #top.visible{opacity:1;visibility:visible}
+    #top svg{width:24px;height:24px;fill:var(--bg-dark)}
+  </style>
 </head>
 <body>
 
-<!-- ========= HEADER ========= -->
-<header>
-  <nav class="navbar flex just-between">
-    <div class="logo"><a href="/">CyberBlogX</a></div>
-    <ul class="nav-links">
-      <li><a href="#posts">Posts</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li><a id="theme-btn" href="#">Toggle Theme</a></li>
-    </ul>
-    <button class="nav-toggle" aria-label="Toggle navigation"><span class="hamburger"></span></button>
-  </nav>
-</header>
+  <!-- ========= HEADER ========= -->
+  <header>
+    <nav class="navbar flex just-between">
+      <div class="logo"><a href="/">CyberBlogX</a></div>
+      <ul class="nav-links">
+        <li><a href="#posts">Posts</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a id="theme-btn" href="#">Toggle Theme</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span class="hamburger"></span>
+      </button>
+    </nav>
+  </header>
 
-<!-- ========= HERO ========= -->
-<section class="hero" id="hero">
-  <h1 class="hero-title">Welcome to CyberBlogX</h1>
-  <p class="hero-sub">Diving deep into the Matrix, one post at a time.</p>
-  <a href="#posts" class="btn" id="explore">Explore Posts</a>
-</section>
+  <!-- ========= HERO ========= -->
+  <section class="hero" id="hero">
+    <h1 class="hero-title">Welcome to CyberBlogX</h1>
+    <p class="hero-sub">Diving deep into the Matrix, one post at a time.</p>
+    <a href="#posts" class="btn" id="explore">Explore Posts</a>
+  </section>
 
-<!-- ========= MAIN ========= -->
-<main class="container" id="posts">
-  <div class="search-bar">
-    <input id="search" type="search" placeholder="Search posts…">
-    <button id="clear" class="btn hidden">Clear</button>
+  <!-- ========= MAIN ========= -->
+  <main class="container" id="posts">
+    <div class="search-bar">
+      <input id="search" type="search" placeholder="Search posts…">
+      <button id="clear" class="btn hidden">Clear</button>
+    </div>
+    <div id="tag-wrap" class="tags"></div>
+    <section id="grid" class="posts-grid"></section>
+    <nav id="pager" class="pagination"></nav>
+  </main>
+
+  <!-- ========= CONTACT ========= -->
+  <section class="contact" id="contact">
+    <form>
+      <h2>Get in Touch</h2>
+      <label>Name<input required type="text"></label>
+      <label>Email<input required type="email"></label>
+      <label>Message<textarea required rows="5"></textarea></label>
+      <button type="submit">Send</button>
+      <p id="status"></p>
+    </form>
+  </section>
+
+  <!-- ========= FOOTER ========= -->
+  <footer>
+    <div class="container">
+      <p>&copy; <span id="yr"></span> CyberBlogX. All Rights Reserved.</p>
+      <ul class="social">
+        <li><a href="#"><img src="assets/icons/twitter.svg" alt="Twitter"></a></li>
+        <li><a href="#"><img src="assets/icons/github.svg" alt="GitHub"></a></li>
+        <li><a href="#"><img src="assets/icons/linkedin.svg" alt="LinkedIn"></a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- ========= BACK TO TOP ========= -->
+  <div id="top" title="Back to top">
+    <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h16z"/></svg>
   </div>
-  <div id="tag-wrap" class="tags"></div>
-  <section id="grid" class="posts-grid"></section>
-  <nav id="pager" class="pagination"></nav>
-</main>
 
-<!-- ========= CONTACT ========= -->
-<section class="contact" id="contact">
-  <form>
-    <h2>Get in Touch</h2>
-    <label>Name<input required type="text"></label>
-    <label>Email<input required type="email"></label>
-    <label>Message<textarea required rows="5"></textarea></label>
-    <button type="submit">Send</button>
-    <p id="status"></p>
-  </form>
-</section>
-
-<!-- ========= FOOTER ========= -->
-<footer><div class="container">
-  <p>&copy; <span id="yr"></span> CyberBlogX. All Rights Reserved.</p>
-  <ul class="social">
-    <li><a href="#"><img src="assets/icons/twitter.svg" alt="Twitter"></a></li>
-    <li><a href="#"><img src="assets/icons/github.svg" alt="GitHub"></a></li>
-    <li><a href="#"><img src="assets/icons/linkedin.svg" alt="LinkedIn"></a></li>
-  </ul>
-</div></footer>
-
-<!-- ========= BACK TO TOP ========= -->
-<div id="top" title="Back to top">
-  <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h16z"/></svg>
-</div>
-
-<script>
-/* ------- THEME & NAV & HERO ------- */
-const root = document.documentElement,
-      themeBtn = document.getElementById('theme-btn');
-let theme = localStorage.getItem('theme') || 'dark';
-applyTheme();
-themeBtn.addEventListener('click', e => {
-  e.preventDefault();
-  theme = theme==='dark' ? 'light' : 'dark';
-  applyTheme();
-});
-function applyTheme(){
-  root.classList.toggle('light', theme==='light');
-  localStorage.setItem('theme', theme);
-}
-
-document.querySelector('.nav-toggle').addEventListener('click', () => {
-  document.querySelector('.nav-links').classList.toggle('show');
-  document.querySelector('.hamburger').classList.toggle('open');
-});
-
-document.getElementById('explore').addEventListener('click', e => {
-  e.preventDefault();
-  const postsSection = document.getElementById('posts');
-  const headerH = document.querySelector('header').offsetHeight;
-  const y = postsSection.getBoundingClientRect().top + window.pageYOffset - headerH;
-  window.scrollTo({ top: y, behavior: 'smooth' });
-});
-
-/* ------- BACK TO TOP ------- */
-const topBtn = document.getElementById('top');
-window.addEventListener('scroll', () => {
-  window.scrollY > 300
-    ? topBtn.classList.add('visible')
-    : topBtn.classList.remove('visible');
-});
-topBtn.addEventListener('click', () =>
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-);
-
-/* ------- CONTACT FAKE SUBMIT ------- */
-document.querySelector('.contact form').addEventListener('submit', e => {
-  e.preventDefault();
-  const st = document.getElementById('status');
-  st.textContent = 'Sending…';
-  setTimeout(() => st.textContent = 'Message sent!', 1200);
-});
-
-/* ------- DYNAMIC POST RENDER ------- */
-const PER_PAGE = 6;
-let postsList = [], page = 1, currentTag = '', q = '';
-const grid = document.getElementById('grid'),
-      pager = document.getElementById('pager'),
-      tagWrap = document.getElementById('tag-wrap'),
-      searchIn = document.getElementById('search'),
-      clearBtn2 = document.getElementById('clear');
-
-const ioCard = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      ioCard.unobserve(e.target);
-    }
-  });
-},{ threshold: 0.3 });
-
-const ioImg = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      const img = e.target;
-      img.src = img.dataset.src;
-      img.onload = () => img.classList.remove('skeleton');
-      ioImg.unobserve(img);
-    }
-  });
-},{ rootMargin: '200px' });
-
-async function loadPosts(){
-  const arr = [];
-  for (let id = 1; ; id++){
-    const res = await fetch(`posts/feed/${id}/${id}.json`);
-    if (!res.ok) break;
-    const j = await res.json();
-    arr.push({
-      id,
-      title:   j.title,
-      excerpt: j.excerpt,
-      date:    j.date,
-      read:    j.read,
-      tags:    j.tags,
-      img:     `posts/assets/cover/${id}.png`
+  <script>
+    /* ------- THEME / NAV / HERO ------- */
+    const root = document.documentElement,
+          themeBtn = document.getElementById('theme-btn');
+    let theme = localStorage.getItem('theme') || 'dark';
+    applyTheme();
+    themeBtn.addEventListener('click', e => {
+      e.preventDefault();
+      theme = theme==='dark' ? 'light' : 'dark';
+      applyTheme();
     });
-  }
-  return arr;
-}
+    function applyTheme(){
+      root.classList.toggle('light', theme==='light');
+      localStorage.setItem('theme', theme);
+    }
+    document.querySelector('.nav-toggle').addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.toggle('show');
+      document.querySelector('.hamburger').classList.toggle('open');
+    });
+    document.getElementById('explore').addEventListener('click', e => {
+      e.preventDefault();
+      const postsSection = document.getElementById('posts');
+      const headerH = document.querySelector('header').offsetHeight;
+      const y = postsSection.getBoundingClientRect().top + window.pageYOffset - headerH;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    });
 
-function cardHTML(p){
-  return `
-    <article class="post-card lazy">
-      <a href="posts/feed/${p.id}/${p.id}.html">
-        <div class="post-thumbnail">
-          <img data-src="${p.img}" alt="${p.title}" class="skeleton" loading="lazy">
-        </div>
-        <div class="post-content">
-          <h2 class="post-title">${p.title}</h2>
-          <p class="post-excerpt">${p.excerpt}</p>
-          <span class="post-meta">${p.date} • ${p.read} min read</span>
-        </div>
-      </a>
-    </article>`;
-}
+    /* ------- BACK TO TOP ------- */
+    const topBtn = document.getElementById('top');
+    window.addEventListener('scroll', () => {
+      window.scrollY > 300
+        ? topBtn.classList.add('visible')
+        : topBtn.classList.remove('visible');
+    });
+    topBtn.addEventListener('click', () =>
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    );
 
-function renderTags() {
-  tagWrap.innerHTML = '';
-  const all = [...new Set(postsList.flatMap(p => p.tags))].sort();
-  all.forEach(t => {
-    const btn = document.createElement('button');
-    btn.textContent = t;
-    btn.onclick = () => {
-      currentTag = (currentTag === t ? '' : t);
-      page = 1; draw();
-      tagWrap.querySelectorAll('button').forEach(b =>
-        b.classList.toggle('active', b.textContent === currentTag)
+    /* ------- CONTACT FAKE SUBMIT ------- */
+    document.querySelector('.contact form').addEventListener('submit', e => {
+      e.preventDefault();
+      const st = document.getElementById('status');
+      st.textContent = 'Sending…';
+      setTimeout(() => st.textContent = 'Message sent!', 1200);
+    });
+
+    /* ------- DYNAMIC POST RENDER ------- */
+    const PER_PAGE = 6;
+    let postsList = [], page = 1, currentTag = '', q = '';
+    const grid = document.getElementById('grid'),
+          pager = document.getElementById('pager'),
+          tagWrap = document.getElementById('tag-wrap'),
+          searchIn = document.getElementById('search'),
+          clearBtn2 = document.getElementById('clear');
+
+    const ioCard = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          ioCard.unobserve(e.target);
+        }
+      });
+    },{ threshold: 0.3 });
+
+    const ioImg = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const img = e.target;
+          img.src = img.dataset.src;
+          img.onload = () => img.classList.remove('skeleton');
+          ioImg.unobserve(img);
+        }
+      });
+    },{ rootMargin: '200px' });
+
+    // 1) Fetch single manifest
+    async function loadPosts(){
+      const res = await fetch('/posts/feed/index.json', { cache:'no-store' });
+      if (!res.ok) throw new Error('Failed to load posts index');
+      const manifest = await res.json();
+      return manifest.map(j => ({
+        id:      j.id,
+        title:   j.title,
+        excerpt: j.excerpt,
+        date:    j.date,
+        read:    j.read,
+        tags:    j.tags,
+        img:     `/posts/assets/cover/${j.id}.png`
+      }));
+    }
+
+    // 2) Build card HTML
+    function cardHTML(p){
+      return `
+      <article class="post-card lazy">
+        <a href="/posts/feed/${p.id}/${p.id}.html">
+          <div class="post-thumbnail">
+            <img data-src="${p.img}" alt="${p.title}" class="skeleton" loading="lazy">
+          </div>
+          <div class="post-content">
+            <h2 class="post-title">${p.title}</h2>
+            <p class="post-excerpt">${p.excerpt}</p>
+            <span class="post-meta">${p.date} • ${p.read} min read</span>
+          </div>
+        </a>
+      </article>`;
+    }
+
+    // 3) Render Tags
+    function renderTags() {
+      tagWrap.innerHTML = '';
+      const all = [...new Set(postsList.flatMap(p => p.tags))].sort();
+      all.forEach(t => {
+        const btn = document.createElement('button');
+        btn.textContent = t;
+        btn.onclick = () => {
+          currentTag = (currentTag === t ? '' : t);
+          page = 1; draw();
+          tagWrap.querySelectorAll('button').forEach(b =>
+            b.classList.toggle('active', b.textContent === currentTag)
+          );
+          clearBtn2.classList.toggle('hidden', !currentTag);
+        };
+        tagWrap.appendChild(btn);
+      });
+    }
+
+    // 4) Filter & paginate
+    function filterList(){
+      let lst = postsList;
+      if (currentTag) lst = lst.filter(p => p.tags.includes(currentTag));
+      if (q) lst = lst.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        p.excerpt.toLowerCase().includes(q)
       );
-      clearBtn2.classList.toggle('hidden', !currentTag);
-    };
-    tagWrap.appendChild(btn);
-  });
-}
+      return lst;
+    }
+    function draw(){
+      const list = filterList();
+      const slice = list.slice((page-1)*PER_PAGE, page*PER_PAGE);
 
-function filterList(){
-  let lst = postsList;
-  if (currentTag) lst = lst.filter(p => p.tags.includes(currentTag));
-  if (q) lst = lst.filter(p =>
-    p.title.toLowerCase().includes(q) ||
-    p.excerpt.toLowerCase().includes(q)
-  );
-  return lst;
-}
+      document.querySelectorAll('.post-card').forEach(c => c.classList.add('hidden'));
+      setTimeout(() => {
+        grid.innerHTML = slice.map(cardHTML).join('');
+        grid.querySelectorAll('.lazy').forEach(card => {
+          ioCard.observe(card);
+          ioImg.observe(card.querySelector('img'));
+        });
+      }, 200);
 
-function draw(){
-  const list = filterList();
-  const slice = list.slice((page-1)*PER_PAGE, page*PER_PAGE);
+      pager.innerHTML =
+        (page>1 ? `<a href="#" class="prev">« Newer</a>` : '') +
+        `<span> Page ${page} </span>` +
+        ((page*PER_PAGE < list.length) ? `<a href="#" class="next">Older »</a>` : '');
+      pager.querySelectorAll('a').forEach(a => {
+        a.style.opacity = '0';
+        setTimeout(() => a.style.opacity = '1', 200);
+      });
+      pager.onclick = e => {
+        if (e.target.matches('.prev')) { e.preventDefault(); page--; draw(); }
+        if (e.target.matches('.next')) { e.preventDefault(); page++; draw(); }
+      };
+    }
 
-  document.querySelectorAll('.post-card').forEach(c => c.classList.add('hidden'));
-  setTimeout(() => {
-    grid.innerHTML = slice.map(cardHTML).join('');
-    grid.querySelectorAll('.lazy').forEach(card => {
-      ioCard.observe(card);
-      ioImg.observe(card.querySelector('img'));
+    // 5) Initialize
+    loadPosts()
+      .then(a => {
+        postsList = a;
+        renderTags();
+        draw();
+      })
+      .catch(err => {
+        grid.innerHTML = '<p style="color:red">Unable to load posts.</p>';
+        console.error(err);
+      });
+
+    // 6) Search & clear
+    searchIn.addEventListener('input', () => {
+      q = searchIn.value.trim().toLowerCase();
+      page = 1; draw();
     });
-  }, 200);
+    clearBtn2.addEventListener('click', () => {
+      currentTag = '';
+      page = 1; draw();
+      clearBtn2.classList.add('hidden');
+      tagWrap.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    });
 
-  pager.innerHTML =
-    (page>1 ? `<a href="#" class="prev">« Newer</a>` : '') +
-    `<span> Page ${page} </span>` +
-    ((page*PER_PAGE < list.length) ? `<a href="#" class="next">Older »</a>` : '');
-  pager.querySelectorAll('a').forEach(a => {
-    a.style.opacity = '0';
-    setTimeout(() => a.style.opacity = '1', 200);
-  });
-  pager.onclick = e => {
-    if (e.target.matches('.prev')) { e.preventDefault(); page--; draw(); }
-    if (e.target.matches('.next')) { e.preventDefault(); page++; draw(); }
-  };
-}
+    // 7) Year
+    document.getElementById('yr').textContent = new Date().getFullYear();
+  </script>
 
-loadPosts().then(a => {
-  postsList = a;
-  renderTags();
-  draw();
-});
-
-searchIn.addEventListener('input', () => {
-  q = searchIn.value.trim().toLowerCase();
-  page = 1; draw();
-});
-clearBtn2.addEventListener('click', () => {
-  currentTag = '';
-  page = 1; draw();
-  clearBtn2.classList.add('hidden');
-  tagWrap.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-});
-
-document.getElementById('yr').textContent = new Date().getFullYear();
-</script>
 </body>
 </html>
