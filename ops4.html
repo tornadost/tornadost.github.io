@@ -1,262 +1,354 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CyberBlogX</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-  <style>
-    /* ========== ROOT & RESET ================================================= */
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;width:100%;scroll-behavior:smooth;overflow-x:hidden;
-      background:var(--bg-dark);color:var(--text);font-family:'Roboto',sans-serif}
-    :root{--neon:#0f0;--neon-b:#39ff14;--bg-dark:#000;--bg-light:#111;--text:#eee;
-      --radius:8px;--speed:.3s;--max:1200px;--font-mono:'Press Start 2P',cursive}
-    :root.light{--bg-dark:#fafafa;--bg-light:#fff;--text:#222;--neon:#05f;--neon-b:#0ff}
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberBlogX</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 
-    /* ========== UTILITIES ==================================================== */
-    .container{max-width:var(--max);margin:0 auto;padding:1rem}
-    .flex{display:flex;align-items:center}.just-between{justify-content:space-between}
-    .btn{display:inline-block;font-family:var(--font-mono);text-transform:uppercase;
-      padding:.7rem 1.4rem;border:1px solid var(--neon);color:var(--neon);
-      background:transparent;border-radius:var(--radius);letter-spacing:.05em;
-      transition:background var(--speed),color var(--speed),box-shadow var(--speed)}
-    .btn:hover{background:var(--neon);color:var(--bg-dark);
-      box-shadow:0 0 8px var(--neon),0 0 16px var(--neon-b)}
+<style>
+/* ========== ROOT & RESET ================================================= */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;width:100%;scroll-behavior:smooth;overflow-x:hidden;
+  background:var(--bg-dark);color:var(--text);font-family:'Roboto',sans-serif}
+:root{--neon:#0f0;--neon-b:#39ff14;--bg-dark:#000;--bg-light:#111;--text:#eee;
+  --radius:8px;--speed:.3s;--max:1200px;--font-mono:'Press Start 2P',cursive}
+:root.light{--bg-dark:#fafafa;--bg-light:#fff;--text:#222;--neon:#05f;--neon-b:#0ff}
 
-    /* ========== HEADER ======================================================= */
-    header{position:fixed;top:0;left:0;width:100%;background:rgba(0,0,0,.8);
-      backdrop-filter:blur(6px);z-index:100}
-    .navbar{max-width:var(--max);margin:0 auto;padding:1rem}
-    .logo a{font-family:var(--font-mono);font-size:1.5rem;color:var(--neon);
-      text-decoration:none;text-shadow:0 0 4px var(--neon)}
-    .nav-links{list-style:none}.nav-links li{display:inline-block;margin-left:2rem}
-    .nav-links a{color:var(--neon);text-decoration:none;position:relative}
-    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;
-      height:2px;background:var(--neon-b);transition:width var(--speed)}
-    .nav-links a:hover::after{width:100%}
-    .nav-toggle{display:none;background:none;border:none;cursor:pointer}
-    .hamburger,.hamburger::before,.hamburger::after{width:28px;height:3px;background:var(--neon);
-      display:block;position:relative;transition:all var(--speed)}
-    .hamburger::before,.hamburger::after{content:'';position:absolute;left:0}
-    .hamburger::before{top:-8px}.hamburger::after{top:8px}
-    .hamburger.open{transform:rotate(45deg)}.hamburger.open::before{top:0;transform:rotate(90deg)}
-    .hamburger.open::after{top:0;opacity:0}
-    @media(max-width:768px){
-      .nav-toggle{display:block}
-      .nav-links{display:none;flex-direction:column;position:fixed;top:60px;right:0;width:200px;
-        height:calc(100% - 60px);background:var(--bg-light);padding:2rem}
-      .nav-links.show{display:flex}.nav-links li{margin:1rem 0}
-    }
+/* ========== UTILITIES ==================================================== */
+.container{max-width:var(--max);margin:0 auto;padding:1rem}
+.flex{display:flex;align-items:center}.just-between{justify-content:space-between}
+.btn{display:inline-block;font-family:var(--font-mono);text-transform:uppercase;
+  padding:.7rem 1.4rem;border:1px solid var(--neon);color:var(--neon);
+  background:transparent;border-radius:var(--radius);letter-spacing:.05em;
+  transition:background var(--speed),color var(--speed),box-shadow var(--speed)}
+.btn:hover{background:var(--neon);color:var(--bg-dark);
+  box-shadow:0 0 8px var(--neon),0 0 16px var(--neon-b)}
 
-    /* ========== HERO ========================================================= */
-    .hero{height:70vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
-      background:url('assets/images/hero-bg.jpg') center/cover no-repeat;position:relative;margin-top:60px}
-    .hero::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.6)}
-    .hero-title{font-size:3.2rem;color:var(--neon);font-family:var(--font-mono);z-index:1;animation:flicker 2s infinite}
-    .hero-sub{font-size:1.1rem;color:#ccc;margin-top:1rem;z-index:1}
-    .hero .btn{margin-top:2rem;z-index:1;animation:pulse 2s infinite}
-    @keyframes flicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,24%,55%{opacity:.35}}
-    @keyframes pulse{0%{box-shadow:0 0 4px var(--neon)}50%{box-shadow:0 0 14px var(--neon-b)}100%{box-shadow:0 0 4px var(--neon)}}
-    @keyframes fadeOut{to{opacity:0;visibility:hidden}}
-    .hero.hidden{animation:fadeOut .8s forwards}
+/* ========== HEADER ======================================================= */
+header{position:fixed;top:0;left:0;width:100%;background:rgba(0,0,0,.8);
+  backdrop-filter:blur(6px);z-index:100}
+.navbar{max-width:var(--max);margin:0 auto;padding:1rem}
+.logo a{font-family:var(--font-mono);font-size:1.5rem;color:var(--neon);
+  text-decoration:none;text-shadow:0 0 4px var(--neon)}
+.nav-links{list-style:none}.nav-links li{display:inline-block;margin-left:2rem}
+.nav-links a{color:var(--neon);text-decoration:none;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;
+  height:2px;background:var(--neon-b);transition:width var(--speed)}
+.nav-links a:hover::after{width:100%}
+.nav-toggle{display:none;background:none;border:none;cursor:pointer}
+.hamburger,.hamburger::before,.hamburger::after{width:28px;height:3px;background:var(--neon);
+  display:block;position:relative;transition:all var(--speed)}
+.hamburger::before,.hamburger::after{content:'';position:absolute;left:0}
+.hamburger::before{top:-8px}.hamburger::after{top:8px}
+.hamburger.open{transform:rotate(45deg)}.hamburger.open::before{top:0;transform:rotate(90deg)}
+.hamburger.open::after{top:0;opacity:0}
+@media(max-width:768px){
+  .nav-toggle{display:block}
+  .nav-links{display:none;flex-direction:column;position:fixed;top:60px;right:0;width:200px;
+    height:calc(100% - 60px);background:var(--bg-light);padding:2rem}
+  .nav-links.show{display:flex}.nav-links li{margin:1rem 0}
+}
 
-    /* ========== SEARCH & TAGS =============================================== */
-    .search-bar{margin:2rem 0 0;display:grid;grid-template-columns:1fr auto;gap:1rem}
-    #search{width:100%;padding:.7rem;border:1px solid var(--neon);border-radius:var(--radius);
-      background:var(--bg-light);color:var(--text)}
-    .tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
-    .tags button{padding:.3rem .8rem;border:1px solid var(--neon-b);background:transparent;
-      color:var(--neon-b);border-radius:var(--radius);cursor:pointer;font-size:.8rem;
-      transition:background var(--speed)}
-    .tags button.active,.tags button:hover{background:var(--neon-b);color:var(--bg-dark)}
+/* ========== HERO ========================================================= */
+.hero{height:70vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  background:url('assets/images/hero-bg.jpg') center/cover no-repeat;position:relative;margin-top:60px}
+.hero::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.6)}
+.hero-title{font-size:3.2rem;color:var(--neon);font-family:var(--font-mono);z-index:1;animation:flicker 2s infinite}
+.hero-sub{font-size:1.1rem;color:#ccc;margin-top:1rem;z-index:1}
+.hero .btn{margin-top:2rem;z-index:1;animation:pulse 2s infinite}
+@keyframes flicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,24%,55%{opacity:.35}}
+@keyframes pulse{0%{box-shadow:0 0 4px var(--neon)}50%{box-shadow:0 0 14px var(--neon-b)}100%{box-shadow:0 0 4px var(--neon)}}
+@keyframes fadeOut{to{opacity:0;visibility:hidden}}
+.hero.hidden{animation:fadeOut .8s forwards}
 
-    /* ========== POSTS GRID =================================================== */
-    .posts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:2rem}
-    .post-card{background:var(--bg-light);border:1px solid var(--neon);border-radius:var(--radius);
-      overflow:hidden;transition:transform var(--speed),box-shadow var(--speed)}
-    .post-card:hover{transform:translateY(-6px);box-shadow:0 0 8px var(--neon-b)}
-    .post-thumbnail img{width:100%;display:block;object-fit:cover;min-height:160px;transition:transform .6s;will-change:transform}
-    .post-card:hover .post-thumbnail img{transform:scale(1.05)}
-    .post-content{padding:1rem}.post-title{font-size:1.2rem;color:var(--neon-b);margin-bottom:.4rem}
-    .post-excerpt{color:#ccc;font-size:.95rem;line-height:1.55;margin-bottom:.8rem}
-    .post-meta{font-size:.75rem;color:#888}
-    .skeleton{background:linear-gradient(90deg,#333 25%,#444 50%,#333 75%);background-size:200% 100%;
-      animation:skeleton 1.25s infinite}@keyframes skeleton{0%{background-position:200%}100%{background-position:-200%}}
-    .lazy{opacity:0;transform:translateY(20px);transition:opacity .6s ease-out,transform .6s ease-out}
-    .lazy.visible{opacity:1;transform:translateY(0)}
+/* ========== SEARCH & TAGS =============================================== */
+.search-bar{margin:2rem 0 0;display:grid;grid-template-columns:1fr auto;gap:1rem}
+#search{width:100%;padding:.7rem;border:1px solid var(--neon);border-radius:var(--radius);
+  background:var(--bg-light);color:var(--text)}
+.tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.tags button{padding:.3rem .8rem;border:1px solid var(--neon-b);background:transparent;
+  color:var(--neon-b);border-radius:var(--radius);cursor:pointer;font-size:.8rem;
+  transition:background var(--speed)}
+.tags button.active,.tags button:hover{background:var(--neon-b);color:var(--bg-dark)}
 
-    /* ========== PAGINATION =================================================== */
-    .pagination{display:flex;justify-content:center;align-items:center;gap:1rem;margin:3rem 0}
-    .pagination a{color:var(--neon);text-decoration:none;position:relative;padding-bottom:2px}
-    .pagination a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--neon);
-     transition:width var(--speed)}.pagination a:hover::after{width:100%}
+/* ========== POSTS GRID =================================================== */
+.posts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:2rem}
+.post-card{background:var(--bg-light);border:1px solid var(--neon);border-radius:var(--radius);
+  overflow:hidden;transition:transform var(--speed),box-shadow var(--speed)}
+.post-card:hover{transform:translateY(-6px);box-shadow:0 0 8px var(--neon-b)}
+.post-thumbnail img{width:100%;display:block;object-fit:cover;min-height:160px;transition:transform .6s;will-change:transform}
+.post-card:hover .post-thumbnail img{transform:scale(1.05)}
+.post-content{padding:1rem}.post-title{font-size:1.2rem;color:var(--neon-b);margin-bottom:.4rem}
+.post-excerpt{color:#ccc;font-size:.95rem;line-height:1.55;margin-bottom:.8rem}
+.post-meta{font-size:.75rem;color:#888}
+.skeleton{background:linear-gradient(90deg,#333 25%,#444 50%,#333 75%);background-size:200% 100%;
+  animation:skeleton 1.25s infinite}@keyframes skeleton{0%{background-position:200%}100%{background-position:-200%}}
+.lazy{opacity:0;transform:translateY(20px);transition:opacity .6s ease-out,transform .6s ease-out}
+.lazy.visible{opacity:1;transform:translateY(0)}
 
-    /* ========== CONTACT & FOOTER ============================================ */
-    .contact{margin:4rem 0}.contact form{background:var(--bg-light);padding:2rem;border-radius:var(--radius);
-      box-shadow:0 0 8px rgba(0,0,0,.5);max-width:600px;margin:0 auto}
-    .contact h2{font-family:var(--font-mono);margin-bottom:1rem}
-    .contact label{display:block;color:#ccc;margin:.4rem 0}
-    .contact input,.contact textarea{width:100%;padding:.7rem;background:#222;border:1px solid #444;
-      color:#eee;border-radius:var(--radius);margin-bottom:1rem}
-    .contact button{background:var(--neon-b);color:var(--bg-dark);border:none;padding:.7rem 1.4rem;
-      border-radius:var(--radius);cursor:pointer;transition:background var(--speed)}
-    .contact button:hover{background:var(--neon)}
-    footer{background:rgba(0,0,0,.85);text-align:center;padding:2rem 0;margin-top:4rem}
-    footer p{color:#888;font-size:.9rem}.social{list-style:none;margin-top:1rem}
-    .social li{display:inline-block;margin:0 .5rem}
-    .social img{width:28px;filter:invert(1);transition:transform var(--speed)}
-    .social a:hover img{transform:scale(1.15) rotate(-8deg)}
+/* ========== PAGINATION =================================================== */
+.pagination{display:flex;justify-content:center;align-items:center;gap:1rem;margin:3rem 0}
+.pagination a{color:var(--neon);text-decoration:none;position:relative;padding-bottom:2px}
+.pagination a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--neon);
+ transition:width var(--speed)}.pagination a:hover::after{width:100%}
 
-    /* ========== BACK TO TOP ================================================== */
-    #top{position:fixed;right:1rem;bottom:1rem;width:48px;height:48px;background:var(--neon-b);
-      border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;
-      opacity:0;visibility:hidden;transition:opacity var(--speed),visibility var(--speed);z-index:1000}
-    #top.visible{opacity:1;visibility:visible}
-    #top svg{width:24px;height:24px;fill:var(--bg-dark)}
-  </style>
+/* ========== CONTACT & FOOTER ============================================ */
+.contact{margin:4rem 0}.contact form{background:var(--bg-light);padding:2rem;border-radius:var(--radius);
+  box-shadow:0 0 8px rgba(0,0,0,.5);max-width:600px;margin:0 auto}
+.contact h2{font-family:var(--font-mono);margin-bottom:1rem}
+.contact label{display:block;color:#ccc;margin:.4rem 0}
+.contact input,.contact textarea{width:100%;padding:.7rem;background:#222;border:1px solid #444;
+  color:#eee;border-radius:var(--radius);margin-bottom:1rem}
+.contact button{background:var(--neon-b);color:var(--bg-dark);border:none;padding:.7rem 1.4rem;
+  border-radius:var(--radius);cursor:pointer;transition:background var(--speed)}
+.contact button:hover{background:var(--neon)}
+footer{background:rgba(0,0,0,.85);text-align:center;padding:2rem 0;margin-top:4rem}
+footer p{color:#888;font-size:.9rem}.social{list-style:none;margin-top:1rem}
+.social li{display:inline-block;margin:0 .5rem}
+.social img{width:28px;filter:invert(1);transition:transform var(--speed)}
+.social a:hover img{transform:scale(1.15) rotate(-8deg)}
+
+/* ========== BACK TO TOP ================================================== */
+#top{position:fixed;right:1rem;bottom:1rem;width:48px;height:48px;background:var(--neon-b);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  opacity:0;visibility:hidden;transition:opacity var(--speed),visibility var(--speed);z-index:1000}
+#top.visible{opacity:1;visibility:visible}
+#top svg{width:24px;height:24px;fill:var(--bg-dark)}
+</style>
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header>…</header>
-  <!-- HERO -->
-  <section class="hero" id="hero">…</section>
-  <!-- MAIN POSTS GRID -->
-  <main class="container" id="posts">…</main>
-  <!-- CONTACT -->
-  <section class="contact" id="contact">…</section>
-  <!-- FOOTER -->
-  <footer>…</footer>
-  <!-- BACK TO TOP -->
-  <div id="top" title="Back to top">…</div>
+<!-- ========= HEADER ========= -->
+<header>
+  <nav class="navbar flex just-between">
+    <div class="logo"><a href="/">CyberBlogX</a></div>
+    <ul class="nav-links">
+      <li><a href="#posts">Posts</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a id="theme-btn" href="#">Toggle Theme</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Toggle navigation"><span class="hamburger"></span></button>
+  </nav>
+</header>
 
-  <!-- CORE SCRIPT -->
-  <script>
-    /* THEME TOGGLE */
-    const root = document.documentElement, themeBtn = document.getElementById('theme-btn');
-    let theme = localStorage.getItem('theme') || 'dark';
-    apply(theme);
-    themeBtn.addEventListener('click', e => { e.preventDefault(); theme = theme==='dark'?'light':'dark'; apply(theme); });
-    function apply(t){ root.classList.toggle('light', t==='light'); localStorage.setItem('theme', t); }
+<!-- ========= HERO ========= -->
+<section class="hero" id="hero">
+  <h1 class="hero-title">Welcome to CyberBlogX</h1>
+  <p class="hero-sub">Diving deep into the Matrix, one post at a time.</p>
+  <a href="#posts" class="btn" id="explore">Explore Posts</a>
+</section>
 
-    /* NAV TOGGLE */
-    document.querySelector('.nav-toggle').addEventListener('click', ()=>{
-      document.querySelector('.nav-links').classList.toggle('show');
-      document.querySelector('.hamburger').classList.toggle('open');
-    });
+<!-- ========= MAIN ========= -->
+<main class="container" id="posts">
+  <div class="search-bar">
+    <input id="search" type="search" placeholder="Search posts…">
+    <button id="clear" class="btn hidden">Clear</button>
+  </div>
+  <div id="tag-wrap" class="tags"></div>
 
-    /* HERO → SCROLL & FADE */
-    document.getElementById('explore').addEventListener('click', e => {
-      e.preventDefault();
-      document.getElementById('hero').classList.add('hidden');
-      document.getElementById('posts').scrollIntoView({behavior:'smooth'});
-    });
+  <section id="grid" class="posts-grid"></section>
+  <nav id="pager" class="pagination"></nav>
+</main>
 
-    /* BACK TO TOP BUTTON */
-    const topBtn = document.getElementById('top');
-    window.addEventListener('scroll', () => {
-      window.scrollY > 300 ? topBtn.classList.add('visible') : topBtn.classList.remove('visible');
-    });
-    topBtn.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+<!-- ========= CONTACT ========= -->
+<section class="contact" id="contact">
+  <form>
+    <h2>Get in Touch</h2>
+    <label>Name<input required type="text"></label>
+    <label>Email<input required type="email"></label>
+    <label>Message<textarea required rows="5"></textarea></label>
+    <button type="submit">Send</button>
+    <p id="status"></p>
+  </form>
+</section>
 
-    /* FAKE CONTACT SUBMIT */
-    document.querySelector('.contact form').addEventListener('submit', e => {
-      e.preventDefault();
-      const st = document.getElementById('status');
-      st.textContent = 'Sending…';
-      setTimeout(() => st.textContent = 'Message sent!', 1200);
-    });
+<!-- ========= FOOTER ========= -->
+<footer><div class="container">
+  <p>&copy; <span id="yr"></span> CyberBlogX. All Rights Reserved.</p>
+  <ul class="social">
+    <li><a href="#"><img src="assets/icons/twitter.svg" alt="Twitter"></a></li>
+    <li><a href="#"><img src="assets/icons/github.svg" alt="GitHub"></a></li>
+    <li><a href="#"><img src="assets/icons/linkedin.svg" alt="LinkedIn"></a></li>
+  </ul>
+</div></footer>
 
-    /* DYNAMIC POST LOADING */
-    const grid = document.getElementById('grid'),
-          pager = document.getElementById('pager'),
-          CARDS_PER_PAGE = 6;
-    let posts = [], page = 1;
+<!-- ========= BACK TO TOP ========= -->
+<div id="top" title="Back to top"><svg viewBox="0 0 24 24"><path d="M12 4l-8 8h16z"/></svg></div>
 
-    /* Lazy observers */
-    const ioCard = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if(e.isIntersecting){
-          e.target.classList.add('visible');
-          ioCard.unobserve(e.target);
-        }
-      });
-    },{ threshold: 0.3 });
-    const ioImg = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if(e.isIntersecting){
-          const img = e.target;
-          img.src = img.dataset.src;
-          img.onload = () => img.classList.remove('skeleton');
-          ioImg.unobserve(img);
-        }
-      });
-    },{ rootMargin: '200px' });
+<!-- ========= CORE SCRIPT ========= -->
+<script>
+/* ------- CONFIG ------- */
+const PER_PAGE = 6;
 
-    /* Sequentially fetch numbered JSON until 404 */
-    async function loadPosts(){
-      let id = 1, list = [];
-      while(true){
-        try {
-          const res = await fetch(`/posts/${id}.json`);
-          if(!res.ok) break;  // stop on 404 or any non-2xx :contentReference[oaicite:10]{index=10}
-          const j = await res.json();
-          list.push({
-            id,
-            title:   j.title,
-            excerpt: j.excerpt,
-            date:    j.date,
-            read:    j.read,
-            cover:   `/posts/assets/cover/${id}.png`
-          });
-          id++;
-        } catch {
-          break; // optional retry or skip logic can go here :contentReference[oaicite:11]{index=11}
-        }
-      }
-      return list;
+/* ------- THEME TOGGLE ------- */
+const root=document.documentElement, themeBtn=document.getElementById('theme-btn');
+let theme=localStorage.getItem('theme')||'dark';
+applyTheme();
+themeBtn.addEventListener('click',e=>{e.preventDefault();theme=theme==='dark'?'light':'dark';applyTheme();});
+function applyTheme(){
+  root.classList.toggle('light', theme==='light');
+  localStorage.setItem('theme', theme);
+}
+
+/* ------- MOBILE NAV ------- */
+document.querySelector('.nav-toggle').addEventListener('click',()=>{
+  document.querySelector('.nav-links').classList.toggle('show');
+  document.querySelector('.hamburger').classList.toggle('open');
+});
+
+/* ------- HERO SCROLL ------- */
+document.getElementById('explore').addEventListener('click',e=>{
+  e.preventDefault();
+  document.getElementById('hero').classList.add('hidden');
+  document.getElementById('posts').scrollIntoView({behavior:'smooth'});
+});
+
+/* ------- BACK TO TOP ------- */
+const topBtn=document.getElementById('top');
+window.addEventListener('scroll',()=>{
+  window.scrollY > 300 ? topBtn.classList.add('visible') : topBtn.classList.remove('visible');
+});
+topBtn.addEventListener('click',()=>window.scrollTo({top:0, behavior:'smooth'}));
+
+/* ------- CONTACT FORM ------- */
+document.querySelector('.contact form').addEventListener('submit',e=>{
+  e.preventDefault();
+  const st=document.getElementById('status'); st.textContent='Sending…';
+  setTimeout(()=>st.textContent='Message sent!',1200);
+});
+
+/* ------- DYNAMIC POST RENDER ------- */
+const grid = document.getElementById('grid');
+const pager = document.getElementById('pager');
+const tagWrap = document.getElementById('tag-wrap');
+const searchInput = document.getElementById('search');
+const clearBtn = document.getElementById('clear');
+
+let posts = [], page = 1, currentTag = '', q = '';
+
+/* Lazy observers */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      io.unobserve(e.target);
     }
+  });
+}, { threshold: 0.3 });
 
-    function cardHTML(p){
-      return `
-        <article class="post-card lazy">
-          <a href="/posts/${p.id}.html">
-            <div class="post-thumbnail">
-              <img data-src="${p.cover}" alt="${p.title}" class="skeleton" loading="lazy">
-            </div>
-            <div class="post-content">
-              <h2 class="post-title">${p.title}</h2>
-              <p class="post-excerpt">${p.excerpt}</p>
-              <span class="post-meta">${p.date} • ${p.read} min read</span>
-            </div>
-          </a>
-        </article>`;
+const ioImg = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const img = e.target;
+      img.src = img.dataset.src;
+      img.onload = () => img.classList.remove('skeleton');
+      ioImg.unobserve(img);
     }
+  });
+}, { rootMargin: '200px' });
 
-    function render(){
-      const slice = posts.slice((page-1)*CARDS_PER_PAGE, page*CARDS_PER_PAGE);
-      grid.innerHTML = slice.map(cardHTML).join('');
-      grid.querySelectorAll('.lazy').forEach(card => {
-        ioCard.observe(card);
-        ioImg.observe(card.querySelector('img'));
+/* Load numbered JSON until first 404 */
+async function loadPosts(){
+  const list = [];
+  for(let id=1;;id++){
+    try {
+      const res = await fetch(`/posts/${id}.json`);
+      if(!res.ok) break;
+      const j = await res.json();
+      list.push({
+        id,
+        title:   j.title   || `Post ${id}`,
+        excerpt: j.excerpt || '',
+        date:    j.date    || '',
+        read:    j.read    || 0,
+        tags:    j.tags    || [],
+        img:     `/posts/assets/cover/${id}.png`
       });
-      pager.innerHTML =
-        (page>1 ? `<a href="#" class="prev">« Newer</a>` : '') +
-        `<span> Page ${page} </span>` +
-        (page*CARDS_PER_PAGE<posts.length ? `<a href="#" class="next">Older »</a>` : '');
-      pager.onclick = e => {
-        if(e.target.matches('.prev')){ e.preventDefault(); page--; render(); }
-        if(e.target.matches('.next')){ e.preventDefault(); page++; render(); }
-      };
+    } catch {
+      break;
     }
+  }
+  return list;
+}
 
-    /* Initialize */
-    loadPosts().then(list => { posts = list; render(); });
+/* Build card HTML */
+function cardHTML(p){
+  return `
+    <article class="post-card lazy">
+      <a href="/posts/${p.id}.html">
+        <div class="post-thumbnail">
+          <img data-src="${p.img}" alt="${p.title}" class="skeleton" loading="lazy">
+        </div>
+        <div class="post-content">
+          <h2 class="post-title">${p.title}</h2>
+          <p class="post-excerpt">${p.excerpt}</p>
+          <span class="post-meta">${p.date} • ${p.read} min read</span>
+        </div>
+      </a>
+    </article>`;
+}
 
-    /* Dynamic year */
-    document.getElementById('yr').textContent = new Date().getFullYear();
-  </script>
+/* Render tags */
+function renderTags(){
+  tagWrap.innerHTML = '';
+  const tags = [...new Set(posts.flatMap(p=>p.tags))].sort();
+  tags.forEach(t=>{
+    const b = document.createElement('button');
+    b.textContent = t;
+    b.onclick = ()=> {
+      currentTag = (currentTag===t ? '' : t);
+      page = 1;
+      draw();
+      tagWrap.querySelectorAll('button').forEach(btn=>btn.classList.toggle('active', btn.textContent===currentTag));
+      clearBtn.classList.toggle('hidden', !currentTag);
+    };
+    tagWrap.appendChild(b);
+  });
+}
+
+/* Filter by tag & search */
+function filterList(){
+  let lst = posts;
+  if(currentTag) lst = lst.filter(p=>p.tags.includes(currentTag));
+  if(q) lst = lst.filter(p=>p.title.toLowerCase().includes(q)||p.excerpt.toLowerCase().includes(q));
+  return lst;
+}
+
+/* Draw page */
+function draw(){
+  const lst = filterList();
+  const slice = lst.slice((page-1)*PER_PAGE, page*PER_PAGE);
+  grid.innerHTML = slice.map(cardHTML).join('');
+  grid.querySelectorAll('.lazy').forEach(card=>{
+    io.observe(card);
+    ioImg.observe(card.querySelector('img'));
+  });
+  pager.innerHTML = 
+    (page>1 ? `<a href="#" class="prev">« Newer</a>` : '') +
+    `<span> Page ${page} </span>` +
+    ((page*PER_PAGE)<lst.length ? `<a href="#" class="next">Older »</a>` : '');
+  pager.onclick = e => {
+    if(e.target.matches('.prev')){ e.preventDefault(); page--; draw(); }
+    if(e.target.matches('.next')){ e.preventDefault(); page++; draw(); }
+  };
+}
+
+/* Initialize all */
+loadPosts().then(list=>{
+  posts = list;
+  renderTags();
+  draw();
+});
+
+/* Search & clear */
+searchInput.addEventListener('input', ()=>{ q = searchInput.value.trim().toLowerCase(); page=1; draw(); });
+clearBtn.addEventListener('click', ()=>{ currentTag=''; page=1; draw(); clearBtn.classList.add('hidden'); tagWrap.querySelectorAll('button').forEach(b=>b.classList.remove('active')); });
+
+/* Year */
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+
 </body>
 </html>
