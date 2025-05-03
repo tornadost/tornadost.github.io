@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Matrix Access Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { width:100%; height:100%; overflow:hidden; background:#000; color:#7CFC00; font-family:'Share Tech Mono',monospace; }
+    #particles-js, canvas, #overlay { position:fixed; top:0; left:0; width:100%; height:100%; }
+
+    /* Canvas layering */
+    #particles-js { z-index:1; }
+    canvas        { z-index:2; }
+    #overlay      { z-index:4; background:rgba(0,0,0,0.95); display:flex; flex-direction:column; align-items:center; }
+
+    /* Intro text */
+    #intro { z-index:3; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:2rem; cursor:pointer;
+      animation:flicker 1.5s infinite;
+      text-shadow:0 0 5px,#7CFC00,0 0 10px,#7CFC00,0 0 20px,#0F0;
+      will-change:opacity;
+    }
+
+    /* Glossy marquee */
+    #headline { font-size:2.5rem; white-space:nowrap; margin-top:20vh; opacity:0; will-change:transform,opacity; }
+
+    /* Access section */
+    #accessSection { display:none; flex-direction:column; align-items:center; gap:1.5rem; opacity:0; }
+
+    .glitch { position:relative; font-size:3rem; color:#7CFC00; animation:glitchAnim 1.8s infinite; will-change:transform; backface-visibility:hidden; }
+    .glitch::before, .glitch::after { content:attr(data-text); position:absolute; left:0; width:100%; height:100%; top:0; }
+
+    #code-box { display:none; padding:1rem 2rem; border:2px solid #7CFC00; border-radius:4px; position:relative; overflow:hidden; will-change:opacity; }
+    #code-box::after { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+      background:linear-gradient(90deg,transparent,rgba(124,252,0,0.2),transparent);
+      animation:codeGlow 2s infinite;
+      will-change:transform;
+    }
+
+    img.hint-img { width:80px; margin-top:1rem; opacity:0; animation:fadeIn 1s forwards, pulse 3s ease-in-out infinite; }
+    @keyframes flicker { /* as above */ }
+    @keyframes glitchAnim {
+      0% {transform:translate3d(0,0,0);}20% {transform:translate3d(-2px,2px,0);}40%{transform:translate3d(-2px,-2px,0);}60%{transform:translate3d(2px,2px,0);}80%{transform:translate3d(2px,-2px,0);}100%{transform:translate3d(0,0,0);}
+    }
+    @keyframes codeGlow { 100% { left:100%; } }
+    @keyframes marquee {
+      0%   { transform:translate3d(100vw,0,0); opacity:1; }
+      90%  { opacity:1; }
+      100% { transform:translate3d(-100%,0,0); opacity:0; }
+    }
+    @keyframes pulse { 0%,100%{transform:scale(1);}50%{transform:scale(1.1);} }
+    @keyframes fadeIn { from{opacity:0;} to{opacity:0.6;} }
+  </style>
+</head>
+<body>
+  <div id="intro">you take the red pill... you stay in wonderland.</div>
+  <div id="particles-js"></div>
+  <canvas id="matrix"></canvas>
+  <div id="overlay" class="hidden">
+    <div id="headline">initializing access sequence</div>
+    <div id="accessSection">
+      <a href="index.html" style="text-decoration:none;">
+        <div class="glitch" data-text="ACCESS GRANTED">ACCESS GRANTED</div>
+      </a>
+      <div id="code-box">loading code...</div>
+      <img src="http://rkeaves.online/assets/tornado.webp" alt="tornado hint" class="hint-img">
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    const intro = document.getElementById('intro'),
+          overlay = document.getElementById('overlay'),
+          headline = document.getElementById('headline'),
+          accessSection = document.getElementById('accessSection'),
+          codeBox = document.getElementById('code-box'),
+          imgHint = document.querySelector('.hint-img'),
+          canvas = document.getElementById('matrix'),
+          ctx = canvas.getContext('2d'),
+          letters = 'アァカサタナ...0123456789';
+
+    // Particles.js init (tuned for performance)
+    particlesJS('particles-js', {
+      particles: { number:{value:50,density:{enable:true,value_area:1200}},color:{value:'#7CFC00'},opacity:{value:0.3},size:{value:2},line_linked:{enable:false},move:{speed:1} }
+    }); :contentReference[oaicite:16]{index=16}
+
+    // Matrix setup
+    function initMatrix() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const fontSize = 18;
+      const cols     = Math.floor(canvas.width / fontSize);
+      const drops    = Array(cols).fill(0);
+
+      window.drawMatrix = function() {
+        ctx.fillStyle = 'rgba(0,0,0,0.05)';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = '#7CFC00';
+        ctx.font      = `${fontSize}px monospace`;
+
+        drops.forEach((y, i) => {
+          const text = letters.charAt(Math.random() * letters.length | 0);
+          ctx.fillText(text, i * fontSize, y * fontSize);
+          drops[i] = (y * fontSize > canvas.height && Math.random() > 0.975) ? 0 : y + 1;
+        });
+      };
+    }
+
+    // RAF loop for smooth 60fps
+    let then = performance.now(), fpsInterval = 1000/60;
+    function animate(now) {
+      requestAnimationFrame(animate);
+      const elapsed = now - then;
+      if (elapsed > fpsInterval) {
+        then = now - (elapsed % fpsInterval);
+        drawMatrix();
+      }
+    }
+
+    // Kickoff
+    initMatrix();
+    intro.addEventListener('click', () => {
+      intro.style.display = 'none';
+      initMatrix();
+      animate(performance.now()); :contentReference[oaicite:17]{index=17}
+
+      setTimeout(() => {
+        overlay.classList.remove('hidden');
+        headline.style.animation = 'marquee 12s linear forwards';
+        setTimeout(() => {
+          headline.style.display = 'none';
+          accessSection.style.opacity = 1;
+        }, 11000);
+      }, 2000);
+
+      setTimeout(() => {
+        fetch('https://files.catbox.moe/myrqma.txt')
+          .then(r=>r.text())
+          .then(t=>{
+            codeBox.textContent='access code: '+t.trim();
+            codeBox.style.display='block';
+          })
+          .catch(_=>{
+            codeBox.textContent='access code: [FAILED]';
+            codeBox.style.display='block';
+          });
+      }, 12000);
+    });
+
+    window.addEventListener('resize', () => {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
