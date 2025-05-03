@@ -1,9 +1,10 @@
 {
-    "title":   "222 My Awesome Idea  222",
-    "excerpt": "222 A single-line teaser for the card. 222",
-    "date":    "2025-05-29",
-    "read":    4,
-    "tags":    ["tag1","tag2"],
-    "markdown": true
-  }
-  
+  "title": "Essential Windows 10 System Maintenance via Command Prompt",
+  "excerpt": "A comprehensive guide to using Command Prompt for maintaining and repairing Windows 10 systems.",
+  "date": "2025-05-03",
+  "read": 15,
+  "tags": ["Windows 10", "System Maintenance", "SFC", "DISM", "CHKDSK", "CMD"],
+  "markdown": true,
+  "video_url": "https://www.youtube.com/watch?v=hc05xXPkarY",
+  "audio_url": "https://files.catbox.moe/gvp31e.flac"
+}
