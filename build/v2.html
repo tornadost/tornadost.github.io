@@ -17,7 +17,6 @@
       height: 100%;
       overflow: hidden;
       background: #000;
-      color: #0F0;
       font-family: 'Share Tech Mono', monospace;
     }
 
@@ -26,6 +25,8 @@
     #matrix {
       display: none;
       pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
     }
 
     /* ============ INTRO TEXT ============ */
@@ -34,17 +35,16 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: #0F0;
+      color: #7CFC00;
       font-size: 2.5rem;
       text-align: center;
       text-shadow:
-        0 0 20px rgba(0,255,0,0.7),
-        0 0 40px rgba(0,255,0,0.5),
-        0 0 60px rgba(0,255,0,0.3);
+        0 0 8px #7CFC00,
+        0 0 16px #39ff14,
+        0 0 24px #7CFC00;
       cursor: pointer;
       z-index: 10;
-      animation:
-        glowIntro 2s ease-in-out infinite;
+      animation: glowIntro 2s ease-in-out infinite;
       will-change: opacity, transform;
     }
     @keyframes glowIntro {
@@ -53,8 +53,8 @@
         transform: translate(-50%, -50%) scale(1);
       }
       50% {
-        opacity: 0.8;
-        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.7;
+        transform: translate(-50%, -50%) scale(1.08);
       }
     }
 
@@ -66,7 +66,8 @@
       width: 100%;
       height: 100%;
       z-index: 1;
-      opacity: 0.6;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
     }
     #matrix {
       position: fixed;
@@ -85,23 +86,23 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.95);
+      background: rgba(0, 0, 0, 0);
       z-index: 4;
       display: flex;
       flex-direction: column;
       align-items: center;
       opacity: 0;
-      transition: opacity 0.8s ease-in-out;
+      transition: background 1s ease-in-out, opacity 1s ease-in-out;
     }
     .hidden {
       display: none !important;
     }
 
-    /* ============ HEADLINE ============ */
+    /* ============ HEADLINE & ACCESS ============ */
     #headline {
       font-size: 2.5rem;
-      color: #0F0;
-      text-shadow: 0 0 10px #0F0, 0 0 20px #0F0;
+      color: #7CFC00;
+      text-shadow: 0 0 8px #7CFC00;
       white-space: nowrap;
       margin-top: 20vh;
       opacity: 0;
@@ -112,8 +113,6 @@
       90%  { opacity:1; }
       100% { transform: translate3d(-100%,0,0); opacity:0; }
     }
-
-    /* ============ ACCESS SECTION ============ */
     #accessSection {
       display: none;
       flex-direction: column;
@@ -131,14 +130,12 @@
     /* ============ GLITCH EFFECT ============ */
     .glitch {
       position: relative;
-      color: #0F0;
+      color: #7CFC00;
       font-size: 3rem;
-      animation: glitchAnim 2s infinite;
+      animation: glitchAnim 1.8s infinite;
       will-change: transform;
       backface-visibility: hidden;
-      text-shadow:
-        -1px 0 1px #00ff00,
-        1px 0 1px #00ff00;
+      text-shadow: -1px 0 1px #39ff14, 1px 0 1px #39ff14;
     }
     .glitch::before, .glitch::after {
       content: attr(data-text);
@@ -150,25 +147,26 @@
       overflow: hidden;
     }
     @keyframes glitchAnim {
-      0%   { transform: translate(0,0); }
-      20%  { transform: translate(-3px,2px); }
-      40%  { transform: translate(-3px,-2px); }
-      60%  { transform: translate(3px,2px); }
-      80%  { transform: translate(3px,-2px); }
-      100% { transform: translate(0,0); }
+      0%,100% { transform: translate(0,0); }
+      20% { transform: translate(-2px,2px); }
+      40% { transform: translate(-2px,-2px); }
+      60% { transform: translate(2px,2px); }
+      80% { transform: translate(2px,-2px); }
     }
 
     /* ============ CODE BOX ============ */
     #code-box {
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.9);
       padding: 1rem 2rem;
-      border: 2px solid #0F0;
+      border: 2px solid #7CFC00;
       border-radius: 4px;
       font-size: 1.3rem;
-      color: #0F0;
+      color: #7CFC00;
       overflow: hidden;
       display: none;
       position: relative;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
     }
     #code-box::after {
       content: '';
@@ -177,7 +175,7 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(0,255,0,0.2), transparent);
+      background: linear-gradient(90deg, transparent, rgba(124,252,0,0.2), transparent);
       animation: codeGlow 2s infinite;
     }
     @keyframes codeGlow { 100% { left:100%; } }
@@ -217,7 +215,6 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script>
-    // Grab elements
     const intro = document.getElementById('intro');
     const particlesEl = document.getElementById('particles-js');
     const canvas = document.getElementById('matrix');
@@ -226,25 +223,26 @@
     const headline = document.getElementById('headline');
     const accessSection = document.getElementById('accessSection');
     const codeBox = document.getElementById('code-box');
-
     let started = false;
 
-    // Responsive canvas
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
     window.addEventListener('resize', resizeCanvas);
 
-    // Matrix rain setup
+    // Matrix rain
     let columns, drops;
     const letters = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     function initMatrix() {
       resizeCanvas();
       const fontSize = 16;
       columns = Math.floor(canvas.width / fontSize);
-      drops = Array(columns).fill(canvas.height);
+      drops = Array(columns).fill(0);
       ctx.font = `${fontSize}px monospace`;
+      // show matrix
+      particlesEl.style.opacity = '0.6';
+      canvas.style.opacity = '1';
     }
 
     function drawMatrix() {
@@ -264,25 +262,22 @@
       drawMatrix();
     }
 
-    // Click handler
     intro.addEventListener('click', () => {
-      if (started) return;
-      started = true;
-      particlesEl.style.display = 'block';
-      canvas.style.display = 'block';
-      intro.style.transition = 'opacity 0.6s ease-out';
-      intro.style.opacity = '0';
-      setTimeout(() => intro.remove(), 600);
+      if (started) return; started = true;
       initParticles();
-      initMatrix();
-      animateMatrix();
+      initMatrix(); animateMatrix();
+      // fade out intro
+      intro.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+      intro.style.opacity = '0'; intro.style.transform = 'translate(-50%, -50%) scale(0.9)';
+      setTimeout(() => intro.remove(), 600);
+      // show overlay smoothly
       setTimeout(() => {
-        overlay.classList.remove('hidden');
-        overlay.style.opacity = '1';
+        overlay.classList.remove('hidden'); overlay.style.opacity = '1';
+        overlay.style.background = 'rgba(0,0,0,0.95)';
         headline.style.animation = 'marquee 12s linear forwards';
         setTimeout(() => {
-          headline.style.display = 'none';
-          accessSection.style.display = 'flex';
+          headline.style.display = 'none'; accessSection.style.display = 'flex'; accessSection.style.opacity = '1';
+          codeBox.style.opacity = '1';
         }, 11000);
       }, 2000);
       setTimeout(fetchCode, 12000);
@@ -290,28 +285,15 @@
 
     function initParticles() {
       particlesJS('particles-js', {
-        particles: {
-          number: { value: 50, density: { enable: true, value_area: 800 } },
-          color: { value: '#0F0' },
-          opacity: { value: 0.2 },
-          size: { value: 1.5 },
-          line_linked: { enable: false },
-          move: { enable: true, speed: 0.8 }
-        }
+        particles: { number:{value:50,density:{enable:true,value_area:800}},color:{value:'#0F0'},opacity:{value:0.2},size:{value:1.5},line_linked:{enable:false},move:{enable:true,speed:0.8} }
       });
     }
 
     function fetchCode() {
       fetch('https://files.catbox.moe/myrqma.txt')
         .then(r => r.text())
-        .then(t => {
-          codeBox.textContent = 'access code: ' + t.trim();
-          codeBox.style.display = 'block';
-        })
-        .catch(() => {
-          codeBox.textContent = 'access code: [FAILED TO LOAD]';
-          codeBox.style.display = 'block';
-        });
+        .then(t => { codeBox.textContent = 'access code: '+t.trim(); codeBox.style.display='block'; })
+        .catch(() => { codeBox.textContent = 'access code: [FAILED]'; codeBox.style.display='block'; });
     }
   </script>
 </body>
