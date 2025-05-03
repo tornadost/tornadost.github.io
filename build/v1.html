@@ -1,61 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Matrix Access Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    html, body { width:100%; height:100%; overflow:hidden; background:#000; color:#7CFC00; font-family:'Share Tech Mono',monospace; }
-    #particles-js, canvas, #overlay { position:fixed; top:0; left:0; width:100%; height:100%; }
-
-    /* Canvas layering */
-    #particles-js { z-index:1; }
-    canvas        { z-index:2; }
-    #overlay      { z-index:4; background:rgba(0,0,0,0.95); display:flex; flex-direction:column; align-items:center; }
-
-    /* Intro text */
-    #intro { z-index:3; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:2rem; cursor:pointer;
-      animation:flicker 1.5s infinite;
-      text-shadow:0 0 5px,#7CFC00,0 0 10px,#7CFC00,0 0 20px,#0F0;
-      will-change:opacity;
+    /* ========== RESET & BASE ========== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      color: #7CFC00;
+      font-family: 'Share Tech Mono', monospace;
     }
 
-    /* Glossy marquee */
-    #headline { font-size:2.5rem; white-space:nowrap; margin-top:20vh; opacity:0; will-change:transform,opacity; }
-
-    /* Access section */
-    #accessSection { display:none; flex-direction:column; align-items:center; gap:1.5rem; opacity:0; }
-
-    .glitch { position:relative; font-size:3rem; color:#7CFC00; animation:glitchAnim 1.8s infinite; will-change:transform; backface-visibility:hidden; }
-    .glitch::before, .glitch::after { content:attr(data-text); position:absolute; left:0; width:100%; height:100%; top:0; }
-
-    #code-box { display:none; padding:1rem 2rem; border:2px solid #7CFC00; border-radius:4px; position:relative; overflow:hidden; will-change:opacity; }
-    #code-box::after { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
-      background:linear-gradient(90deg,transparent,rgba(124,252,0,0.2),transparent);
-      animation:codeGlow 2s infinite;
-      will-change:transform;
+    /* ========== HIDE UNTIL CLICK ========== */
+    #particles-js,
+    #matrix {
+      display: none;
+      pointer-events: none;
     }
 
-    img.hint-img { width:80px; margin-top:1rem; opacity:0; animation:fadeIn 1s forwards, pulse 3s ease-in-out infinite; }
-    @keyframes flicker { /* as above */ }
-    @keyframes glitchAnim {
-      0% {transform:translate3d(0,0,0);}20% {transform:translate3d(-2px,2px,0);}40%{transform:translate3d(-2px,-2px,0);}60%{transform:translate3d(2px,2px,0);}80%{transform:translate3d(2px,-2px,0);}100%{transform:translate3d(0,0,0);}
+    /* ========== INTRO TEXT ========== */
+    #intro {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #39ff14;
+      font-size: 2.5rem;
+      text-align: center;
+      text-shadow:
+        0 0 10px #39ff14,
+        0 0 20px #0f0,
+        0 0 30px #0f0;
+      cursor: pointer;
+      z-index: 10;
+      animation:
+        flicker 1.5s infinite,
+        pulseIntro 2s ease-in-out infinite;
+      will-change: opacity, transform;
     }
-    @keyframes codeGlow { 100% { left:100%; } }
+    @keyframes pulseIntro {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50%      { transform: translate(-50%, -50%) scale(1.05); }
+    }
+    @keyframes flicker {
+      0%, 20%, 40%, 60%, 80%, 100% { opacity: 1; }
+      10%, 30%, 50%, 70%, 90%     { opacity: 0.4; }
+    }
+
+    /* ========== PARTICLES & CANVAS ========== */
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      opacity: 0.7;
+    }
+    #matrix {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      mix-blend-mode: screen;
+    }
+
+    /* ========== OVERLAY ========== */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hidden {
+      display: none !important;
+    }
+
+    /* ========== HEADLINE ========== */
+    #headline {
+      font-size: 2.5rem;
+      white-space: nowrap;
+      margin-top: 20vh;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
     @keyframes marquee {
-      0%   { transform:translate3d(100vw,0,0); opacity:1; }
-      90%  { opacity:1; }
-      100% { transform:translate3d(-100%,0,0); opacity:0; }
+      0%   { transform: translate3d(100vw, 0, 0); opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translate3d(-100%, 0, 0); opacity: 0; }
     }
-    @keyframes pulse { 0%,100%{transform:scale(1);}50%{transform:scale(1.1);} }
-    @keyframes fadeIn { from{opacity:0;} to{opacity:0.6;} }
+
+    /* ========== ACCESS SECTION ========== */
+    #accessSection {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      opacity: 0;
+      will-change: opacity;
+      animation: sectionEntry 1.5s ease-out forwards;
+      margin-top: 10vh;
+    }
+    @keyframes sectionEntry {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========== GLITCH EFFECT ========== */
+    .glitch {
+      position: relative;
+      color: #7CFC00;
+      font-size: 3rem;
+      animation: glitchAnim 1.8s infinite;
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      overflow: hidden;
+    }
+    @keyframes glitchAnim {
+      0%   { transform: translate3d(0,0,0); }
+      20%  { transform: translate3d(-2px,2px,0); }
+      40%  { transform: translate3d(-2px,-2px,0); }
+      60%  { transform: translate3d(2px,2px,0); }
+      80%  { transform: translate3d(2px,-2px,0); }
+      100% { transform: translate3d(0,0,0); }
+    }
+
+    /* ========== CODE BOX ========== */
+    #code-box {
+      background: rgba(0, 0, 0, 0.9);
+      padding: 1rem 2rem;
+      border: 2px solid #7CFC00;
+      border-radius: 4px;
+      font-size: 1.3rem;
+      position: relative;
+      overflow: hidden;
+      display: none;
+      will-change: opacity;
+    }
+    #code-box::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(124,252,0,0.2),
+        transparent
+      );
+      animation: codeGlow 2s infinite;
+      will-change: transform;
+    }
+    @keyframes codeGlow {
+      100% { left: 100%; }
+    }
+
+    /* ========== HINT IMAGE ========== */
+    .hint-img {
+      width: 80px;
+      margin-top: 1rem;
+      opacity: 0;
+      animation:
+        fadeIn 1s forwards 0.5s,
+        pulse 3s ease-in-out infinite 1s;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.1); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 0.6; }
+    }
   </style>
 </head>
 <body>
-  <div id="intro">you take the red pill... you stay in wonderland.</div>
+
+  <!-- Intro -->
+  <div id="intro">you take the red pill… you stay in wonderland.</div>
+
+  <!-- Particles.js container -->
   <div id="particles-js"></div>
+
+  <!-- Matrix canvas -->
   <canvas id="matrix"></canvas>
+
+  <!-- Overlay -->
   <div id="overlay" class="hidden">
     <div id="headline">initializing access sequence</div>
     <div id="accessSection">
@@ -63,51 +222,104 @@
         <div class="glitch" data-text="ACCESS GRANTED">ACCESS GRANTED</div>
       </a>
       <div id="code-box">loading code...</div>
-      <img src="http://rkeaves.online/assets/tornado.webp" alt="tornado hint" class="hint-img">
+      <img
+        src="http://rkeaves.online/assets/tornado.webp"
+        alt="tornado hint"
+        class="hint-img"
+      />
     </div>
   </div>
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script>
-    const intro = document.getElementById('intro'),
-          overlay = document.getElementById('overlay'),
-          headline = document.getElementById('headline'),
-          accessSection = document.getElementById('accessSection'),
-          codeBox = document.getElementById('code-box'),
-          imgHint = document.querySelector('.hint-img'),
-          canvas = document.getElementById('matrix'),
-          ctx = canvas.getContext('2d'),
-          letters = 'アァカサタナ...0123456789';
+    // Elements
+    const intro         = document.getElementById('intro');
+    const particlesEl   = document.getElementById('particles-js');
+    const canvas        = document.getElementById('matrix');
+    const ctx           = canvas.getContext('2d');
+    const overlay       = document.getElementById('overlay');
+    const headline      = document.getElementById('headline');
+    const accessSection = document.getElementById('accessSection');
+    const codeBox       = document.getElementById('code-box');
 
-    // Particles.js init (tuned for performance)
-    particlesJS('particles-js', {
-      particles: { number:{value:50,density:{enable:true,value_area:1200}},color:{value:'#7CFC00'},opacity:{value:0.3},size:{value:2},line_linked:{enable:false},move:{speed:1} }
-    }); :contentReference[oaicite:16]{index=16}
+    let started = false;
 
-    // Matrix setup
+    // Intro click
+    intro.addEventListener('click', () => {
+      if (started) return;
+      started = true;
+
+      // Reveal particles & matrix
+      particlesEl.style.display = 'block';
+      canvas.style.display      = 'block';
+
+      // Fade out intro
+      intro.style.transition     = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+      intro.style.opacity        = '0';
+      intro.style.transform      = 'translate(-50%, -50%) scale(0.8)';
+      setTimeout(() => intro.remove(), 800);
+
+      // Kick off effects
+      initParticles();
+      initMatrix();
+      animate(performance.now());
+
+      // Overlay sequence
+      setTimeout(() => {
+        overlay.classList.remove('hidden');
+        headline.style.animation = 'marquee 12s linear forwards';
+        setTimeout(() => {
+          headline.style.display = 'none';
+          accessSection.style.display = 'flex';
+          accessSection.style.opacity = '1';
+        }, 11000);
+      }, 2000);
+
+      // Fetch code
+      setTimeout(fetchCode, 12000);
+    });
+
+    // Particles.js init
+    function initParticles() {
+      particlesJS('particles-js', {
+        particles: {
+          number:      { value: 50, density: { enable: true, value_area: 1200 } },
+          color:       { value: '#7CFC00' },
+          opacity:     { value: 0.3 },
+          size:        { value: 2 },
+          line_linked: { enable: false },
+          move:        { enable: true, speed: 1 }
+        }
+      });
+    }
+
+    // Matrix init
+    const letters = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     function initMatrix() {
-      canvas.width = window.innerWidth;
+      canvas.width  = window.innerWidth;
       canvas.height = window.innerHeight;
       const fontSize = 18;
       const cols     = Math.floor(canvas.width / fontSize);
       const drops    = Array(cols).fill(0);
 
-      window.drawMatrix = function() {
+      window.drawMatrix = () => {
         ctx.fillStyle = 'rgba(0,0,0,0.05)';
-        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#7CFC00';
         ctx.font      = `${fontSize}px monospace`;
 
         drops.forEach((y, i) => {
-          const text = letters.charAt(Math.random() * letters.length | 0);
-          ctx.fillText(text, i * fontSize, y * fontSize);
+          const char = letters.charAt(Math.random() * letters.length | 0);
+          ctx.fillText(char, i * fontSize, y * fontSize);
           drops[i] = (y * fontSize > canvas.height && Math.random() > 0.975) ? 0 : y + 1;
         });
       };
     }
 
-    // RAF loop for smooth 60fps
-    let then = performance.now(), fpsInterval = 1000/60;
+    // Animation loop
+    let then = performance.now();
+    const fpsInterval = 1000 / 60;
     function animate(now) {
       requestAnimationFrame(animate);
       const elapsed = now - then;
@@ -117,36 +329,21 @@
       }
     }
 
-    // Kickoff
-    initMatrix();
-    intro.addEventListener('click', () => {
-      intro.style.display = 'none';
-      initMatrix();
-      animate(performance.now()); :contentReference[oaicite:17]{index=17}
+    // Fetch code text
+    function fetchCode() {
+      fetch('https://files.catbox.moe/myrqma.txt')
+        .then(res => res.text())
+        .then(txt => {
+          codeBox.textContent = 'access code: ' + txt.trim();
+          codeBox.style.display = 'block';
+        })
+        .catch(() => {
+          codeBox.textContent = 'access code: [FAILED TO LOAD]';
+          codeBox.style.display = 'block';
+        });
+    }
 
-      setTimeout(() => {
-        overlay.classList.remove('hidden');
-        headline.style.animation = 'marquee 12s linear forwards';
-        setTimeout(() => {
-          headline.style.display = 'none';
-          accessSection.style.opacity = 1;
-        }, 11000);
-      }, 2000);
-
-      setTimeout(() => {
-        fetch('https://files.catbox.moe/myrqma.txt')
-          .then(r=>r.text())
-          .then(t=>{
-            codeBox.textContent='access code: '+t.trim();
-            codeBox.style.display='block';
-          })
-          .catch(_=>{
-            codeBox.textContent='access code: [FAILED]';
-            codeBox.style.display='block';
-          });
-      }, 12000);
-    });
-
+    // Handle resize
     window.addEventListener('resize', () => {
       canvas.width  = window.innerWidth;
       canvas.height = window.innerHeight;
