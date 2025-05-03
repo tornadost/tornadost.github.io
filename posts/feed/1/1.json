@@ -5,4 +5,6 @@
   "read": 5,
   "tags": ["hexchat", "pushover", "irc", "notifications", "mobile"],
   "markdown": true
+  "video_url": "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1",
+  "audio_url": "https://files.catbox.moe/gvp31e.flac"
 }
