@@ -89,6 +89,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
     }
     .hidden {
       display: none !important;
@@ -233,41 +235,91 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script>
-    // Elements
-    const intro         = document.getElementById('intro');
-    const particlesEl   = document.getElementById('particles-js');
-    const canvas        = document.getElementById('matrix');
-    const ctx           = canvas.getContext('2d');
-    const overlay       = document.getElementById('overlay');
-    const headline      = document.getElementById('headline');
+    const intro = document.getElementById('intro');
+    const particlesEl = document.getElementById('particles-js');
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    const overlay = document.getElementById('overlay');
+    const headline = document.getElementById('headline');
     const accessSection = document.getElementById('accessSection');
-    const codeBox       = document.getElementById('code-box');
+    const codeBox = document.getElementById('code-box');
 
     let started = false;
 
-    // Intro click
+    // Responsive canvas
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // Improved Matrix rain setup
+    let drops = [];
+    const letters = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    function initMatrix() {
+      resizeCanvas();
+      const fontSize = 18;
+      const cols = Math.floor(canvas.width / fontSize);
+      drops = Array.from({ length: cols }, (_, i) => ({
+        x: i * fontSize,
+        y: Math.random() * -canvas.height,
+        speed: (Math.random() * 0.5 + 0.5) * fontSize
+      }));
+      ctx.font = `${fontSize}px monospace`;
+    }
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(0,0,0,0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      drops.forEach(drop => {
+        const char = letters.charAt(Math.random() * letters.length | 0);
+        // draw head char bright
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(char, drop.x, drop.y);
+        // draw trail char
+        ctx.fillStyle = '#7CFC00';
+        ctx.fillText(char, drop.x, drop.y - 18);
+        // move drop
+        drop.y += drop.speed;
+        if (drop.y > canvas.height + 20) {
+          drop.y = Math.random() * -100;
+          drop.speed = (Math.random() * 0.5 + 0.5) * 18;
+        }
+      });
+    }
+
+    // Animation loop
+    let lastTime = performance.now();
+    function animate(time) {
+      requestAnimationFrame(animate);
+      drawMatrix();
+    }
+
+    
     intro.addEventListener('click', () => {
       if (started) return;
       started = true;
 
-      // Reveal particles & matrix
+      // reveal
       particlesEl.style.display = 'block';
-      canvas.style.display      = 'block';
+      canvas.style.display = 'block';
 
-      // Fade out intro
-      intro.style.transition     = 'opacity 0.8s ease-out, transform 0.8s ease-out';
-      intro.style.opacity        = '0';
-      intro.style.transform      = 'translate(-50%, -50%) scale(0.8)';
+      // fade out intro
+      intro.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+      intro.style.opacity = 0;
+      intro.style.transform = 'translate(-50%, -50%) scale(0.8)';
       setTimeout(() => intro.remove(), 800);
 
-      // Kick off effects
+      // start effects
       initParticles();
       initMatrix();
-      animate(performance.now());
+      requestAnimationFrame(animate);
 
-      // Overlay sequence
+      // overlay
       setTimeout(() => {
         overlay.classList.remove('hidden');
+        overlay.style.opacity = '1';
         headline.style.animation = 'marquee 12s linear forwards';
         setTimeout(() => {
           headline.style.display = 'none';
@@ -276,7 +328,7 @@
         }, 11000);
       }, 2000);
 
-      // Fetch code
+      // code fetch
       setTimeout(fetchCode, 12000);
     });
 
@@ -284,57 +336,22 @@
     function initParticles() {
       particlesJS('particles-js', {
         particles: {
-          number:      { value: 50, density: { enable: true, value_area: 1200 } },
-          color:       { value: '#7CFC00' },
-          opacity:     { value: 0.3 },
-          size:        { value: 2 },
+          number: { value: 50, density: { enable: true, value_area: 1200 } },
+          color: { value: '#7CFC00' },
+          opacity: { value: 0.3 },
+          size: { value: 2 },
           line_linked: { enable: false },
-          move:        { enable: true, speed: 1 }
+          move: { enable: true, speed: 1 }
         }
       });
     }
 
-    // Matrix init
-    const letters = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    function initMatrix() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-      const fontSize = 18;
-      const cols     = Math.floor(canvas.width / fontSize);
-      const drops    = Array(cols).fill(0);
-
-      window.drawMatrix = () => {
-        ctx.fillStyle = 'rgba(0,0,0,0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#7CFC00';
-        ctx.font      = `${fontSize}px monospace`;
-
-        drops.forEach((y, i) => {
-          const char = letters.charAt(Math.random() * letters.length | 0);
-          ctx.fillText(char, i * fontSize, y * fontSize);
-          drops[i] = (y * fontSize > canvas.height && Math.random() > 0.975) ? 0 : y + 1;
-        });
-      };
-    }
-
-    // Animation loop
-    let then = performance.now();
-    const fpsInterval = 1000 / 60;
-    function animate(now) {
-      requestAnimationFrame(animate);
-      const elapsed = now - then;
-      if (elapsed > fpsInterval) {
-        then = now - (elapsed % fpsInterval);
-        drawMatrix();
-      }
-    }
-
-    // Fetch code text
+    // fetch code
     function fetchCode() {
       fetch('https://files.catbox.moe/myrqma.txt')
-        .then(res => res.text())
-        .then(txt => {
-          codeBox.textContent = 'access code: ' + txt.trim();
+        .then(r => r.text())
+        .then(t => {
+          codeBox.textContent = 'access code: ' + t.trim();
           codeBox.style.display = 'block';
         })
         .catch(() => {
@@ -342,12 +359,6 @@
           codeBox.style.display = 'block';
         });
     }
-
-    // Handle resize
-    window.addEventListener('resize', () => {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-    });
   </script>
 </body>
 </html>
