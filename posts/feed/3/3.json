@@ -1,8 +1,10 @@
 {
-    "title": "My Very First Blog Post",
-    "excerpt": "An in-depth guide to writing your first Markdown-powered CyberBlogX post.",
-    "date": "2025-05-02",
-    "read": 10,
-    "tags": ["markdown", "guide", "tutorial", "media", "formatting"],
-    "markdown": true
-  }
+  "title": "Ancient Aliens & Lost Worlds: Probability and Preservation Bias",
+  "excerpt": "An in-depth analysis estimating the likelihood of ancient extraterrestrial visitors (<0.1%) and exploring five high-probability ‘lost worlds’ erased by time.",
+  "date": "2025-05-06",
+  "read": 7,
+  "tags": ["ancient-aliens", "astrobiology", "archaeology", "lost-worlds", "Drake-Equation", "Fermi-Paradox"],
+  "markdown": true,
+  "video_url": "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1",
+  "audio_url": "https://files.catbox.moe/gvp31e.flac"
+}
