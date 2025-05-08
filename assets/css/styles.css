@@ -71,18 +71,20 @@ body, html {
     60%{clip:rect(40px,900px,45px,0);} 70%{clip:rect(30px,900px,35px,0);}
     100%{clip:rect(30px,900px,35px,0);}
   }
-  
+  /* Floating repo links */
   .links a {
     position: absolute;
     padding: 0.8em 1.5em;
     color: #0f0;
     text-decoration: none;
     font-size: 1.2em;
-    background: transparent;
-    box-shadow: 0 0 10px rgba(0,255,0,0.7);
-    opacity: 0.7;
+    background: rgba(0,0,0,0.8);
+    border: 2px solid #0f0;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+    opacity: 0.8;
     transition: opacity 0.3s, transform 0.3s;
     z-index: 2;
+    pointer-events: auto;
     animation: pulse 2.5s infinite;
   }
   .links a:hover {
@@ -90,9 +92,7 @@ body, html {
     transform: scale(1.2) rotate(2deg);
   }
   @keyframes pulse {
-    0%,100%{box-shadow:0 0 5px rgba(0,255,0,0.7);}
-    50%   {box-shadow:0 0 20px rgba(0,255,0,1);}
-  }
+    0%,100%{box-shadow:0 0 5px rgba(0,255,0,0.7);}50%{box-shadow:0 0 20px rgba(0,255,0,1);}  }
   
   .top-nav {
     position: fixed;
