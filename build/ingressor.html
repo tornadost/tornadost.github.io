@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>~gate</title>
+  <style>
+    /* Full-page reset */
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Courier New', monospace; }
+
+    /* Matrix canvas */
+    #matrixCanvas {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+      opacity: 0.05;
+    }
+
+    /* Starfield background */
+    .stars {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: transparent;
+      z-index: 0;
+    }
+    .stars:after {
+      content: '';
+      position: absolute;
+      width: 2px; height: 2px;
+      background: #fff;
+      box-shadow: 
+        100px 200px #fff, 500px 50px #fff, 400px 600px #fff,
+        800px 300px #fff, 1200px 800px #fff, 1600px 100px #fff;
+      animation: flicker 10s infinite;
+    }
+
+    @keyframes flicker {
+      0%,100% { opacity: 0.8; }
+      50% { opacity: 0.05; }
+    }
+
+    /* Centered gate UI */
+    .gate-wrapper {
+      position: relative; z-index: 2;
+      width: 360px; margin: auto;
+      top: 50%; transform: translateY(-50%);
+      background: rgba(0,0,0,0.85);
+      padding: 2rem; border: 2px solid #0f0;
+      box-shadow: 0 0 15px #0f0; color: #0f0;
+      text-align: center; border-radius: 12px;
+    }
+    .gate-wrapper h2 { margin-bottom: 1rem; text-shadow: 0 0 8px #0f0; }
+    .gate-wrapper input {
+      width: 100%; padding: 0.6rem; margin: 0.5rem 0;
+      background: #111; border: none; color: #0f0;
+      box-shadow: 0 0 5px #0f0; font-size: 1rem;
+    }
+    .gate-wrapper button {
+      padding: 0.6rem 1.2rem; margin-top: 1rem;
+      border: 1px solid #0f0; background: transparent;
+      color: #0f0; cursor: pointer;
+      transition: background 0.3s;
+    }
+    .gate-wrapper button:hover {
+      background: #0f0; color: #000;
+    }
+    .message {
+      margin-top: 1rem; font-size: 0.9rem;
+      word-break: break-word; white-space: pre-wrap;
+    }
+
+    /* Music player */
+    .music-player {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: rgba(20,20,20,0.7); backdrop-filter: blur(8px);
+      border-radius: 20px; padding: 1rem 1.5rem;
+      display: flex; flex-direction: column; align-items: center;
+      z-index: 2; width: 320px;
+    }
+    .song-title { color: #fff; font-size: 0.9rem; text-align: center; }
+    .progress-container {
+      width: 100%; height: 4px; background: rgba(255,255,255,0.2);
+      border-radius: 2px; cursor: pointer; margin: 0.75rem 0;
+    }
+    .progress-bar { height: 100%; width: 0; background: #0f0; border-radius: 2px; }
+    .player-controls { display: flex; gap: 1rem; }
+    .control-btn {
+      background: rgba(0,0,0,0.3); border: none;
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #0f0; cursor: pointer; transition: transform 0.2s;
+    }
+    .control-btn:hover { transform: scale(1.1); }
+  </style>
+</head>
+<body>
+  <canvas id="matrixCanvas"></canvas>
+  <div class="stars"></div>
+
+  <div class="gate-wrapper">
+    <h2>ACCESS CODE</h2>
+    <input type="password" id="codeInput" placeholder="Enter code..."/>
+    <button onclick="checkCode()">ENTER</button>
+    <div class="message" id="messageBox"></div>
+  </div>
+
+  <div class="music-player">
+    <div class="song-title" id="songTitle">No track</div>
+    <div class="progress-container" onclick="seek(event)">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="player-controls">
+      <button class="control-btn" id="prevBtn" onclick="prevTrack()"><i>&#9664;&#9664;</i></button>
+      <button class="control-btn" id="playPauseBtn" onclick="togglePlay()"><i>&#9654;</i></button>
+      <button class="control-btn" id="nextBtn" onclick="nextTrack()"><i>&#9654;&#9654;</i></button>
+    </div>
+    <audio id="audioPlayer"></audio>
+  </div>
+
+  <script>
+    // Matrix effect
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = innerWidth; canvas.height = innerHeight;
+    const columns = Math.floor(canvas.width / 14);
+    const drops = Array(columns).fill(1);
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(0,0,0,0.07)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      drops.forEach((y, x) => {
+        const text = String.fromCharCode(0x30A0 + Math.random()*96);
+        ctx.fillStyle = '#0f0';
+        ctx.font = '14px monospace';
+        ctx.fillText(text, x*14, y*14);
+        drops[x] = (y*14 > canvas.height && Math.random() > 0.975) ? 0 : y + 1;
+      });
+      setTimeout(() => requestAnimationFrame(drawMatrix), 75);
+    }
+    window.addEventListener('resize', ()=>{canvas.width=innerWidth;canvas.height=innerHeight;});
+    drawMatrix();
+
+    // Code check
+    async function hashCode(input) {
+      const buf = new TextEncoder().encode(input);
+      const hash = await crypto.subtle.digest('SHA-256', buf);
+      return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+    async function checkCode() {
+      const code = document.getElementById('codeInput').value.trim();
+      const msg = document.getElementById('messageBox');
+      msg.style.color = 'red';
+      const list = (await (await fetch('/assets/codes.txt')).text()).split('\n').map(s=>s.trim());
+      const h = await hashCode(code);
+      msg.textContent = 'Access denied';
+      if (list.includes(h)) {
+        msg.style.color = 'lime';
+        msg.textContent = 'Access granted';
+        setTimeout(()=>location.href='/dashboard', 1000);
+      }
+    }
+
+    // Music player
+    const tracks = [
+      { title: 'Track 1', src: 'audio/track1.mp3' },
+      { title: 'Track 2', src: 'audio/track2.mp3' }
+    ];
+    let current = 0;
+    const player = document.getElementById('audioPlayer');
+    const titleBox = document.getElementById('songTitle');
+    const progressBar = document.getElementById('progressBar');
+    function loadTrack(idx) {
+      player.src = tracks[idx].src;
+      titleBox.textContent = tracks[idx].title;
+      player.load();
+    }
+    function togglePlay() {
+      if (player.paused) { player.play(); document.getElementById('playPauseBtn').innerHTML='&#10074;&#10074;'; }
+      else { player.pause(); document.getElementById('playPauseBtn').innerHTML='&#9654;'; }
+    }
+    function prevTrack() { current = (current-1+tracks.length)%tracks.length; loadTrack(current); player.play(); }
+    function nextTrack() { current = (current+1)%tracks.length; loadTrack(current); player.play(); }
+    player.addEventListener('timeupdate', ()=>{
+      const pct=(player.currentTime/player.duration)*100||0;
+      progressBar.style.width = pct+'%';
+    });
+    function seek(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const pct = (e.clientX - rect.left)/rect.width;
+      player.currentTime = pct * player.duration;
+    }
+    loadTrack(current);
+  </script>
+</body>
+</html>
