@@ -7,7 +7,12 @@
   <link rel="stylesheet" href="/assets/css/styles.css" />
 </head>
 <body>
-  <script src="/assets/js/login.js" defer></script>
+  <script>
+    (function() {
+      const loggedIn = document.cookie.split('; ').some(c => c.startsWith('is_logged_in='));
+      if (!loggedIn) window.location.replace('index.html');
+    })();
+  </script>
   <nav class="top-nav">
     <a href="/redacted" id="link1">index</a>
     <a href="/layer/cache" id="link2">vault</a>
