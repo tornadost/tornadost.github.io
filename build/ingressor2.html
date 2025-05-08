@@ -5,246 +5,311 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>~gate</title>
   <style>
+    /* =============================
+       VARIABLES & BASE RESET
+     ============================= */
     :root {
       --clr-bg: #000;
       --clr-neon: #0f0;
-      --clr-neon-faint: rgba(0,255,0,0.15);
+      --clr-neon-faint: rgba(0,255,0,0.1);
       --clr-error: #f33;
       --font-main: 'Courier New', monospace;
       --radius: 8px;
+      --border-width: 2px;
       --glow: 0 0 15px var(--clr-neon), inset 0 0 5px var(--clr-neon);
-      --fast: 0.2s ease-in-out;
+      --transition-fast: 0.2s ease-in-out;
+      --matrix-opacity: 0.15;
+      --star-count: 250;
     }
-
+    *, *::before, *::after {
+      margin:0; padding:0; box-sizing:border-box;
+    }
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      background: var(--clr-bg);
-      font-family: var(--font-main);
+      width:100%; height:100%;
+      overflow:hidden;
+      background:var(--clr-bg);
+      color:var(--clr-neon);
+      font-family:var(--font-main);
+      position:relative;
     }
 
-    /* starfield behind everything */
-    #stars {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-      pointer-events: none;
+    /* =============================
+       STARFIELD & MATRIX LAYERS
+     ============================= */
+    canvas {
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      pointer-events:none;
+    }
+    #stars { z-index:0; }
+    #matrix { z-index:1; opacity:var(--matrix-opacity) !important; }
+
+    /* =============================
+       CENTER PANEL
+     ============================= */
+    .panel-container {
+      position:relative;
+      z-index:2;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:100%; height:100%;
+    }
+    .panel {
+      width:340px;
+      padding:2rem;
+      background:var(--clr-neon-faint);
+      border:var(--border-width) solid var(--clr-neon);
+      border-radius:var(--radius);
+      box-shadow:var(--glow);
+      backdrop-filter: blur(10px);
+      text-align:center;
+      animation: border-pulse 3s ease-in-out infinite;
     }
 
-    /* Matrix rain */
-    #kG7nZ5 {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 1;
-      opacity: 0.2 !important;
-      pointer-events: none;
+    /* pulsating neon border animation */
+    @keyframes border-pulse {
+      0%,100% {
+        box-shadow: 0 0 10px var(--clr-neon), inset 0 0 5px var(--clr-neon);
+      }
+      50% {
+        box-shadow: 0 0 25px var(--clr-neon), inset 0 0 15px var(--clr-neon);
+      }
     }
 
-    /* Center panel */
-    .cH8jT2 {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%; height: 100%;
+    /* glitch effect on heading */
+    .panel h2 {
+      margin-bottom:1.2rem;
+      font-size:1.6rem;
+      letter-spacing:3px;
+      position:relative;
+      animation: glitch 2s infinite;
+    }
+    @keyframes glitch {
+      0% {
+        text-shadow: 2px 0 var(--clr-neon), -2px 0 var(--clr-neon);
+      }
+      20% {
+        text-shadow: -2px 0 var(--clr-neon), 2px 0 var(--clr-neon);
+      }
+      40% {
+        text-shadow: 2px 1px var(--clr-neon), -2px -1px var(--clr-neon);
+      }
+      60% {
+        text-shadow: -2px 1px var(--clr-neon), 2px -1px var(--clr-neon);
+      }
+      80% {
+        text-shadow: 1px 0 var(--clr-neon), -1px 0 var(--clr-neon);
+      }
     }
 
-    .bP6mR4 {
-      background: var(--clr-neon-faint);
-      border: 2px solid var(--clr-neon);
-      border-radius: var(--radius);
-      box-shadow: var(--glow);
-      backdrop-filter: blur(8px);
-      padding: 2rem;
-      width: 320px;
-      color: var(--clr-neon);
-      text-align: center;
+    .panel input,
+    .panel button {
+      width:100%;
+      border-radius:var(--radius);
+      font-size:1rem;
+      transition: all var(--transition-fast);
     }
 
-    .bP6mR4 h2 {
-      margin: 0 0 1rem;
-      font-size: 1.5rem;
-      letter-spacing: 2px;
-      text-shadow: 0 0 8px var(--clr-neon);
+    .panel input {
+      padding:0.75rem;
+      margin:0.5rem 0;
+      background:#111;
+      border:1px solid var(--clr-neon);
+      color:var(--clr-neon);
+      box-shadow:0 0 5px var(--clr-neon);
+    }
+    .panel input:focus {
+      outline:none;
+      border-color:#fff;
+      box-shadow:0 0 8px #fff;
     }
 
-    .bP6mR4 input {
-      width: 100%;
-      padding: 0.75rem;
-      margin: 0.5rem 0;
-      background: #111;
-      border: 1px solid var(--clr-neon);
-      border-radius: var(--radius);
-      color: var(--clr-neon);
-      font-size: 1rem;
-      box-shadow: 0 0 5px var(--clr-neon);
-      transition: border-color var(--fast), box-shadow var(--fast);
-    }
-    .bP6mR4 input:focus {
-      outline: none;
-      border-color: #fff;
-      box-shadow: 0 0 8px #fff;
-    }
-
-    .bP6mR4 button {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.75rem 1.5rem;
+    .panel button {
+      padding:0.75rem;
+      margin:1rem 0;
       background: transparent;
-      border: 2px solid var(--clr-neon);
-      border-radius: var(--radius);
-      color: var(--clr-neon);
-      font-size: 1rem;
-      letter-spacing: 1px;
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: background var(--fast), color var(--fast), box-shadow var(--fast);
-      box-shadow: 0 0 5px var(--clr-neon);
+      border:var(--border-width) solid var(--clr-neon);
+      color:var(--clr-neon);
+      letter-spacing:1px;
+      cursor:pointer;
+      box-shadow:0 0 5px var(--clr-neon);
+      text-transform:uppercase;
     }
-    .bP6mR4 button:hover {
-      background: var(--clr-neon);
-      color: var(--clr-bg);
-      box-shadow: 0 0 12px var(--clr-neon);
+    .panel button:hover {
+      background:var(--clr-neon);
+      color:var(--clr-bg);
+      box-shadow:0 0 12px var(--clr-neon);
     }
 
-    .eR3vW1 {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      color: var(--clr-error);
-      white-space: pre-wrap;
-      word-break: break-all;
-      text-shadow: 0 0 3px var(--clr-error);
+    .panel .message {
+      margin-top:1rem;
+      color:var(--clr-error);
+      font-size:0.9rem;
+      text-shadow:0 0 3px var(--clr-error);
+      white-space:pre-wrap;
+      word-break:break-word;
     }
 
-    /* audio controls styling */
-    .bP6mR4 audio {
-      width: 100%;
-      margin-top: 1rem;
-      outline: none;
-      filter: drop-shadow(0 0 5px var(--clr-neon));
-      border-radius: var(--radius);
-      background: #111;
+    /* audio styling */
+    .panel audio {
+      margin-top:1rem;
+      width:100%;
+      border-radius:var(--radius);
+      filter:drop-shadow(0 0 5px var(--clr-neon));
+      background:#111;
     }
-  </style>  
+
+  </style>
 </head>
 <body>
-  <canvas id="stars"></canvas>
-  <canvas id="kG7nZ5"></canvas>
 
-  <div class="cH8jT2">
-    <div class="bP6mR4">
-      <h2>Access Code</h2>
-      <input type="text" id="qL9pD7" placeholder="Enter code…"/>
-      <button onclick="uT5hE9()">Enter</button>
-      <div class="eR3vW1" id="zX4tK8">Access denied</div>
-      <!-- audio player (replace the src) -->
+  <!-- Starfield -->
+  <canvas id="stars"></canvas>
+
+  <!-- Matrix rain -->
+  <canvas id="matrix"></canvas>
+
+  <!-- Centered panel -->
+  <div class="panel-container">
+    <div class="panel">
+      <h2>ACCESS CODE</h2>
+      <input type="text" id="codeInput" placeholder="Enter code…"/>
+      <button onclick="submitCode()">Enter</button>
+      <div class="message" id="statusMsg">Access denied</div>
+      <!-- Background audio -->
       <audio id="bgAudio" src="assets/music.mp3" controls loop></audio>
     </div>
   </div>
 
   <script>
-    // ★ twinkling starfield
-    const starsC = document.getElementById('stars'),
-          sCtx = starsC.getContext('2d');
-    let stars = [];
-    function resizeStars() {
-      starsC.width = innerWidth;
-      starsC.height = innerHeight;
-      stars = Array.from({length:200}, ()=>({
-        x: Math.random()*innerWidth,
-        y: Math.random()*innerHeight,
-        r: Math.random()*1.2
-      }));
+    /* =============================
+       STARFIELD SCRIPT
+     ============================= */
+    const starCanvas = document.getElementById('stars'),
+          starCtx = starCanvas.getContext('2d');
+    let starArray = [];
+
+    function setupStars() {
+      starCanvas.width = window.innerWidth;
+      starCanvas.height = window.innerHeight;
+      starArray = [];
+      for (let i = 0; i < parseInt(getComputedStyle(document.documentElement).getPropertyValue('--star-count')); i++) {
+        starArray.push({
+          x: Math.random() * starCanvas.width,
+          y: Math.random() * starCanvas.height,
+          r: Math.random() * 1.5,
+          alpha: 0.5 + Math.random() * 0.5
+        });
+      }
     }
-    window.addEventListener('resize', resizeStars);
-    resizeStars();
-    (function drawStars(){
-      sCtx.clearRect(0,0,starsC.width,starsC.height);
-      stars.forEach(s=>{
-        sCtx.beginPath();
-        sCtx.arc(s.x,s.y,s.r,0,2*Math.PI);
-        sCtx.fillStyle = `rgba(255,255,255,${0.5+Math.random()*0.5})`;
-        sCtx.fill();
+
+    function drawStars() {
+      starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+      starArray.forEach(s => {
+        starCtx.beginPath();
+        starCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        starCtx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+        starCtx.fill();
+        // twinkle
+        s.alpha += (Math.random() - 0.5) * 0.02;
+        s.alpha = Math.max(0.3, Math.min(1, s.alpha));
       });
       requestAnimationFrame(drawStars);
-    })();
+    }
 
-    // ★ Matrix rain
-    const X = document.getElementById('kG7nZ5'),
-          M = X.getContext('2d');
-    let cols = Math.floor(innerWidth/14),
-        drops = Array(cols).fill(1);
-    function resizeMatrix(){
-      X.width = innerWidth; X.height = innerHeight;
-      cols = Math.floor(innerWidth/14);
+    /* =============================
+       MATRIX RAIN SCRIPT
+     ============================= */
+    const matCanvas = document.getElementById('matrix'),
+          matCtx = matCanvas.getContext('2d');
+    let cols = 0, drops = [];
+
+    function setupMatrix() {
+      matCanvas.width = window.innerWidth;
+      matCanvas.height = window.innerHeight;
+      cols = Math.floor(matCanvas.width / 14);
       drops = Array(cols).fill(1);
     }
-    window.addEventListener('resize', resizeMatrix);
-    resizeMatrix();
-    (function rain(){
-      M.fillStyle = 'rgba(0,0,0,0.05)';
-      M.fillRect(0,0,X.width,X.height);
-      for(let i=0;i<drops.length;i++){
-        const x = i*14,
-              y = drops[i]*14,
-              ch = String.fromCharCode(0x30A0 + Math.random()*96);
-        M.fillStyle = Math.random() < .005 ? '#FFF' : '#0F0';
-        M.font = `${14+Math.random()*4}px monospace`;
-        M.fillText(ch,x,y);
-        drops[i] = (y > X.height && Math.random() > .98) ? 0 : drops[i]+1;
-      }
-      requestAnimationFrame(rain);
-    })();
 
-    // ★ login logic (unchanged)
-    async function hash256(text){
-      const buf = new TextEncoder().encode(text),
-            h = await crypto.subtle.digest(atob('U0hBLTI1Ng=='), buf);
-      return Array.from(new Uint8Array(h))
-                  .map(b=>b.toString(16).padStart(2,'0'))
-                  .join('');
+    function drawMatrix() {
+      matCtx.fillStyle = 'rgba(0,0,0,0.05)';
+      matCtx.fillRect(0, 0, matCanvas.width, matCanvas.height);
+      matCtx.font = 'bold 16px monospace';
+      for (let i = 0; i < drops.length; i++) {
+        const text = String.fromCharCode(0x30A0 + Math.random() * 96);
+        matCtx.fillStyle = Math.random() < 0.004 ? '#fff' : '#0f0';
+        matCtx.fillText(text, i * 14, drops[i] * 14);
+        drops[i] = (drops[i] * 14 > matCanvas.height && Math.random() > 0.975) ? 0 : drops[i] + 1;
+      }
+      requestAnimationFrame(drawMatrix);
     }
-    async function uT5hE9(){
-      const pwd = document.getElementById('qL9pD7').value.trim(),
-            msg = document.getElementById('zX4tK8');
-      msg.style.color = 'red';
+
+    /* =============================
+       PAGE RESIZE HANDLING
+     ============================= */
+    window.addEventListener('resize', () => {
+      setupStars();
+      setupMatrix();
+    });
+    setupStars();
+    setupMatrix();
+    drawStars();
+    drawMatrix();
+
+    /* =============================
+       LOGIN / ACCESS LOGIC
+     ============================= */
+    async function hashText(str) {
+      const encoder = new TextEncoder().encode(str);
+      const hashBuffer = await crypto.subtle.digest(atob('U0hBLTI1Ng=='), encoder);
+      return Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+    }
+
+    async function submitCode() {
+      const input = document.getElementById('codeInput').value.trim();
+      const status = document.getElementById('statusMsg');
+      status.style.color = getComputedStyle(document.documentElement).getPropertyValue('--clr-error');
       try {
-        const path = atob('L2Fzc2V0cy9yZWRhY3RlZC50eHQ='),
-              dest = atob('aHR0cHM6Ly9jYWNoZS11bmxvY2tlZC5vbmxpbmUvbGF5ZXIvcmVkYWN0ZWQ='),
-              list = (await (await fetch(path)).text())
-                     .split('\n').map(s=>s.trim()).filter(Boolean),
-              h = await hash256(pwd);
-        msg.textContent = `${h}\nAccess denied`;
-        if(list.includes(h)){
-          msg.style.color = 'lime';
-          msg.textContent = 'Access granted\nRe-authentication required!';
-          setTimeout(()=> location.href = dest, 1500);
+        // assets/reddacted.txt contains the list of SHA256 hashes
+        const txt = await fetch(atob('L2Fzc2V0cy9yZWRhY3RlZC50eHQ=')).then(r => r.text());
+        const valid = txt.split('\n').map(s=>s.trim()).filter(Boolean);
+        const h = await hashText(input);
+        if (valid.includes(h)) {
+          status.style.color = getComputedStyle(document.documentElement).getPropertyValue('--clr-neon');
+          status.textContent = 'Access granted\nRe-authenticating…';
+          setTimeout(() => window.location.href = atob('aHR0cHM6Ly9jYWNoZS11bmxvY2tlZC5vbmxpbmUvbGF5ZXIvcmVkYWN0ZWQ='), 1500);
+        } else {
+          status.textContent = `${h}\nAccess denied`;
         }
-      } catch {
-        msg.textContent = 'Error verifying credentials.';
+      } catch (e) {
+        status.textContent = 'Error verifying credentials.';
       }
     }
 
-    // ★ anti–debug crash
-    (function watchDebug(){
-      setInterval(()=>{
+    /* =============================
+       ANTI-DEBUG PROTECTION
+     ============================= */
+    (function antiDebug(){
+      setInterval(() => {
         const t0 = performance.now();
         debugger;
-        if(performance.now()-t0>100){
+        if (performance.now() - t0 > 100) {
           document.body.innerHTML = "<h1 style='color:red;text-align:center;'>what happened?</h1>";
         }
-      },1000);
+      }, 1000);
     })();
 
-    // ★ optional: start music muted until user unmutes
-    const bg = document.getElementById('bgAudio');
-    bg.volume = 0.5;
+    /* =============================
+       AUDIO AUTO-PLAY HANDLING
+     ============================= */
+    const bgAudio = document.getElementById('bgAudio');
+    bgAudio.volume = 0.4;
+    bgAudio.muted = false;
+    bgAudio.play().catch(()=>{/* user gesture needed */});
   </script>
 </body>
 </html>
