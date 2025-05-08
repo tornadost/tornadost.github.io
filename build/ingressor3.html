@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>~gate</title>
+  <style>
+    /*──────────────────── Variables & Reset ────────────────────*/
+    :root {
+      --clr-bg: #000;
+      --clr-neon: #0f0;
+      --clr-neon-faint: rgba(0,255,0,0.15);
+      --clr-error: #f33;
+      --font-main: 'Courier New', monospace;
+      --radius: 8px;
+      --glow: 
+        0 0 5px rgba(0,255,0,0.6),    /* soft core glow */
+        0 0 15px rgba(0,255,0,0.4),   /* diffused outer glow */ 
+        inset 0 0 3px rgba(0,255,0,0.8); /* inner edge glow */ /* double shadow trick :contentReference[oaicite:5]{index=5} */
+      --fast: 0.2s ease-in-out;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body {
+      width:100vw; height:100vh; overflow:hidden;
+      background: var(--clr-bg);
+      color: var(--clr-neon);
+      font-family: var(--font-main);
+    }
+
+    /*──────────────────── Starfield Canvas ────────────────────*/
+    #stars {
+      position:fixed; top:0; left:0;
+      width:100%; height:100%; z-index:0;
+      pointer-events:none;
+    }
+
+    /*──────────────────── Matrix Rain Canvas ────────────────────*/
+    #matrix {
+      position:fixed; top:0; left:0;
+      width:100%; height:100%; z-index:1;
+      opacity:0.2 !important; pointer-events:none;
+    }
+
+    /*──────────────────── Centered Panel ────────────────────*/
+    .panel-wrap {
+      position:relative; z-index:2;
+      display:flex; align-items:center; justify-content:center;
+      width:100%; height:100%;
+    }
+    .panel {
+      background: var(--clr-neon-faint);
+      border: 2px solid var(--clr-neon);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px); /* glass effect :contentReference[oaicite:6]{index=6} */
+      box-shadow: var(--glow);
+      padding:2rem; width:340px;
+      text-align:center;
+    }
+    .panel h2 {
+      margin-bottom:1rem;
+      font-size:1.6rem; letter-spacing:2px;
+      text-shadow: 0 0 5px var(--clr-neon), 0 0 10px var(--clr-neon);
+    }
+    .panel input, .panel button {
+      width:100%; margin:0.5rem 0;
+      font-size:1rem; letter-spacing:1px;
+      border-radius: var(--radius);
+      box-shadow: var(--glow);
+      transition: all var(--fast);
+    }
+    .panel input {
+      padding:0.75rem;
+      background:#111; border:1px solid var(--clr-neon);
+      color: var(--clr-neon);
+    }
+    .panel input:focus {
+      outline:none; border-color:#fff;
+      box-shadow: 0 0 8px #fff;
+    }
+    .panel button {
+      padding:0.75rem; background:transparent;
+      border:2px solid var(--clr-neon);
+      color: var(--clr-neon); cursor:pointer;
+      text-transform:uppercase;
+    }
+    .panel button:hover {
+      background: var(--clr-neon); color:#000;
+      box-shadow: 0 0 12px var(--clr-neon);
+    }
+    .panel .msg {
+      margin-top:1rem; font-size:0.9rem;
+      color: var(--clr-error);
+      text-shadow:0 0 3px var(--clr-error);
+    }
+
+    /*──────────────────── Audio Player ────────────────────*/
+    .panel audio {
+      width:100%; margin-top:1rem;
+      background:#111; border-radius:var(--radius);
+      filter: drop-shadow(0 0 8px var(--clr-neon));
+      outline:none;
+    }
+    /* Optional: custom play button */
+    .panel audio::-webkit-media-controls-panel {
+      background: #111;
+      border-radius: var(--radius);
+      box-shadow: var(--glow);
+    }
+    .panel audio::-webkit-media-controls-play-button {
+      filter: invert(1);
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Starfield -->
+  <canvas id="stars"></canvas>
+  <!-- Matrix Rain -->
+  <canvas id="matrix"></canvas>
+
+  <!-- Main Panel -->
+  <div class="panel-wrap">
+    <div class="panel">
+      <h2>Access Code</h2>
+      <input id="codeInput" type="text" placeholder="Enter code…" />
+      <button onclick="verify()">Enter</button>
+      <div id="msg" class="msg">Access denied</div>
+      <audio id="bgm" src="assets/music.mp3" controls loop>
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+  </div>
+
+  <script>
+    /*──────────────────── Starfield Script ────────────────────*/
+    const starC = document.getElementById('stars'),
+          sCtx = starC.getContext('2d');
+    let stars = [];
+    function initStars() {
+      starC.width = innerWidth;
+      starC.height = innerHeight;
+      stars = Array.from({length:200}, ()=>({
+        x: Math.random()*innerWidth,
+        y: Math.random()*innerHeight,
+        r: Math.random()*1.2
+      }));
+    }
+    window.addEventListener('resize', initStars);
+    initStars();
+    (function drawStars(){
+      sCtx.clearRect(0,0,starC.width,starC.height);
+      stars.forEach(s=>{
+        sCtx.beginPath();
+        sCtx.arc(s.x, s.y, s.r, 0,2*Math.PI);
+        sCtx.fillStyle = `rgba(255,255,255,${0.3+Math.random()*0.5})`;
+        sCtx.fill();
+      });
+      requestAnimationFrame(drawStars);
+    })(); /* :contentReference[oaicite:7]{index=7} */
+
+    /*──────────────────── Matrix Rain Script ────────────────────*/
+    const matC = document.getElementById('matrix'),
+          mCtx = matC.getContext('2d');
+    let cols = Math.floor(innerWidth/14),
+        drops = Array(cols).fill(0);
+    function initMatrix(){
+      matC.width = innerWidth;
+      matC.height = innerHeight;
+      cols = Math.floor(innerWidth/14);
+      drops = Array(cols).fill(0);
+    }
+    window.addEventListener('resize', initMatrix);
+    initMatrix();
+    (function rain(){
+      mCtx.fillStyle = 'rgba(0,0,0,0.05)';
+      mCtx.fillRect(0,0,matC.width,matC.height);
+      for(let i=0; i<cols; i++){
+        const x = i * 14,
+              y = drops[i] * 14,
+              char = String.fromCharCode(0x30A0 + Math.random()*96);
+        mCtx.font = (14 + Math.random()*4) + 'px monospace';
+        mCtx.fillStyle = Math.random()<0.005 ? '#FFF' : '#0F0';
+        mCtx.fillText(char, x, y);
+        drops[i] = (y > matC.height && Math.random()>0.975) ? 0 : drops[i]+1;
+      }
+      requestAnimationFrame(rain);
+    })(); /* :contentReference[oaicite:8]{index=8} */
+
+    /*──────────────────── Verification & Hash ────────────────────*/
+    async function sha256(str){
+      const buf = new TextEncoder().encode(str),
+            digest = await crypto.subtle.digest('SHA-256', buf);
+      return Array.from(new Uint8Array(digest))
+        .map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+    async function verify(){
+      const code = document.getElementById('codeInput').value.trim(),
+            m = document.getElementById('msg');
+      m.textContent = 'Access denied'; m.style.color = 'var(--clr-error)';
+      try {
+        const path = atob('L2Fzc2V0cy9yZWRhY3RlZC50eHQ='),
+              dest = atob('aHR0cHM6Ly9jYWNoZS11bmxvY2tlZC5vbmxpbmUvbGF5ZXIvcmVkYWN0ZWQ='),
+              list = (await (await fetch(path)).text())
+                     .split('\n').map(s=>s.trim()),
+              h = await sha256(code);
+        m.textContent = `${h}\nAccess denied`;
+        if(list.includes(h)){
+          m.textContent = 'Access granted\nRedirecting…';
+          m.style.color = 'lime';
+          setTimeout(()=>window.location.href = dest, 1200);
+        }
+      } catch {
+        m.textContent = 'Error verifying credentials.';
+      }
+    }
+
+    /*──────────────────── Anti-Debug Crash ────────────────────*/
+    setInterval(()=>{
+      const t0 = performance.now();
+      debugger;
+      if(performance.now() - t0 > 100){
+        document.body.innerHTML = "<h1 style='color:red;text-align:center;'>what happened?</h1>";
+      }
+    }, 1000);
+
+    /*──────────────────── Audio Init ────────────────────*/
+    const bgm = document.getElementById('bgm');
+    bgm.volume = 0.4; /* start muted/low until user adjusts */ 
+    /* :contentReference[oaicite:9]{index=9} */
+  </script>
+</body>
+</html>
