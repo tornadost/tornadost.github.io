@@ -556,7 +556,7 @@ Use this as your **master template**. Copy, modify, and create epic posts! 🚀�
     <nav class="navbar flex just-between">
       <div class="logo"><a href="/feed/blog">CyberBlogX~RK</a></div>
       <ul class="nav-links">
-        <li><a href="/redacted.html">index</a></li>
+        <li><a href="/layer/redacted.html">index</a></li>
         <li>
           <button id="audio-toggle" class="btn neon-flicker" title="Unmute Music">
             🔈 Unmute
