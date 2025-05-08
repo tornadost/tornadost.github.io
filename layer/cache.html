@@ -1,91 +1,21 @@
 <!DOCTYPE html>
-<html lang="en" data-arp=""><head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Repo Cache</title>
-  <link rel="stylesheet" href="/assets/css/styles.css" />
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>cache</title>
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <script defer src="/assets/js/matrix.js"></script>
+    <script defer src="/assets/js/git.js"></script>
 </head>
 <body>
-  <script src="/assets/js/login.js"></script>
-  <div id="nav-placeholder"></div>
-  <canvas id="matrixCanvas"></canvas>
-  <div class="container">
-    <h1 class="glitch" data-text="Repo Cache">Repo Cache</h1>
-  </div>
-  <div class="links"><a href="https://github.com/RKeaves/betanin" target="_blank" style="left: 329.04px; top: 117.272px;">betanin</a><a href="https://github.com/RKeaves/bon-giveaway-unit3d" target="_blank" style="left: 32.8926px; top: 618.757px;">bon-giveaway-unit3d</a><a href="https://github.com/RKeaves/CustomUploaders" target="_blank" style="left: 968.123px; top: 1186.7px;">CustomUploaders</a><a href="https://github.com/RKeaves/cyber-unit3d-theme" target="_blank" style="left: 37.4905px; top: 669.96px;">cyber-unit3d-theme</a><a href="https://github.com/RKeaves/discord-music-presence" target="_blank" style="left: 795.924px; top: 328.573px;">discord-music-presence</a><a href="https://github.com/RKeaves/dottorrent-gui" target="_blank" style="left: 853.585px; top: 282.784px;">dottorrent-gui</a><a href="https://github.com/RKeaves/Enterr" target="_blank" style="left: 425.108px; top: 418.972px;">Enterr</a><a href="https://github.com/RKeaves/gazelle-origin" target="_blank" style="left: 1055.56px; top: 454.429px;">gazelle-origin</a><a href="https://github.com/RKeaves/intermodal" target="_blank" style="left: 650.333px; top: 1054.62px;">intermodal</a><a href="https://github.com/RKeaves/matterunit3d" target="_blank" style="left: 368.828px; top: 135.021px;">matterunit3d</a><a href="https://github.com/RKeaves/mktorrent-wind" target="_blank" style="left: 519.52px; top: 275.14px;">mktorrent-wind</a><a href="https://github.com/RKeaves/optimizing-qbittorrent" target="_blank" style="left: 200.881px; top: 0.949851px;">optimizing-qbittorrent</a><a href="https://github.com/RKeaves/protonvpn-qbit-troubleshoot" target="_blank" style="left: 701.988px; top: 1157.92px;">protonvpn-qbit-troubleshoot</a><a href="https://github.com/RKeaves/qbit_manage" target="_blank" style="left: 167.691px; top: 981.064px;">qbit_manage</a><a href="https://github.com/RKeaves/qbtFixAnnounceURL" target="_blank" style="left: 436.711px; top: 1091.41px;">qbtFixAnnounceURL</a><a href="https://github.com/RKeaves/qobuz-dl-command-comp" target="_blank" style="left: 134.345px; top: 891.408px;">qobuz-dl-command-comp</a><a href="https://github.com/RKeaves/qobuz-lib-check" target="_blank" style="left: 715.2px; top: 797.066px;">qobuz-lib-check</a><a href="https://github.com/RKeaves/really-cool-emojis" target="_blank" style="left: 1007.84px; top: 573.365px;">really-cool-emojis</a><a href="https://github.com/RKeaves/refresh-watch" target="_blank" style="left: 798.087px; top: 439.36px;">refresh-watch</a></div>
-  <script>
-    // Matrix animation setup
-    const canvas = document.getElementById('matrixCanvas');
-    const ctx = canvas.getContext('2d');
-    let cols, drops;
-
-    function setupMatrix() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      cols = Math.floor(canvas.width / 14);
-      drops = Array(cols).fill(1);
-    }
-    window.addEventListener('resize', setupMatrix);
-    setupMatrix();
-
-    function drawMatrix() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < drops.length; i++) {
-        const x = i * 14;
-        const y = drops[i] * 14;
-        const char = String.fromCharCode(0x30A0 + Math.random() * 96);
-        ctx.fillStyle = (Math.random() < 0.005) ? '#FFF' : '#0F0';
-        ctx.font = (14 + Math.random() * 4) + 'px monospace';
-        ctx.fillText(char, x, y);
-        drops[i] = (y > canvas.height && Math.random() > 0.98) ? 0 : drops[i] + 1;
-      }
-      requestAnimationFrame(drawMatrix);
-    }
-    drawMatrix();
-
-    // GitHub repo fetching
-    const GITHUB_USERNAME = "RKeaves";
-    const excludedRepos = [
-      "7612u", "Private-Trackers-Spreadsheet", "RKeaves", "MrScraper", "rkeaves.github.io", "Private-Trackers-Spreadsheet", "DiscordBee", "Media-Finder", "DropToPTP", "Dasharr", "Gazelle", "proton-vpn-setup-cudy-router", "red", "REDBetter"
-    ];
-
-    async function fetchRepos() {
-      try {
-        const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos`);
-        const repos = await res.json();
-        const container = document.querySelector('.links');
-
-        repos.filter(r => !excludedRepos.includes(r.name)).forEach(repo => {
-          const a = document.createElement('a');
-          a.href = repo.html_url;
-          a.target = "_blank";
-          a.textContent = repo.name;
-          container.appendChild(a);
-
-          // Floating placement logic
-          (function move(el) {
-            const titleRect = document.querySelector('.glitch').getBoundingClientRect();
-            let x, y;
-            do {
-              x = Math.random() * (window.innerWidth - el.offsetWidth);
-              y = Math.random() * (window.innerHeight - el.offsetHeight);
-            } while (
-              x < titleRect.right + 20 && x + el.offsetWidth > titleRect.left - 20 &&
-              y < titleRect.bottom + 20 && y + el.offsetHeight > titleRect.top - 20
-            );
-            el.style.left = x + 'px';
-            el.style.top = y + 'px';
-            setTimeout(() => move(el), 2000 + Math.random() * 2000);
-          })(a);
-        });
-      } catch (err) {
-        console.error("Error loading GitHub repos:", err);
-      }
-    }
-    window.addEventListener('DOMContentLoaded', fetchRepos);
-
-  </script>
-<script src="/assets/js/nav.js" defer></script>
+    <script src="/assets/js/login.js"></script>
+    <div id="nav-placeholder"></div>
+    <canvas id="matrixCanvas"></canvas>
+    <div class="container">
+        <h1 class="glitch" data-text="Repo Cache">Repo Cache</h1>
+    </div>
+    <div class="links"></div>
+    <script defer src="/assets/js/nav.js"></script>
 </body>
 </html>
