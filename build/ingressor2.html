@@ -7,13 +7,13 @@
   <style>
     :root {
       --clr-bg: #000;
-      --clr-panel-bg: rgba(0, 255, 0, 0.15);
-      --clr-panel-border: rgba(0, 255, 0, 0.6);
-      --clr-text: #0f0;
-      --clr-text-accent: #fff;
+      --clr-neon: #0f0;
+      --clr-neon-faint: rgba(0,255,0,0.15);
       --clr-error: #f33;
-      --transition-fast: 0.2s ease-in-out;
-      --panel-blur: 10px;
+      --font-main: 'Courier New', monospace;
+      --radius: 8px;
+      --glow: 0 0 15px var(--clr-neon), inset 0 0 5px var(--clr-neon);
+      --fast: 0.2s ease-in-out;
     }
 
     html, body {
@@ -22,47 +22,56 @@
       width: 100vw;
       height: 100vh;
       overflow: hidden;
-      font-family: 'Courier New', monospace;
       background: var(--clr-bg);
+      font-family: var(--font-main);
     }
 
-    #kG7nZ5 {
+    /* starfield behind everything */
+    #stars {
       position: fixed;
       top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      opacity: 0.05 !important;
+      width: 100%; height: 100%;
+      z-index: 0;
       pointer-events: none;
     }
 
+    /* Matrix rain */
+    #kG7nZ5 {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+      opacity: 0.2 !important;
+      pointer-events: none;
+    }
+
+    /* Center panel */
     .cH8jT2 {
       position: relative;
       z-index: 2;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
     }
 
     .bP6mR4 {
-      background: var(--clr-panel-bg);
-      border: 2px solid var(--clr-panel-border);
-      backdrop-filter: blur(var(--panel-blur));
-      box-shadow: 0 0 20px var(--clr-panel-border);
+      background: var(--clr-neon-faint);
+      border: 2px solid var(--clr-neon);
+      border-radius: var(--radius);
+      box-shadow: var(--glow);
+      backdrop-filter: blur(8px);
       padding: 2rem;
-      border-radius: 0.5rem;
-      color: var(--clr-text);
-      text-align: center;
-      max-width: 90vw;
       width: 320px;
+      color: var(--clr-neon);
+      text-align: center;
     }
 
     .bP6mR4 h2 {
-      margin-bottom: 1rem;
-      color: var(--clr-text-accent);
-      text-shadow: 0 0 8px var(--clr-text);
+      margin: 0 0 1rem;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      text-shadow: 0 0 8px var(--clr-neon);
     }
 
     .bP6mR4 input {
@@ -70,125 +79,172 @@
       padding: 0.75rem;
       margin: 0.5rem 0;
       background: #111;
-      border: 1px solid var(--clr-text);
-      color: var(--clr-text);
+      border: 1px solid var(--clr-neon);
+      border-radius: var(--radius);
+      color: var(--clr-neon);
       font-size: 1rem;
-      transition: border-color var(--transition-fast),
-                  box-shadow var(--transition-fast);
+      box-shadow: 0 0 5px var(--clr-neon);
+      transition: border-color var(--fast), box-shadow var(--fast);
     }
     .bP6mR4 input:focus {
       outline: none;
-      border-color: var(--clr-text-accent);
-      box-shadow: 0 0 5px var(--clr-text-accent);
+      border-color: #fff;
+      box-shadow: 0 0 8px #fff;
     }
 
     .bP6mR4 button {
+      display: inline-block;
       margin-top: 1rem;
       padding: 0.75rem 1.5rem;
       background: transparent;
-      border: 1px solid var(--clr-text);
-      color: var(--clr-text);
+      border: 2px solid var(--clr-neon);
+      border-radius: var(--radius);
+      color: var(--clr-neon);
       font-size: 1rem;
+      letter-spacing: 1px;
       cursor: pointer;
-      transition: background var(--transition-fast),
-                  color var(--transition-fast);
+      text-transform: uppercase;
+      transition: background var(--fast), color var(--fast), box-shadow var(--fast);
+      box-shadow: 0 0 5px var(--clr-neon);
     }
     .bP6mR4 button:hover {
-      background: var(--clr-text);
+      background: var(--clr-neon);
       color: var(--clr-bg);
+      box-shadow: 0 0 12px var(--clr-neon);
     }
 
     .eR3vW1 {
       margin-top: 1rem;
       font-size: 0.9rem;
-      word-break: break-all;
+      color: var(--clr-error);
       white-space: pre-wrap;
+      word-break: break-all;
+      text-shadow: 0 0 3px var(--clr-error);
     }
-  </style>
+
+    /* audio controls styling */
+    .bP6mR4 audio {
+      width: 100%;
+      margin-top: 1rem;
+      outline: none;
+      filter: drop-shadow(0 0 5px var(--clr-neon));
+      border-radius: var(--radius);
+      background: #111;
+    }
+  </style>  
 </head>
 <body>
+  <canvas id="stars"></canvas>
   <canvas id="kG7nZ5"></canvas>
+
   <div class="cH8jT2">
     <div class="bP6mR4">
-      <h2>Login</h2>
-      <input type="text" id="qL9pD7" placeholder="Username"/>
-      <input type="password" id="sF2vM3" placeholder="Password"/>
+      <h2>Access Code</h2>
+      <input type="text" id="qL9pD7" placeholder="Enter code…"/>
       <button onclick="uT5hE9()">Enter</button>
-      <div class="eR3vW1" id="zX4tK8"></div>
+      <div class="eR3vW1" id="zX4tK8">Access denied</div>
+      <!-- audio player (replace the src) -->
+      <audio id="bgAudio" src="assets/music.mp3" controls loop></audio>
     </div>
   </div>
 
   <script>
-    const Xy1Pq = document.getElementById('kG7nZ5'),
-          Vf8Lu = Xy1Pq.getContext('2d');
-    let Nz2Hj = Math.floor(window.innerWidth / 14),
-        Qw5Zm = Array(Nz2Hj).fill(1);
-
-    window.addEventListener('resize', () => {
-      Xy1Pq.width = window.innerWidth;
-      Xy1Pq.height = window.innerHeight;
-      Nz2Hj = Math.floor(Xy1Pq.width / 14);
-      Qw5Zm = Array(Nz2Hj).fill(1);
-    });
-
-    (Xy1Pq.width = window.innerWidth),
-    (Xy1Pq.height = window.innerHeight),
-    (function pN3vX1() {
-      Vf8Lu.fillStyle = 'rgba(0,0,0,0.07)';
-      Vf8Lu.fillRect(0, 0, Xy1Pq.width, Xy1Pq.height);
-      for (let i = 0; i < Qw5Zm.length; i++) {
-        const x = i * 14,
-              y = Qw5Zm[i] * 14,
-              ch = String.fromCharCode(0x30A0 + Math.random() * 96);
-        Vf8Lu.fillStyle = Math.random() < .005 ? '#FFF' : '#0F0';
-        Vf8Lu.font = (14 + Math.random() * 4) + 'px monospace';
-        Vf8Lu.fillText(ch, x, y);
-        Qw5Zm[i] = (y > Xy1Pq.height && Math.random() > .98) ? 0 : Qw5Zm[i] + 1;
-      }
-      requestAnimationFrame(pN3vX1);
+    // ★ twinkling starfield
+    const starsC = document.getElementById('stars'),
+          sCtx = starsC.getContext('2d');
+    let stars = [];
+    function resizeStars() {
+      starsC.width = innerWidth;
+      starsC.height = innerHeight;
+      stars = Array.from({length:200}, ()=>({
+        x: Math.random()*innerWidth,
+        y: Math.random()*innerHeight,
+        r: Math.random()*1.2
+      }));
+    }
+    window.addEventListener('resize', resizeStars);
+    resizeStars();
+    (function drawStars(){
+      sCtx.clearRect(0,0,starsC.width,starsC.height);
+      stars.forEach(s=>{
+        sCtx.beginPath();
+        sCtx.arc(s.x,s.y,s.r,0,2*Math.PI);
+        sCtx.fillStyle = `rgba(255,255,255,${0.5+Math.random()*0.5})`;
+        sCtx.fill();
+      });
+      requestAnimationFrame(drawStars);
     })();
 
-    async function rB7mC2(i) {
-      const buf = new TextEncoder().encode(i),
+    // ★ Matrix rain
+    const X = document.getElementById('kG7nZ5'),
+          M = X.getContext('2d');
+    let cols = Math.floor(innerWidth/14),
+        drops = Array(cols).fill(1);
+    function resizeMatrix(){
+      X.width = innerWidth; X.height = innerHeight;
+      cols = Math.floor(innerWidth/14);
+      drops = Array(cols).fill(1);
+    }
+    window.addEventListener('resize', resizeMatrix);
+    resizeMatrix();
+    (function rain(){
+      M.fillStyle = 'rgba(0,0,0,0.05)';
+      M.fillRect(0,0,X.width,X.height);
+      for(let i=0;i<drops.length;i++){
+        const x = i*14,
+              y = drops[i]*14,
+              ch = String.fromCharCode(0x30A0 + Math.random()*96);
+        M.fillStyle = Math.random() < .005 ? '#FFF' : '#0F0';
+        M.font = `${14+Math.random()*4}px monospace`;
+        M.fillText(ch,x,y);
+        drops[i] = (y > X.height && Math.random() > .98) ? 0 : drops[i]+1;
+      }
+      requestAnimationFrame(rain);
+    })();
+
+    // ★ login logic (unchanged)
+    async function hash256(text){
+      const buf = new TextEncoder().encode(text),
             h = await crypto.subtle.digest(atob('U0hBLTI1Ng=='), buf);
       return Array.from(new Uint8Array(h))
-                  .map(b => b.toString(16).padStart(2, '0'))
+                  .map(b=>b.toString(16).padStart(2,'0'))
                   .join('');
     }
-
-    async function uT5hE9() {
-      const pwd = document.getElementById('sF2vM3').value.trim(),
+    async function uT5hE9(){
+      const pwd = document.getElementById('qL9pD7').value.trim(),
             msg = document.getElementById('zX4tK8');
       msg.style.color = 'red';
       try {
         const path = atob('L2Fzc2V0cy9yZWRhY3RlZC50eHQ='),
               dest = atob('aHR0cHM6Ly9jYWNoZS11bmxvY2tlZC5vbmxpbmUvbGF5ZXIvcmVkYWN0ZWQ='),
               list = (await (await fetch(path)).text())
-                     .split('\n')
-                     .map(s => s.trim())
-                     .filter(Boolean),
-              h = await rB7mC2(pwd);
-
+                     .split('\n').map(s=>s.trim()).filter(Boolean),
+              h = await hash256(pwd);
         msg.textContent = `${h}\nAccess denied`;
-        if (list.includes(h)) {
+        if(list.includes(h)){
           msg.style.color = 'lime';
           msg.textContent = 'Access granted\nRe-authentication required!';
-          setTimeout(() => window.location.href = dest, 1500);
+          setTimeout(()=> location.href = dest, 1500);
         }
       } catch {
         msg.textContent = 'Error verifying credentials.';
       }
     }
 
-    (function mO1yL4() {
-      setInterval(() => {
+    // ★ anti–debug crash
+    (function watchDebug(){
+      setInterval(()=>{
         const t0 = performance.now();
         debugger;
-        if (performance.now() - t0 > 100) {
+        if(performance.now()-t0>100){
           document.body.innerHTML = "<h1 style='color:red;text-align:center;'>what happened?</h1>";
         }
-      }, 1000);
+      },1000);
     })();
+
+    // ★ optional: start music muted until user unmutes
+    const bg = document.getElementById('bgAudio');
+    bg.volume = 0.5;
   </script>
 </body>
 </html>
