@@ -4,30 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>~chat</title>
-
-  <!-- Styles -->
   <link rel="stylesheet" href="/assets/css/styles.css" />
-
-  <!-- Authentication check -->
   <script src="/assets/js/login.js" defer></script>
-
-  <!-- Shared nav -->
   <script src="/assets/js/nav.js" defer></script>
-
-  <!-- Chat logic (matrix + floaters) -->
   <script src="/assets/js/chat.js" defer></script>
-
-  <!-- WidgetBot loader -->
   <script src="/assets/js/widgetbot.js" defer></script>
 </head>
 <body>
-  <!-- NAV bar is injected here -->
+<script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
   <div id="nav-placeholder"></div>
-
-  <!-- Matrix background -->
   <canvas id="matrixCanvas"></canvas>
-
-  <!-- Chat container: widgetbot is injected here -->
   <div class="container">
     <div id="widgetbot-placeholder"></div>
   </div>
