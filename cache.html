@@ -1,116 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>cache</title>
-  <link rel="stylesheet" href="/assets/css/styles.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>cache</title>
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <script defer src="/assets/js/matrix.js"></script>
+    <script defer src="/assets/js/git.js"></script>
 </head>
 <body>
-  <script>
-    (function() {
-      const cookies = document.cookie.split('; ');
-      const loggedIn = cookies.some(c => c.startsWith('is_logged_in='));
-      if (!loggedIn) {
-        window.location.replace('index.html');
-      }
-    })();
-  </script>
- 
- <nav class="top-nav">
-  <a href="/redacted" id="link1">index</a>
-  <a href="/layer/cache" id="link2">vault</a>
-  <a href="/layer/star" id="link3">star</a>
-  <a href="/feed/blog" id="link4">blog</a>
-  <a href="/layer/archive" id="link5">secret</a>
-  <a href="/layer/chat" id="link6">chat</a>
-</nav>
-
-
-  <canvas id="matrixCanvas"></canvas>
-  
-  <div class="container">
-    <h1 class="glitch" data-text="Repo Cache">Repo Cache</h1>
-  </div>
-  <div class="links"></div>
-
-  <script>
-    // Matrix animation
-    const canvas = document.getElementById('matrixCanvas');
-    const ctx = canvas.getContext('2d');
-    let cols, drops;
-
-    function setupMatrix() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      cols = Math.floor(canvas.width / 14);
-      drops = Array(cols).fill(1);
-    }
-
-    window.addEventListener('resize', setupMatrix);
-    setupMatrix();
-
-    function drawMatrix() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < drops.length; i++) {
-        const x = i * 14;
-        const y = drops[i] * 14;
-        const char = String.fromCharCode(0x30A0 + Math.random() * 96);
-        ctx.fillStyle = (Math.random() < 0.005) ? '#FFF' : '#0F0';
-        ctx.font = (14 + Math.random() * 4) + 'px monospace';
-        ctx.fillText(char, x, y);
-        drops[i] = (y > canvas.height && Math.random() > 0.98) ? 0 : drops[i] + 1;
-      }
-      requestAnimationFrame(drawMatrix);
-    }
-    drawMatrix();
-
-    const GITHUB_USERNAME = "RKeaves";
-    const excludedRepos = ["7612u", "Private-Trackers-Spreadsheet", "RKeaves", "MrScraper", "rkeaves.github.io", "Private-Trackers-Spreadsheet", "DiscordBee", "Media-Finder", "DropToPTP", "Dasharr", "Gazelle", "proton-vpn-setup-cudy-router", "red", "REDBetter"];
-
-    async function fetchRepos() {
-      try {
-        const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos`);
-        const repos = await res.json();
-        const linksContainer = document.querySelector('.links');
-
-        repos
-          .filter(repo => !excludedRepos.includes(repo.name))
-          .forEach(repo => {
-            const a = document.createElement('a');
-            a.href = repo.html_url;
-            a.target = "_blank";
-            a.textContent = repo.name;
-            a.classList.add('floating-repo');
-            linksContainer.appendChild(a);
-          });
-
-        const titleEl = document.querySelector('.glitch');
-        document.querySelectorAll('.floating-repo').forEach(btn => {
-          const moveButton = (b) => {
-            const titleRect = titleEl.getBoundingClientRect();
-            let x, y;
-            do {
-              x = Math.random() * (window.innerWidth - b.offsetWidth);
-              y = Math.random() * (window.innerHeight - b.offsetHeight);
-            } while (
-              x < titleRect.right + 20 && x + b.offsetWidth > titleRect.left - 20 &&
-              y < titleRect.bottom + 20 && y + b.offsetHeight > titleRect.top - 20
-            );
-            b.style.left = x + 'px';
-            b.style.top = y + 'px';
-            setTimeout(() => moveButton(b), 2000 + Math.random() * 2000);
-          };
-          moveButton(btn);
-        });
-
-      } catch (err) {
-        console.error("Error loading GitHub repos:", err);
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', fetchRepos);
-  </script>
+    <script src="/assets/js/login.js"></script>
+    <div id="nav-placeholder"></div>
+    <canvas id="matrixCanvas"></canvas>
+    <div class="container">
+        <h1 class="glitch" data-text="Repo Cache">Repo Cache</h1>
+    </div>
+    <div class="links"></div>
+    <script defer src="/assets/js/nav.js"></script>
 </body>
 </html>
