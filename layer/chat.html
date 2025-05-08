@@ -7,13 +7,7 @@
   <link rel="stylesheet" href="/assets/css/styles.css" />
 </head>
 <body>
-  <script>
-    (function() {
-      const loggedIn = document.cookie.split('; ').some(c => c.startsWith('is_logged_in='));
-      if (!loggedIn) window.location.replace('index.html');
-    })();
-  </script>
-
+  <script src="/assets/js/auth-redirect.js" defer></script>
   <nav class="top-nav">
     <a href="/redacted" id="link1">index</a>
     <a href="/layer/cache" id="link2">vault</a>
@@ -22,9 +16,7 @@
     <a href="/layer/archive" id="link5">secret</a>
     <a href="/layer/chat" id="link6">chat</a>
   </nav>
-
   <canvas id="matrixCanvas"></canvas>
-
   <div class="container">
     <widgetbot
       server="1339396287061168232"
