@@ -7,33 +7,16 @@
   <link rel="stylesheet" href="/assets/css/styles.css" />
 </head>
 <body>
-  <script>
-    (function() {
-      const cookies = document.cookie.split('; ');
-      const loggedIn = cookies.some(c => c.startsWith('is_logged_in='));
-      if (!loggedIn) window.location.replace('index.html');
-    })();
-  </script>
-
-  <nav class="top-nav">
-    <a href="/redacted" id="link1">index</a>
-    <a href="/layer/cache" id="link2">vault</a>
-    <a href="/layer/star" id="link3">star</a>
-    <a href="/feed/blog" id="link4">blog</a>
-    <a href="/layer/archive" id="link5">secret</a>
-    <a href="/layer/chat" id="link6">chat</a>
-  </nav>
-
+  <script src="/assets/js/login.js"></script>
+  <div id="nav-placeholder"></div>
   <canvas id="matrixCanvas"></canvas>
   <div class="container">
     <h1 class="glitch" data-text="CACHE VAULT">STAR VAULT</h1>
   </div>
-
   <div class="links">
     <a id="item1" href="/1" target="_blank">Snake</a>
     <a id="item2" href="/2" target="_blank">Tetris</a>
   </div>
-
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       const canvas = document.getElementById('matrixCanvas');
@@ -91,5 +74,6 @@
       buttons.forEach(moveButton);
     });
   </script>
+  <script src="/assets/js/nav.js" defer></script>
 </body>
 </html>
