@@ -4,8 +4,13 @@
   <meta charset="UTF-8">
   <title>CyberBlogX~RK · Post</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap"
+    rel="stylesheet"
+  >
+
   <style>
     /* ========== ROOT & RESET ================================================= */
     *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0 }
@@ -78,6 +83,21 @@
       color: var(--neon-b);
       text-shadow: 0 0 4px var(--neon-b);
     }
+    .music-player input[type="range"] {
+      -webkit-appearance: none; appearance: none;
+      width: 100px; height: 4px;
+      background: var(--neon-b);
+      border-radius: 2px; cursor: pointer;
+    }
+    .music-player input[type="range"]::-webkit-slider-thumb,
+    .music-player input[type="range"]::-moz-range-thumb {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--neon);
+    }
+    .music-player span {
+      font-size: 0.8rem; white-space: nowrap;
+    }
     #track-info {
       display: inline-block; max-width: 200px;
       font-size: .85rem; line-height: 1;
@@ -92,20 +112,6 @@
     @keyframes scroll-text {
       0%   { transform: translateX(0) }
       100% { transform: translateX(-100%) }
-    }
-
-    /* ─── VOLUME & SEEK SLIDERS ─────────────────────────────────────────────── */
-    .music-player input[type="range"] {
-      -webkit-appearance: none; appearance: none;
-      width: 100px; height: 4px;
-      background: var(--neon-b);
-      border-radius: 2px; cursor: pointer;
-    }
-    .music-player input[type="range"]::-webkit-slider-thumb,
-    .music-player input[type="range"]::-moz-range-thumb {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--neon);
     }
 
     /* ─── LIGHT THEME ICONS & LINKS ─────────────────────────────────────────── */
@@ -128,16 +134,14 @@
     .nav-links button:hover::after { width: 100% }
 
     /* theme toggle flicker */
-    #theme-btn { position: relative; }
+    @keyframes flicker {
+      0%,18%,22%,25%,53%,57%,100% { opacity:1 }
+      20%,24%,55% { opacity:.4 }
+    }
     #theme-btn:hover {
       background: transparent !important;
       box-shadow: none !important;
       animation: flicker 1.5s infinite;
-    }
-
-    /* ─── PAGE TITLE LINK ───────────────────────────────────────────────────── */
-    .nav-links .post-link {
-      font-size: .9rem; color: var(--neon-b);
     }
 
     /* ─── HAMBURGER (mobile) ────────────────────────────────────────────────── */
@@ -220,14 +224,9 @@
     #top svg {
       width: 24px; height: 24px; fill: var(--bg-dark);
     }
-
-    /* flicker keyframes */
-    @keyframes flicker {
-      0%,18%,22%,25%,53%,57%,100% { opacity:1 }
-      20%,24%,55% { opacity:.4 }
-    }
   </style>
 </head>
+
 <body>
 
   <!-- ========= HEADER ========= -->
@@ -243,24 +242,16 @@
         <button id="play-btn" aria-label="Play/Pause">▶️</button>
         <button id="next-btn" aria-label="Next Track">⏭</button>
 
-        <!-- current time -->
         <span id="current-time">0:00</span>
-
-        <!-- seek slider -->
         <input type="range" id="seek-bar" min="0" max="100" value="0">
-
-        <!-- duration -->
         <span id="duration">0:00</span>
 
-        <!-- volume -->
         <button id="mute-btn" aria-label="Mute">🔊</button>
         <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="0.7">
 
-        <!-- track info -->
         <span id="track-info">
           <span class="marquee">Loading playlist…</span>
         </span>
-
         <audio id="audio-player" preload="auto"></audio>
       </div>
 
@@ -301,7 +292,7 @@
         id="bg-audio" controls autoplay loop muted
         style="width:100%; margin-top:.5rem;">
         <source src="" type="audio/flac">
-        Your browser does not support the HTML5 Audio element.
+        Your browser does not support HTML5 Audio.
       </audio>
     </section>
   </article>
@@ -312,37 +303,36 @@
   </div>
 
   <!-- ========= SCRIPTS ========= -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-    // theme toggle
+    /* THEME TOGGLE */
     const root = document.documentElement;
     let theme = localStorage.getItem('theme') || 'dark';
-    function applyTheme() {
+    function applyTheme(){
       root.classList.toggle('light', theme==='light');
       localStorage.setItem('theme', theme);
     }
     applyTheme();
     document.getElementById('theme-btn').addEventListener('click', e=>{
       e.preventDefault();
-      theme = (theme==='dark'?'light':'dark');
+      theme = theme==='dark'?'light':'dark';
       applyTheme();
     });
 
-    // mobile nav
+    /* MOBILE NAV */
     document.querySelector('.nav-toggle').addEventListener('click', ()=>{
       document.querySelector('.nav-links').classList.toggle('show');
       document.querySelector('.hamburger').classList.toggle('open');
     });
 
-    // back to top
+    /* BACK TO TOP */
     const topBtn = document.getElementById('top');
-    window.addEventListener('scroll', ()=> {
-      topBtn.classList.toggle('visible', window.scrollY > 300);
+    window.addEventListener('scroll', ()=>{
+      topBtn.classList.toggle('visible', window.scrollY>300);
     });
-    topBtn.addEventListener('click', ()=> {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    topBtn.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
 
-    // audio + seek + volume + progress bar
+    /* AUDIO + MUSIC PLAYER */
     const audio      = document.getElementById('audio-player');
     const playBtn    = document.getElementById('play-btn');
     const prevBtn    = document.getElementById('prev-btn');
@@ -357,91 +347,69 @@
 
     let playlist = [], idx=0, playing=false;
 
-    // load playlist.json
+    // Load playlist.json
     fetch('/assets/playlist/playlist.json')
       .then(r=>r.json())
       .then(data=>{
         playlist = data;
         if(playlist.length) loadTrack(0);
-        else trackInfo.textContent = 'No tracks';
+        else trackInfo.textContent='No tracks';
       })
-      .catch(()=>{
-        trackInfo.textContent = 'Could not load playlist';
-      });
+      .catch(()=> trackInfo.textContent='Playlist error');
 
-    function loadTrack(i) {
+    function loadTrack(i){
       const t = playlist[i];
       audio.src = t.url;
       trackInfo.innerHTML = `<span class="marquee">${t.title} — ${t.artist}</span>`;
       idx = i;
     }
-    function togglePlay() {
+    function togglePlay(){
       if(!playlist.length) return;
-      playing ? audio.pause() : audio.play();
+      playing? audio.pause() : audio.play();
     }
     playBtn.addEventListener('click', togglePlay);
-    prevBtn.addEventListener('click', ()=>{
-      idx = (idx-1+playlist.length)%playlist.length;
-      loadTrack(idx); audio.play();
-    });
-    nextBtn.addEventListener('click', ()=>{
-      idx = (idx+1)%playlist.length;
-      loadTrack(idx); audio.play();
-    });
-    audio.addEventListener('play', ()=>{
-      playing = true; playBtn.textContent='❚❚';
-    });
-    audio.addEventListener('pause', ()=>{
-      playing = false; playBtn.textContent='▶️';
-    });
+    prevBtn.addEventListener('click', ()=>{ idx=(idx-1+playlist.length)%playlist.length; loadTrack(idx); audio.play(); });
+    nextBtn.addEventListener('click', ()=>{ idx=(idx+1)%playlist.length; loadTrack(idx); audio.play(); });
+    audio.addEventListener('play', ()=>{ playing=true; playBtn.textContent='❚❚'; });
+    audio.addEventListener('pause', ()=>{ playing=false; playBtn.textContent='▶️'; });
     audio.addEventListener('ended', ()=> nextBtn.click());
 
-    // metadata loaded
     audio.addEventListener('loadedmetadata', ()=>{
       durationElem.textContent = formatTime(audio.duration);
       seekBar.max = Math.floor(audio.duration);
     });
-    // timeupdate
     audio.addEventListener('timeupdate', ()=>{
       const t = Math.floor(audio.currentTime);
       currentTimeElem.textContent = formatTime(t);
       seekBar.value = t;
       progressBar.style.width = (audio.currentTime/audio.duration*100)+'%';
     });
-    // seek
-    seekBar.addEventListener('input', ()=>{
-      audio.currentTime = seekBar.value;
-    });
-    // mute
+    seekBar.addEventListener('input', ()=> audio.currentTime = seekBar.value );
     muteBtn.addEventListener('click', ()=>{
       audio.muted = !audio.muted;
-      muteBtn.textContent = audio.muted? '🔇' : '🔊';
+      muteBtn.textContent = audio.muted? '🔇':'🔊';
     });
-    // volume
     volumeBar.addEventListener('input', ()=>{
       audio.volume = volumeBar.value;
       if(audio.muted && audio.volume>0) audio.muted=false;
       muteBtn.textContent = audio.muted? '🔇':'🔊';
     });
-    // format helper
     function formatTime(sec){
-      const m = Math.floor(sec/60),
-            s = String(Math.floor(sec%60)).padStart(2,'0');
+      const m = Math.floor(sec/60), s = String(Math.floor(sec%60)).padStart(2,'0');
       return `${m}:${s}`;
     }
 
-    // load post JSON + markdown
-    document.getElementById('post-link').textContent = 'Index';
-    const slug = window.location.pathname.match(/\/(\d+)\.html$/)?.[1];
-    if(!slug) {
-      document.getElementById('body').textContent = 'Bad URL';
+    /* LOAD POST CONTENT */
+    marked.setOptions({ gfm:true, headerIds:true, mangle:false });
+    const slug = window.location.pathname.match(/\/([^\/]+)\.html$/)?.[1];
+    if(!slug){
+      document.getElementById('body').textContent='Invalid URL';
     } else {
       fetch(`./${slug}.json`)
         .then(r=>r.json())
         .then(j=>{
           document.getElementById('title').textContent = j.title;
-          document.getElementById('post-link').href = `/${slug}.html`;
-          if(j.markdown) {
+          if(j.markdown){
             return fetch(`./${slug}.md`)
               .then(r=>r.text())
               .then(md=> document.getElementById('body').innerHTML = marked.parse(md));
@@ -449,13 +417,8 @@
             document.getElementById('body').innerHTML = j.content||'';
           }
         })
-        .catch(()=> document.getElementById('body').textContent='Not found.');
+        .catch(()=> document.getElementById('body').textContent='Post not found.');
     }
-  </script>
-  <!-- Marked.js for Markdown -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script>
-    marked.setOptions({ gfm:true, headerIds:true, mangle:false });
   </script>
 </body>
 </html>
