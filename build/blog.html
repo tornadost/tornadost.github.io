@@ -38,6 +38,41 @@
     }
 
     /* ─── LIGHT THEME HERO ADJUSTMENTS ─── */
+
+    /* ─── NAVIGATION INK COLORS ─── */
+    :root {
+    /* replace your old neons with these blues */
+    --neon:   #4D9EFF;   /* primary link color    */
+    --neon-b: #6BC1FF;   /* hover/underline color */
+    }
+
+    /* make sure your logo, links & buttons pick up the new vars */
+    .logo a,
+    .nav-links a,
+    .nav-links button {
+    color: var(--neon);
+    text-shadow: 0 0 4px var(--neon);
+    }
+
+    .nav-links a::after,
+    .nav-links button::after {
+    background: var(--neon-b);
+    }
+
+    /* hover/focus state */
+    .nav-links a:hover,
+    .nav-links button:hover {
+    color: var(--neon-b);
+    }
+
+    /* toggle underline on hover just like before */
+    .nav-links a:hover::after,
+    .nav-links button:hover::after {
+    width: 100%;
+    }
+
+
+
     :root.light .hero {
     background: #fff !important;         /* white background */
     color: #000;                         /* default text black */
