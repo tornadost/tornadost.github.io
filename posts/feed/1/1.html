@@ -368,10 +368,20 @@
       playing? audio.pause() : audio.play();
     }
     playBtn.addEventListener('click', togglePlay);
-    prevBtn.addEventListener('click', ()=>{ idx=(idx-1+playlist.length)%playlist.length; loadTrack(idx); audio.play(); });
-    nextBtn.addEventListener('click', ()=>{ idx=(idx+1)%playlist.length; loadTrack(idx); audio.play(); });
-    audio.addEventListener('play', ()=>{ playing=true; playBtn.textContent='❚❚'; });
-    audio.addEventListener('pause', ()=>{ playing=false; playBtn.textContent='▶️'; });
+    prevBtn.addEventListener('click', ()=>{
+      idx = (idx-1+playlist.length)%playlist.length;
+      loadTrack(idx); audio.play();
+    });
+    nextBtn.addEventListener('click', ()=>{
+      idx = (idx+1)%playlist.length;
+      loadTrack(idx); audio.play();
+    });
+    audio.addEventListener('play', ()=>{
+      playing=true; playBtn.textContent='❚❚';
+    });
+    audio.addEventListener('pause', ()=>{
+      playing=false; playBtn.textContent='▶️';
+    });
     audio.addEventListener('ended', ()=> nextBtn.click());
 
     audio.addEventListener('loadedmetadata', ()=>{
@@ -399,7 +409,7 @@
       return `${m}:${s}`;
     }
 
-    /* LOAD POST CONTENT */
+    /* LOAD POST CONTENT + VIDEO/AUDIO */
     marked.setOptions({ gfm:true, headerIds:true, mangle:false });
     const slug = window.location.pathname.match(/\/([^\/]+)\.html$/)?.[1];
     if(!slug){
@@ -408,13 +418,26 @@
       fetch(`./${slug}.json`)
         .then(r=>r.json())
         .then(j=>{
+          // title
           document.getElementById('title').textContent = j.title;
+          // body
           if(j.markdown){
-            return fetch(`./${slug}.md`)
+            fetch(`./${slug}.md`)
               .then(r=>r.text())
-              .then(md=> document.getElementById('body').innerHTML = marked.parse(md));
+              .then(md=> document.getElementById('body').innerHTML = marked.parse(md))
+              .catch(()=>{/* ignore */});
           } else {
             document.getElementById('body').innerHTML = j.content||'';
+          }
+          // video
+          if(j.video_url){
+            document.getElementById('video-frame').src = j.video_url;
+            document.getElementById('video-section').style.display = 'block';
+          }
+          // background audio
+          if(j.audio_url){
+            document.getElementById('bg-audio').src = j.audio_url;
+            document.getElementById('audio-section').style.display = 'block';
           }
         })
         .catch(()=> document.getElementById('body').textContent='Post not found.');
