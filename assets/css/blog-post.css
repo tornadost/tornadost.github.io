@@ -75,11 +75,23 @@
       background: var(--neon-b);
       border-radius: 2px; cursor: pointer;
     }
-    .music-player input[type="range"]::-webkit-slider-thumb,
-    .music-player input[type="range"]::-moz-range-thumb {
-      width: 10px; height: 10px;
+    /* Chrome, Safari, Edge */
+    .music-player input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      background: var(--neon);
+      background: var(--neon-b);
+      cursor: pointer;
+    }
+
+    /* Firefox */
+    .music-player input[type="range"]::-moz-range-thumb {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--neon-b);
+      cursor: pointer;
     }
     .music-player span {
       font-size: 0.8rem; white-space: nowrap;
