@@ -951,7 +951,7 @@
       let playing  = false;
   
       // Load playlist.json
-      fetch('assets/playlist/playlist.json')
+      fetch('/assets/playlist/playlist.json')
         .then(r => r.json())
         .then(json => {
           playlist = json;
