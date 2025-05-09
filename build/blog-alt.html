@@ -46,6 +46,16 @@
     margin-right: auto;
     font-family: var(--font-mono);
     color: var(--neon);
+
+    /* start semi-transparent */
+    opacity: 0.5;
+    /* fade in/out */
+    transition: opacity var(--speed) ease;
+    }
+
+    /* on hover, go fully opaque */
+    .music-player:hover {
+    opacity: 1;
     }
 
     .music-player input[type="range"] {
