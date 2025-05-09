@@ -72,6 +72,50 @@
     text-decoration: underline;  /* optional */
     }  
 
+    /* ─── LIGHT‐THEME CONTACT FORM STYLING ─── */
+    :root.light .contact form {
+    background: #fff;                        /* pure white card */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08), /* gentle outer shadow */
+                0 2px 4px rgba(0,0,0,0.04);
+    border-radius: var(--radius);
+    padding: 2rem;
+    transition: box-shadow .3s;
+    }
+
+    :root.light .contact form:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12),
+                0 3px 6px rgba(0,0,0,0.06);
+    }
+
+    /* inputs & textarea */
+    :root.light .contact input,
+    :root.light .contact textarea {
+    background: #f5f5f5;     /* light grey */
+    border: 1px solid #ddd;  /* subtle border */
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+    transition: background .3s, border-color .3s;
+    }
+
+    :root.light .contact input:focus,
+    :root.light .contact textarea:focus {
+    background: #fff;
+    border-color: #bbb;
+    outline: none;
+    }
+
+    /* submit button */
+    :root.light .contact button {
+    background: #5a67d8;     /* indigo light */
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: background .3s, box-shadow .3s;
+    }
+
+    :root.light .contact button:hover {
+    background: #434190;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
     /* Give the thank-you message some breathing room */
     #my-form-status {
     display: block;        /* ensure it’s a block-level element */
