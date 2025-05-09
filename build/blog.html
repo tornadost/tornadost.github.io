@@ -36,7 +36,34 @@
       --neon: #4c5fd7;
       --neon-b: #7f8cfa;
     }
-    /* make excerpts and their links dark on light theme */
+
+    /* ─── LIGHT THEME HERO ADJUSTMENTS ─── */
+    :root.light .hero {
+    background: #fff !important;         /* white background */
+    color: #000;                         /* default text black */
+    }
+    :root.light .hero::before {
+    background: rgba(255,255,255,0.6) !important;  /* lighten the overlay */
+    }
+
+    /* Hero title & subtitle */
+    :root.light .hero-title,
+    :root.light .hero-sub {
+    color: #000 !important;              /* force black text */
+    text-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    /* Hero button */
+    :root.light .hero .btn {
+    border-color: #000 !important;
+    color: #000 !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    :root.light .hero .btn:hover {
+    background: #000 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
     :root.light .post-excerpt {
     color: #222 !important;
     }
