@@ -207,6 +207,18 @@
     color: #000;        /* ← ensure dark text on light bg */
     }
 
+    /* — Make the “Name / Email / Message” labels darker — */
+    :root.light .contact label {
+    color: #333333;  /* dark gray for the label text */
+    }
+
+    /* — Make the placeholder text match — */
+    :root.light .contact input::placeholder,
+    :root.light .contact textarea::placeholder {
+    color: #333333;  /* same dark gray */
+    opacity: 1;      /* ensure full opacity in all browsers */
+    }
+
     :root.light .contact input:focus,
     :root.light .contact textarea:focus {
     background: #fff;
