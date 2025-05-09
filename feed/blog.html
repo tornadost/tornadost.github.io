@@ -8,116 +8,668 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     /* ========== ROOT & RESET ================================================= */
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;width:100%;scroll-behavior:smooth;overflow-x:hidden;
-      background:var(--bg-dark);color:var(--text);font-family:'Roboto',sans-serif}
-    :root{--neon:#0f0;--neon-b:#39ff14;--bg-dark:#000;--bg-light:#111;--text:#eee;
-      --radius:8px;--speed:.3s;--max:1200px;--font-mono:'Press Start 2P',cursive}
-    :root.light{--bg-dark:#fafafa;--bg-light:#fff;--text:#222;--neon:#05f;--neon-b:#0ff}
-
-    /* ========== UTILITIES ==================================================== */
-    .container{max-width:var(--max);margin:0 auto;padding:1rem}
-    .flex{display:flex;align-items:center}.just-between{justify-content:space-between}
-    .btn{display:inline-block;font-family:var(--font-mono);text-transform:uppercase;
-      padding:.7rem 1.4rem;border:1px solid var(--neon);color:var(--neon);
-      background:transparent;border-radius:var(--radius);letter-spacing:.05em;
-      transition:background var(--speed),color var(--speed),box-shadow var(--speed)}
-    .btn:hover{background:var(--neon);color:var(--bg-dark);
-      box-shadow:0 0 8px var(--neon),0 0 16px var(--neon-b)}
-
-    /* ========== HEADER ======================================================= */
-    header{position:fixed;top:0;left:0;width:100%;background:rgba(0,0,0,.8);
-      backdrop-filter:blur(6px);z-index:100}
-    .navbar{max-width:var(--max);margin:0 auto;padding:1rem}
-    .logo a{font-family:var(--font-mono);font-size:1.5rem;color:var(--neon);
-      text-decoration:none;text-shadow:0 0 4px var(--neon)}
-    .nav-links{list-style:none}.nav-links li{display:inline-block;margin-left:2rem}
-    .nav-links a{color:var(--neon);text-decoration:none;position:relative}
-    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;
-      height:2px;background:var(--neon-b);transition:width var(--speed)}
-    .nav-links a:hover::after{width:100%}
-    .nav-toggle{display:none;background:none;border:none;cursor:pointer}
-    .hamburger,.hamburger::before,.hamburger::after{width:28px;height:3px;background:var(--neon);
-      display:block;position:relative;transition:all var(--speed)}
-    .hamburger::before,.hamburger::after{content:'';position:absolute;left:0}
-    .hamburger::before{top:-8px}.hamburger::after{top:8px}
-    .hamburger.open{transform:rotate(45deg)}.hamburger.open::before{top:0;transform:rotate(90deg)}
-    .hamburger.open::after{top:0;opacity:0}
-    @media(max-width:768px){
-      .nav-toggle{display:block}
-      .nav-links{display:none;flex-direction:column;position:fixed;top:60px;right:0;width:200px;
-        height:calc(100% - 60px);background:var(--bg-light);padding:2rem}
-      .nav-links.show{display:flex}.nav-links li{margin:1rem 0}
+    *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0 }
+    html, body {
+      height: 100%;
+      width: 100%;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      background: var(--bg-dark);
+      color: var(--text);
+      font-family: 'Roboto', sans-serif;
+    }
+    :root {
+      --neon: #0f0;
+      --neon-b: #39ff14;
+      --bg-dark: #000;
+      --bg-light: #111;
+      --text: #eee;
+      --radius: 8px;
+      --speed: .3s;
+      --max: 1200px;
+      --font-mono: 'Press Start 2P', cursive;
+    }
+    :root.light {
+      --bg-dark: #f5f7fa;
+      --bg-light: #ffffff;
+      --text: #191d20;
+      --neon: #4c5fd7;
+      --neon-b: #7f8cfa;
     }
 
+    /* ─── MUSIC PLAYER (in header) ─── */
+    .music-player {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 2rem;
+    margin-right: auto;
+    font-family: var(--font-mono);
+    color: var(--neon);
+
+    /* start semi-transparent */
+    opacity: 0.7;
+    /* fade in/out */
+    transition: opacity var(--speed) ease;
+    }
+
+    /* on hover, go fully opaque */
+    .music-player:hover {
+    opacity: 0.95;
+    }
+
+    .music-player input[type="range"] {
+    -webkit-appearance: none; /* remove default WebKit styling */
+    -moz-appearance:    none; /* remove default Firefox styling */
+    appearance:         none; /* remove default styling in all modern browsers */
+
+    width:   100px;
+    height:  4px;
+    background:    var(--neon-b);
+    border-radius: 2px;
+    cursor:        pointer;
+    }
+
+    .music-player input[type="range"]::-moz-range-thumb {
+    width:   10px;
+    height:  10px;
+    border-radius: 50%;
+    background:    var(--neon);
+    }
+
+
+    /* thumb */
+    .music-player input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--neon);
+    }
+    .music-player span {
+    font-size: 0.8rem;
+    white-space: nowrap;
+    }
+
+
+    .music-player button {
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: var(--neon);
+    transition: color var(--speed), text-shadow var(--speed);
+    }
+    .music-player button:hover {
+    color: var(--neon-b);
+    text-shadow: 0 0 4px var(--neon-b);
+    }
+    #track-info {
+    display: inline-block;
+    max-width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
+    }
+
+    #track-info .marquee {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll-text 20s linear infinite;
+    }
+
+    @keyframes scroll-text {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+    }
+    /* ─── LIGHT THEME HERO ADJUSTMENTS ─── */
+    /* make sure your logo, links & buttons pick up the new vars */
+    .logo a,
+    .nav-links a,
+    .nav-links button {
+    color: var(--neon);
+    text-shadow: 0 0 4px var(--neon);
+    }
+
+    .nav-links a::after,
+    .nav-links button::after {
+    background: var(--neon-b);
+    }
+
+    /* hover/focus state */
+    .nav-links a:hover,
+    .nav-links button:hover {
+    color: var(--neon-b);
+    }
+
+    /* toggle underline on hover just like before */
+    .nav-links a:hover::after,
+    .nav-links button:hover::after {
+    width: 100%;
+    }
+
+
+
+    :root.light .hero {
+    background: #fff !important;         /* white background */
+    color: #000;                         /* default text black */
+    }
+    :root.light .hero::before {
+    background: rgba(255,255,255,0.6) !important;  /* lighten the overlay */
+    }
+
+    /* Hero title & subtitle */
+    :root.light .hero-title,
+    :root.light .hero-sub {
+    color: #000 !important;              /* force black text */
+    text-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    /* Hero button */
+    :root.light .hero .btn {
+    border-color: #000 !important;
+    color: #000 !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    :root.light .hero .btn:hover {
+    background: #000 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    :root.light .post-excerpt {
+    color: #222 !important;
+    }
+    :root.light .post-excerpt a {
+    color: #000 !important;
+    text-decoration: underline;  /* optional */
+    }  
+
+    /* ─── LIGHT‐THEME CONTACT FORM STYLING ─── */
+    :root.light .contact form {
+    background: #fff;                        /* pure white card */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08), /* gentle outer shadow */
+                0 2px 4px rgba(0,0,0,0.04);
+    border-radius: var(--radius);
+    padding: 2rem;
+    transition: box-shadow .3s;
+    }
+
+    :root.light .contact form:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12),
+                0 3px 6px rgba(0,0,0,0.06);
+    }
+
+    /* inputs & textarea */
+    :root.light .contact input,
+    :root.light .contact textarea {
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+    transition: background .3s, border-color .3s;
+    color: #000;        /* ← ensure dark text on light bg */
+    }
+
+    /* — Make the “Name / Email / Message” labels darker — */
+    :root.light .contact label {
+    color: #333333;  /* dark gray for the label text */
+    }
+
+    /* — Make the placeholder text match — */
+    :root.light .contact input::placeholder,
+    :root.light .contact textarea::placeholder {
+    color: #333333;  /* same dark gray */
+    opacity: 1;      /* ensure full opacity in all browsers */
+    }
+
+    :root.light .contact input:focus,
+    :root.light .contact textarea:focus {
+    background: #fff;
+    border-color: #bbb;
+    outline: none;
+    }
+
+    /* submit button */
+    :root.light .contact button {
+    background: #5a67d8;     /* indigo light */
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: background .3s, box-shadow .3s;
+    }
+
+    :root.light .contact button:hover {
+    background: #434190;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* Give the thank-you message some breathing room */
+    #my-form-status {
+    display: block;        /* ensure it’s a block-level element */
+    margin-top: 0.75rem;   /* push it down a bit from the button */
+    color: var(--neon-b);  /* optional: make it pop in your theme color */
+    }
+
+    
+    /* ========== ABSOLUTE META FOOTER ========== */
+    .post-card {
+    position: relative;                  /* establish positioning context */
+    padding-bottom: 2.5rem;              /* room for the absolutely-positioned meta */
+    }
+
+    .post-meta {
+    position: absolute !important;       /* pull out of the normal flow */
+    bottom: 6px !important;              /* exactly 6px above the card border */
+    left: 1rem !important;               /* align with your content padding */
+    right: 1rem !important;              /* stretch to same padding on right */
+    margin: 0 !important;                /* reset any margins */
+    }
+
+
+    /* ========= THUMBNAIL SIZE CONTROL ====================================== */
+    .post-thumbnail {
+    /* lock into a 16∶9 box, maxing out at 200px tall */
+    aspect-ratio: 16 / 9;
+    max-height: 200px;
+    overflow: hidden;
+    }
+
+    .post-thumbnail img {
+    /* fill that box, cropping as needed */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    }
+
+
+
+    /* ========== CARD CONTENT VERTICAL ALIGNMENT ============================ */
+    .post-card {
+    display: flex;
+    flex-direction: column;
+    }
+
+    .post-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;               /* make content fill the card */
+    padding: 1rem;         /* keep your existing padding */
+    }
+
+    .post-excerpt {
+    flex: 1;               /* push .post-meta down */
+    }
+
+    .post-meta {
+    margin-top: auto;      /* always sit at bottom of .post-content */
+    }
+
+    /* ========== SINGLE‐ITEM GRID CENTERING & MAX WIDTH ========== */
+    .posts-grid {
+    justify-items: center;               /* center each card in its column */
+    }
+
+    .post-card {
+    width: 100%;                         /* fill its grid slot */
+    max-width: 355px;                    /* but never exceed 600px */
+    }
+
+
+    /* ========== UTILITIES ==================================================== */
+    .container { max-width: var(--max); margin: 0 auto; padding: 1rem }
+    .flex { display: flex; align-items: center }
+    .just-between { justify-content: space-between }
+    .btn {
+      display: inline-block;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      padding: .7rem 1.4rem;
+      border: 1px solid var(--neon);
+      color: var(--neon);
+      background: transparent;
+      border-radius: var(--radius);
+      letter-spacing: .05em;
+      transition: background var(--speed), color var(--speed), box-shadow var(--speed);
+    }
+    .btn:hover {
+      background: var(--neon);
+      color: var(--bg-dark);
+      box-shadow: 0 0 8px var(--neon), 0 0 16px var(--neon-b);
+    }
+  
+    /* ========== HEADER ======================================================= */
+    header {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, .8);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+    }
+    .navbar { max-width: var(--max); margin: 0 auto; padding: 1rem }
+    .logo a {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      color: var(--neon);
+      text-decoration: none;
+      text-shadow: 0 0 4px var(--neon);
+    }
+    .nav-links { list-style: none }
+    .nav-links li { display: inline-block; margin-left: 2rem }
+    .nav-links a {
+      color: var(--neon);
+      text-decoration: none;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 2px;
+      background: var(--neon-b);
+      transition: width var(--speed);
+    }
+    .nav-links a:hover::after { width: 100% }
+    .nav-toggle { display: none; background: none; border: none; cursor: pointer }
+    .hamburger,
+    .hamburger::before,
+    .hamburger::after {
+      width: 28px; height: 3px;
+      background: var(--neon);
+      display: block;
+      position: relative;
+      transition: all var(--speed);
+    }
+    .hamburger::before,
+    .hamburger::after {
+      content: '';
+      position: absolute;
+      left: 0;
+    }
+    .hamburger::before { top: -8px }
+    .hamburger::after { top: 8px }
+    .hamburger.open { transform: rotate(45deg) }
+    .hamburger.open::before {
+      top: 0;
+      transform: rotate(90deg);
+    }
+    .hamburger.open::after { top: 0; opacity: 0 }
+    @media(max-width: 768px) {
+      .nav-toggle { display: block }
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: fixed;
+        top: 60px; right: 0;
+        width: 200px;
+        height: calc(100% - 60px);
+        background: var(--bg-light);
+        padding: 2rem;
+      }
+      .nav-links.show { display: flex }
+      .nav-links li { margin: 1rem 0 }
+    }
+  
     /* ========== HERO ========================================================= */
-    .hero{height:70vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
-      background:url('assets/images/hero-bg.jpg') center/cover no-repeat;position:relative;margin-top:60px}
-    .hero::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.6)}
-    .hero-title{font-size:3.2rem;color:var(--neon);font-family:var(--font-mono);z-index:1;animation:flicker 2s infinite}
-    .hero-sub{font-size:1.1rem;color:#ccc;margin-top:1rem;z-index:1}
-    .hero .btn{margin-top:2rem;z-index:1;animation:pulse 2s infinite}
-    @keyframes flicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,24%,55%{opacity:.35}}
-    @keyframes pulse{0%{box-shadow:0 0 4px var(--neon)}50%{box-shadow:0 0 14px var(--neon-b)}100%{box-shadow:0 0 4px var(--neon)}}
-    @keyframes fadeOut{to{opacity:0;visibility:hidden}}
-    .hero.hidden{animation:fadeOut .8s forwards}
-
+    .hero {
+      height: auto; /* reduced from 70vh */
+      padding: 3rem 0; 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: url('assets/images/hero-bg.jpg') center/cover no-repeat;
+      position: relative;
+      margin-top: 60px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, .6);
+    }
+    .hero-title {
+      font-size: 2.5rem; /* reduced from 3.2rem */
+      color: var(--neon);
+      font-family: var(--font-mono);
+      z-index: 1;
+      animation: flicker 2s infinite;
+    }
+    .hero-sub {
+      font-size: 1rem; /* reduced from 1.1rem */
+      color: #ccc;
+      margin-top: 1rem;
+      z-index: 1;
+    }
+    .hero .btn {
+      margin-top: 2rem;
+      z-index: 1;
+      animation: pulse 2s infinite;
+    }
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1 }
+      20%, 24%, 55% { opacity: .35 }
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 4px var(--neon) }
+      50%  { box-shadow: 0 0 14px var(--neon-b) }
+      100% { box-shadow: 0 0 4px var(--neon) }
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden }
+    }
+    .hero.hidden { animation: fadeOut .8s forwards }
+  
     /* ========== SEARCH & TAGS =============================================== */
-    .search-bar{margin:2rem 0 0;display:grid;grid-template-columns:1fr auto;gap:1rem;
-      position:sticky;top:60px;background:var(--bg-dark);z-index:90;padding-top:1rem}
-    #search{width:100%;padding:.7rem;border:1px solid var(--neon);border-radius:var(--radius);
-      background:var(--bg-light);color:var(--text)}
-    .tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
-    .tags button{padding:.3rem .8rem;border:1px solid var(--neon-b);background:transparent;
-      color:var(--neon-b);border-radius:var(--radius);cursor:pointer;font-size:.8rem;
-      transition:background var(--speed)}
-    .tags button.active,.tags button:hover{background:var(--neon-b);color:var(--bg-dark)}
-
+    .search-bar {
+      margin: 2rem 0 0;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      position: sticky;
+      top: 60px;
+      background: var(--bg-dark);
+      z-index: 90;
+      padding-top: 1rem;
+    }
+    #search {
+      width: 100%;
+      padding: .7rem;
+      border: 1px solid var(--neon);
+      border-radius: var(--radius);
+      background: var(--bg-light);
+      color: var(--text);
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-top: 1rem;
+    }
+    .tags button {
+      padding: .3rem .8rem;
+      border: 1px solid var(--neon-b);
+      background: transparent;
+      color: var(--neon-b);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: .8rem;
+      transition: background var(--speed);
+    }
+    .tags button.active,
+    .tags button:hover {
+      background: var(--neon-b);
+      color: var(--bg-dark);
+    }
+  
     /* ========== POSTS GRID =================================================== */
-    .posts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:2rem}
-    .post-card{background:var(--bg-light);border:1px solid var(--neon);border-radius:var(--radius);
-      overflow:hidden;transition:transform var(--speed),box-shadow var(--speed),opacity .3s}
-    .post-card.hidden{opacity:0}
-    .post-card:hover{transform:translateY(-6px);box-shadow:0 0 8px var(--neon-b)}
-    .post-thumbnail img{width:100%;display:block;object-fit:cover;min-height:160px;transition:transform .6s;will-change:transform}
-    .post-card:hover .post-thumbnail img{transform:scale(1.05)}
-    .post-content{padding:1rem}.post-title{font-size:1.2rem;color:var(--neon-b);margin-bottom:.4rem}
-    .post-excerpt{color:#ccc;font-size:.95rem;line-height:1.55;margin-bottom:.8rem}
-    .post-meta{font-size:.75rem;color:#888}
-    .skeleton{background:linear-gradient(90deg,#333 25%,#444 50%,#333 75%);background-size:200% 100%;
-      animation:skeleton 1.25s infinite}@keyframes skeleton{0%{background-position:200%}100%{background-position:-200%}}
-    .lazy{opacity:0;transform:translateY(20px);transition:opacity .6s ease-out,transform .6s ease-out}
-    .lazy.visible{opacity:1;transform:translateY(0)}
-
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .post-card {
+      background: var(--bg-light);
+      border: 1px solid var(--neon);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform var(--speed), box-shadow var(--speed), opacity .3s;
+    }
+    .post-card.hidden { opacity: 0 }
+    .post-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 8px var(--neon-b);
+    }
+    .post-thumbnail img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+      min-height: 160px;
+      transition: transform .6s;
+      will-change: transform;
+    }
+    .post-card:hover .post-thumbnail img {
+      transform: scale(1.05);
+    }
+    .post-content { padding: 1rem }
+    .post-title {
+      font-size: 1.2rem;
+      color: var(--neon-b);
+      margin-bottom: .4rem;
+    }
+    .post-excerpt {
+      color: #ccc;
+      font-size: .95rem;
+      line-height: 1.55;
+      margin-bottom: .8rem;
+    }
+    .post-meta { font-size: .75rem; color: #888 }
+    .skeleton {
+      background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
+      background-size: 200% 100%;
+      animation: skeleton 1.25s infinite;
+    }
+    @keyframes skeleton {
+      0%   { background-position: 200% }
+      100% { background-position: -200% }
+    }
+    .lazy {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .6s ease-out, transform .6s ease-out;
+    }
+    .lazy.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  
     /* ========== PAGINATION =================================================== */
-    .pagination{display:flex;justify-content:center;align-items:center;gap:1rem;margin:3rem 0}
-    .pagination a{color:var(--neon);text-decoration:none;position:relative;padding-bottom:2px;transition:opacity .3s}
-    .pagination a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--neon);transition:width var(--speed)}
-    .pagination a:hover::after{width:100%}
-
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin: 3rem 0;
+    }
+    .pagination a {
+      color: var(--neon);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 2px;
+      transition: opacity .3s;
+    }
+    .pagination a::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 0; height: 2px;
+      background: var(--neon);
+      transition: width var(--speed);
+    }
+    .pagination a:hover::after { width: 100% }
+  
     /* ========== CONTACT & FOOTER ============================================ */
-    .contact{margin:4rem 0}.contact form{background:var(--bg-light);padding:2rem;border-radius:var(--radius);
-      box-shadow:0 0 8px rgba(0,0,0,.5);max-width:600px;margin:0 auto}
-    .contact h2{font-family:var(--font-mono);margin-bottom:1rem}
-    .contact label{display:block;color:#ccc;margin:.4rem 0}
-    .contact input,.contact textarea{width:100%;padding:.7rem;background:#222;border:1px solid #444;
-      color:#eee;border-radius:var(--radius);margin-bottom:1rem}
-    .contact button{background:var(--neon-b);color:var(--bg-dark);border:none;padding:.7rem 1.4rem;
-      border-radius:var(--radius);cursor:pointer;transition:background var(--speed)}
-    .contact button:hover{background:var(--neon)}
-    footer{background:rgba(0,0,0,.85);text-align:center;padding:2rem 0;margin-top:4rem}
-    footer p{color:#888;font-size:.9rem}.social{list-style:none;margin-top:1rem}
-    .social li{display:inline-block;margin:0 .5rem}
-    .social img{width:28px;filter:invert(1);transition:transform var(--speed)}
-    .social a:hover img{transform:scale(1.15) rotate(-8deg)}
-
+    .contact { margin: 4rem 0 }
+    .contact form {
+      background: var(--bg-light);
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: 0 0 8px rgba(0, 0, 0, .5);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .contact h2 { font-family: var(--font-mono); margin-bottom: 1rem }
+    .contact label {
+      display: block;
+      color: #ccc;
+      margin: .4rem 0;
+    }
+    .contact input,
+    .contact textarea {
+      width: 100%;
+      padding: .7rem;
+      background: #222;
+      border: 1px solid #444;
+      color: #eee;
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+    }
+    .contact button {
+      background: var(--neon-b);
+      color: var(--bg-dark);
+      border: none;
+      padding: .7rem 1.4rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background var(--speed);
+    }
+    .contact button:hover { background: var(--neon) }
+    footer {
+      background: rgba(0, 0, 0, .85);
+      text-align: center;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+    footer p {
+      color: #888;
+      font-size: .9rem;
+    }
+    .social { list-style: none; margin-top: 1rem }
+    .social li { display: inline-block; margin: 0 .5rem }
+    .social img {
+      width: 28px;
+      filter: invert(1);
+      transition: transform var(--speed);
+    }
+    .social a:hover img {
+      transform: scale(1.15) rotate(-8deg);
+    }
+  
     /* ========== BACK TO TOP ================================================== */
-    #top{position:fixed;right:1rem;bottom:1rem;width:48px;height:48px;background:var(--neon-b);
-      border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;
-      opacity:0;visibility:hidden;transition:opacity var(--speed),visibility var(--speed);z-index:1000}
-    #top.visible{opacity:1;visibility:visible}
-    #top svg{width:24px;height:24px;fill:var(--bg-dark)}
-  </style>
+    #top {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      width: 48px;
+      height: 48px;
+      background: var(--neon-b);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--speed), visibility var(--speed);
+      z-index: 1000;
+    }
+    #top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    #top svg {
+      width: 24px;
+      height: 24px;
+      fill: var(--bg-dark);
+    }
+  </style>  
 </head>
 <body>
 
@@ -125,6 +677,32 @@
   <header>
     <nav class="navbar flex just-between">
       <div class="logo"><a href="/feed/blog">CyberBlogX~RK</a></div>
+      
+      <div class="music-player">
+        <button id="prev-btn" aria-label="Previous">⏮</button>
+        <button id="play-btn" aria-label="Play/Pause">▶️</button>
+        <button id="next-btn" aria-label="Next">⏭</button>
+      
+        <!-- current time -->
+        <span id="current-time">0:00</span>
+      
+        <!-- seek slider -->
+        <input type="range" id="seek-bar" min="0" max="100" value="0">
+      
+        <!-- duration -->
+        <span id="duration">0:00</span>
+      
+        <!-- volume -->
+        <button id="mute-btn" aria-label="Mute">🔊</button>
+        <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="0.7">
+      
+        <!-- track info -->
+        <span id="track-info">
+            <span class="marquee">Loading playlist…</span>
+          </span>   
+        <audio id="audio-player" preload="auto"></audio>
+      </div>
+      
       <ul class="nav-links">
         <li><a href="/layer/redacted.html">🏠</a></li>
         <li><a id="theme-btn" href="#">💡</a></li>
@@ -438,5 +1016,133 @@
     // Footer year
     document.getElementById('yr').textContent = new Date().getFullYear();
   </script>
+<script>
+    (function() {
+      const audio      = document.getElementById("audio-player");
+      const playBtn    = document.getElementById("play-btn");
+      const prevBtn    = document.getElementById("prev-btn");
+      const nextBtn    = document.getElementById("next-btn");
+      const trackInfo  = document.getElementById("track-info");
+    
+      let playlist      = [];
+      let currentIndex  = 0;
+      let isPlaying     = false;
+    
+      // — Fetch your playlist.json (adjust path if needed) —
+      fetch("/assets/playlist/playlist.json")
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.json();
+        })
+        .then(data => {
+          playlist = data;
+          if (playlist.length) {
+            loadTrack(0);
+          } else {
+            trackInfo.textContent = "No tracks available";
+          }
+        })
+        .catch(err => {
+          console.error("Playlist load error:", err);
+          trackInfo.textContent = "Could not load playlist";
+        });
+    
+      // — Load a track by its index —
+      function loadTrack(idx) {
+        const t = playlist[idx];
+        audio.src            = t.url;
+        trackInfo.innerHTML = `<span class="marquee">${t.title} — ${t.artist}</span>`;
+        currentIndex         = idx;
+      }
+    
+      // — Toggle play / pause —
+      function togglePlayPause() {
+        if (!playlist.length) return;
+        if (isPlaying) audio.pause();
+        else            audio.play();
+      }
+      playBtn.addEventListener("click", togglePlayPause);
+    
+      // — Previous track —
+      prevBtn.addEventListener("click", () => {
+        if (!playlist.length) return;
+        currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+        loadTrack(currentIndex);
+        audio.play();
+      });
+    
+      // — Next track —
+      nextBtn.addEventListener("click", () => {
+        if (!playlist.length) return;
+        currentIndex = (currentIndex + 1) % playlist.length;
+        loadTrack(currentIndex);
+        audio.play();
+      });
+    
+      // — Update button icon on play / pause —
+      audio.addEventListener("play", () => {
+        isPlaying         = true;
+        playBtn.textContent = "❚❚";
+      });
+      audio.addEventListener("pause", () => {
+        isPlaying         = false;
+        playBtn.textContent = "▶️";
+      });
+    
+      // — Auto-advance at end of track —
+      audio.addEventListener("ended", () => nextBtn.click());
+
+    // —— NEW: Seek bar, timer & volume support ——
+
+    const currentTimeElem = document.getElementById("current-time");
+    const durationElem    = document.getElementById("duration");
+    const seekBar         = document.getElementById("seek-bar");
+    const muteBtn         = document.getElementById("mute-btn");
+    const volumeBar       = document.getElementById("volume-bar");
+
+    // 1) When metadata loads, set duration & seekBar.max
+    audio.addEventListener("loadedmetadata", () => {
+    const d = Math.floor(audio.duration);
+    durationElem.textContent = formatTime(d);
+    seekBar.max = d;
+    });
+
+    // 2) As the track plays, update current time & seek position
+    audio.addEventListener("timeupdate", () => {
+    const t = Math.floor(audio.currentTime);
+    currentTimeElem.textContent = formatTime(t);
+    seekBar.value = t;
+    });
+
+    // 3) Let the user drag the seek bar
+    seekBar.addEventListener("input", () => {
+    audio.currentTime = seekBar.value;
+    });
+
+    // 4) Mute/unmute button
+    muteBtn.addEventListener("click", () => {
+    audio.muted = !audio.muted;
+    muteBtn.textContent = audio.muted ? "🔇" : "🔊";
+    });
+
+    // 5) Volume slider
+    volumeBar.addEventListener("input", () => {
+    audio.volume = volumeBar.value;
+    if (audio.muted && audio.volume > 0) audio.muted = false;
+    muteBtn.textContent = audio.muted ? "🔇" : "🔊";
+    });
+
+    // Helper function to convert seconds → M:SS
+    function formatTime(sec) {
+    const m = Math.floor(sec / 60);
+    const s = String(Math.floor(sec % 60)).padStart(2, "0");
+    return `${m}:${s}`;
+    }
+
+
+
+      
+    })();
+    </script>    
 </body>
 </html>
