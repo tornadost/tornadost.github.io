@@ -342,7 +342,15 @@
       backdrop-filter: blur(6px);
       z-index: 100;
     }
-    .navbar { max-width: var(--max); margin: 0 auto; padding: 1rem }
+
+    .navbar {       
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: var(--max); 
+    margin: 0 auto; 
+    padding: 1rem 
+    }
     .logo a {
       font-family: var(--font-mono);
       font-size: 1.5rem;
@@ -350,22 +358,47 @@
       text-decoration: none;
       text-shadow: 0 0 4px var(--neon);
     }
-    .nav-links { list-style: none }
-    .nav-links li { display: inline-block; margin-left: 2rem }
-    .nav-links a {
-      color: var(--neon);
-      text-decoration: none;
-      position: relative;
+
+    /* ─── NAV LINKS (flex + gap) ───────────────────────────────────────────────── */
+    .nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     }
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -4px; left: 0;
-      width: 0; height: 2px;
-      background: var(--neon-b);
-      transition: width var(--speed);
+    .nav-links a,
+    .nav-links button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 1rem;          /* match post page icon size */
+    text-shadow: none !important;
+    color: var(--neon);
+    background: none;
+    border: none;
+    text-decoration: none;
+    position: relative;
+    cursor: pointer;
     }
-    .nav-links a:hover::after { width: 100% }
+    .nav-links a::after,
+    .nav-links button::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--neon-b);
+    transition: width var(--speed);
+    }
+    .nav-links a:hover::after,
+    .nav-links button:hover::after {
+    width: 100%;
+    }
+
+
+
     .nav-toggle { display: none; background: none; border: none; cursor: pointer }
     .hamburger,
     .hamburger::before,
@@ -704,9 +737,9 @@
       </div>
       
       <ul class="nav-links">
-        <li><a href="/layer/redacted.html">🏠</a></li>
-        <li><a id="theme-btn" href="#">💡</a></li>
-        <li><a href="#contact">📧</a></li>
+        <li><a href="/layer/redacted.html" aria-label="Home">🏠</a></li>
+        <li><button id="theme-btn" aria-label="Toggle Theme">💡</button></li>
+        <li><a href="#contact" aria-label="Contact">📧</a></li>
       </ul>
       <button class="nav-toggle" aria-label="Toggle navigation"><span class="hamburger"></span></button>
     </nav>
