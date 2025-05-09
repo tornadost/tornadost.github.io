@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CyberBlogX~RK ./readme.md</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+    /* ========== ROOT & RESET ================================================= */
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    html,body { height:100%; width:100%; background:var(--bg-dark); color:var(--text);
+      scroll-behavior:smooth; overflow-x:hidden; font-family:'Roboto',sans-serif; }
+    :root {
+      --neon: #0f0; /*! --neon-b: #39ff14; */
+      --bg-dark: #000; --bg-light: #111; --text: #eee;
+      --radius: 8px; --speed: .3s; --font-mono: 'Press Start 2P',cursive;
+    }
+    :root.light {
+      --bg-dark: #fafafa; --bg-light: #fff; --text: #222;
+      --neon: #05f; --neon-b: #0ff;
+    }
+
+    /* ========== UTILITIES ==================================================== */
+    .container { max-width: var(--max,1200px); margin:0 auto; padding:1rem; }
+    .flex { display:flex; align-items:center; }
+    .just-between { justify-content:space-between; }
+    .btn {
+      display:inline-block; font-family:var(--font-mono); text-transform:uppercase;
+      padding:.7rem 1.4rem; border:1px solid var(--neon); color:var(--neon);
+      background:transparent; border-radius:var(--radius); letter-spacing:.05em;
+      transition: background var(--speed), color var(--speed), box-shadow var(--speed);
+      margin-left:1rem;
+    }
+    .btn:hover {
+      background:var(--neon); color:var(--bg-dark);
+      box-shadow:0 0 8px var(--neon),0 0 16px var(--neon-b);
+    }
+    .btn.neon-flicker {
+      animation: flicker 1.5s infinite;
+    }
+    @keyframes flicker {
+      0%,18%,22%,25%,53%,57%,100% { opacity:1; }
+      20%,24%,55% { opacity:.4; }
+    }
+
+    /* ========== HEADER ======================================================= */
+    header {
+      position:fixed; top:0; left:0; width:100%;
+      background:rgba(0,0,0,.8); backdrop-filter:blur(6px); z-index:100;
+    }
+    .navbar { max-width:var(--max,1200px); margin:0 auto; padding:1rem; }
+    .logo a {
+      font-family:var(--font-mono); font-size:1.5rem; color:var(--neon);
+      text-decoration:none; text-shadow:0 0 4px var(--neon);
+    }
+    .nav-links { list-style:none; display:flex; align-items:center; gap:1rem; }
+    .nav-links li { display:block; }
+    .nav-links a, .nav-links button {
+      color:var(--neon); text-decoration:none; position:relative;
+      background:none; border:none; cursor:pointer; font-family:var(--font-mono);
+    }
+    .nav-links a::after, .nav-links button::after {
+      content:''; position:absolute; bottom:-4px; left:0; width:0; height:2px;
+      background:var(--neon-b); transition:width var(--speed);
+    }
+    .nav-links a:hover::after, .nav-links button:hover::after {
+      width:100%;
+    }
+    /* == Light-bulb & envelope hover just like “Messages” underlines + flicker == */
+    #theme-btn {
+      /* make sure it’s positioned for its own underline */
+      position:relative;
+    }
+    #theme-btn:hover {
+      /* cancel the btn:hover background/glow */
+      background:transparent !important;
+      color:var(--neon) !important;
+      box-shadow:none !important;
+      animation:flicker 1.5s infinite;
+    }
+    #theme-btn::after {
+      content:'';
+      position:absolute; bottom:-4px; left:0;
+      width:0; height:2px;
+      background:var(--neon-b);
+      transition:width var(--speed);
+    }
+    #theme-btn:hover::after {
+      width:100%;
+    }
+    /* envelope link (📧) already underlines on hover via .nav-links a:hover::after */
+
+    .nav-toggle { display:none; background:none; border:none; cursor:pointer; }
+    .hamburger, .hamburger::before, .hamburger::after {
+      width:28px; height:3px; background:var(--neon);
+      display:block; position:relative; transition:all var(--speed);
+    }
+    .hamburger::before, .hamburger::after { content:''; position:absolute; left:0; }
+    .hamburger::before { top:-8px; } .hamburger::after { top:8px; }
+    .hamburger.open { transform:rotate(45deg); }
+    .hamburger.open::before { top:0; transform:rotate(90deg); }
+    .hamburger.open::after { top:0; opacity:0; }
+
+    /* ==== PROGRESS BAR UNDER HEADER ==== */
+    #progress-container {
+      position:absolute; bottom:0; left:0; width:100%; height:4px;
+      background:var(--bg-light);
+    }
+    #progress-bar {
+      width:0%; height:100%; background:var(--neon);
+    }
+
+    @media(max-width:768px){
+      .nav-toggle { display:block; }
+      .nav-links {
+        display:none; flex-direction:column; position:fixed; top:60px; right:0;
+        width:200px; height:calc(100% - 60px); background:var(--bg-light);
+        padding:2rem;
+      }
+      .nav-links.show { display:flex; }
+      .nav-links li { margin:1rem 0; }
+    }
+
+    /* ========== POST LAYOUT ================================================== */
+    .post-content {
+      max-width:800px; margin:100px auto 2rem auto; line-height:1.6; padding:0 1rem;
+    }
+    .post-content h2, .post-content h3, .post-content h4 { margin-top:2rem; }
+    h1 {
+      font-family:var(--font-mono); color:var(--neon-b); margin-bottom:1rem;
+    }
+
+    /* ========== BACK TO TOP ================================================== */
+    #top {
+      position:fixed; right:1rem; bottom:1rem; width:48px; height:48px;
+      background:var(--neon-b); border-radius:50%; display:flex;
+      align-items:center; justify-content:center; cursor:pointer;
+      opacity:0; visibility:hidden; transition:opacity var(--speed),visibility var(--speed);
+      z-index:1000;
+    }
+    #top.visible { opacity:1; visibility:visible; }
+    #top svg { width:24px; height:24px; fill:var(--bg-dark); }
+  </style>
+
+  <!-- Marked.js for Markdown rendering + header-ID support -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    marked.setOptions({
+      gfm: true,
+      headerIds: true,
+      headerPrefix: '',
+      mangle: false
+    });
+  </script>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <nav class="navbar flex just-between">
+      <div class="logo"><a href="/feed/blog">CyberBlogX~RK</a></div>
+      <ul class="nav-links">
+        <li><a href="/layer/redacted.html">index</a></li>
+        <li>
+          <button id="audio-toggle" class="btn neon-flicker" title="Unmute Music">
+            🔈 Unmute
+          </button>
+        </li>
+        <li>
+          <button id="audio-playpause" class="btn neon-flicker" title="Pause Music">
+            ⏸ Pause
+          </button>
+        </li>
+        <li>
+          <button id="theme-btn" class="btn" title="Toggle Light/Dark">
+            💡
+          </button>
+        </li>
+        <li><a href="mailto:contact@rkeaves.online">🏠</a></li>  
+        <li><a href="mailto:contact@rkeaves.online">📧</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span class="hamburger"></span>
+      </button>
+    </nav>
+    <div id="progress-container"><div id="progress-bar"></div></div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <article class="post-content container">
+    <h1 id="title">Loading…</h1>
+    <div id="body">Please wait.</div>
+
+    <!-- Video (paused) -->
+    <section id="video-section" style="display:none; margin-top:2rem;">
+      <h2>Featured Video</h2>
+      <iframe
+        id="video-frame" width="560" height="315"
+        src="" title="YouTube video player" frameborder="0"
+        allow="encrypted-media; fullscreen" allowfullscreen>
+      </iframe>
+    </section>
+
+    <!-- Audio (autoplay, muted) -->
+    <section id="audio-section" style="display:none; margin-top:2rem;">
+      <h2>Background Audio</h2>
+      <audio
+        id="audio-player" controls autoplay loop muted
+        style="width:100%; margin-top:.5rem;">
+        <source src="" type="audio/flac">
+        Your browser does not support the HTML5 Audio element.
+      </audio>
+    </section>
+  </article>
+
+  <!-- BACK TO TOP -->
+  <div id="top" title="Back to top">
+    <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h16z"/></svg>
+  </div>
+
+  <script>
+    // THEME TOGGLE
+    const root = document.documentElement;
+    let theme = localStorage.getItem('theme') || 'dark';
+    const applyTheme = () => {
+      root.classList.toggle('light', theme==='light');
+      localStorage.setItem('theme', theme);
+    };
+    applyTheme();
+    document.getElementById('theme-btn').addEventListener('click', e=>{
+      e.preventDefault();
+      theme = theme==='dark'?'light':'dark';
+      applyTheme();
+    });
+
+    // MOBILE NAV
+    document.querySelector('.nav-toggle').addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.toggle('show');
+      document.querySelector('.hamburger').classList.toggle('open');
+    });
+
+    // BACK TO TOP
+    const topBtn = document.getElementById('top');
+    window.addEventListener('scroll',()=>{
+      topBtn.classList.toggle('visible', window.scrollY>300);
+    });
+    topBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+    // AUDIO CONTROLS & PROGRESS
+    const audio = document.getElementById('audio-player'),
+          toggleBtn = document.getElementById('audio-toggle'),
+          pauseBtn  = document.getElementById('audio-playpause');
+
+    toggleBtn.addEventListener('click',()=>{
+      audio.muted=!audio.muted;
+      toggleBtn.innerHTML = audio.muted?'🔈 Unmute':'🔊 Mute';
+      toggleBtn.classList.remove('neon-flicker');
+      void toggleBtn.offsetWidth;
+      toggleBtn.classList.add('neon-flicker');
+    });
+    pauseBtn.addEventListener('click',()=>{
+      if(audio.paused){ audio.play(); pauseBtn.innerHTML='⏸ Pause'; }
+      else { audio.pause(); pauseBtn.innerHTML='▶️ Play'; }
+      pauseBtn.classList.remove('neon-flicker');
+      void pauseBtn.offsetWidth;
+      pauseBtn.classList.add('neon-flicker');
+    });
+    audio.addEventListener('timeupdate',()=>{
+      if(audio.duration){
+        document.getElementById('progress-bar').style.width =
+          (audio.currentTime/audio.duration*100)+'%';
+      }
+    });
+
+    // LOAD POST + Markdown + Media
+    const m = window.location.pathname.match(/\/posts\/feed\/(\d+)\/\1\.html$/);
+    if(!m) {
+      document.getElementById('body').textContent='Invalid post URL';
+    } else {
+      const id=m[1];
+      fetch(`./${id}.json`)
+        .then(r=>r.ok?r.json():Promise.reject())
+        .then(j=>{
+          document.getElementById('title').textContent=j.title;
+          if(j.markdown){
+            fetch(`./${id}.md`)
+              .then(r=>r.ok?r.text():Promise.reject())
+              .then(md=>document.getElementById('body').innerHTML=marked.parse(md))
+              .catch(()=>document.getElementById('body').textContent='Content not found.');
+          } else {
+            document.getElementById('body').innerHTML=j.content||'';
+          }
+          if(j.video_url){
+            document.getElementById('video-frame').src=j.video_url;
+            document.getElementById('video-section').style.display='block';
+          }
+          if(j.audio_url){
+            document.getElementById('audio-section').style.display='block';
+            audio.src=j.audio_url;
+            audio.play().catch(()=>{/* gesture required */});
+          }
+        })
+        .catch(()=>document.getElementById('body').textContent='Post not found.');
+    }
+  </script>
+</body>
+</html>
