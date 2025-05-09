@@ -37,64 +37,35 @@
       --neon-b: #7f8cfa;
     }
 
-    /* ─── BLUE‐THEME VARIATION ─── */
-    html.light.blue-theme {
-      --neon:   #4D9EFF;
-      --neon-b: #6BC1FF;
-      --bg-dark:#f0f4ff;
-      --bg-light:#ffffff;
-      --text:   #1a1f36;
+    /* ─── MUSIC PLAYER (in header) ─── */
+    .music-player {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 1rem;
+    font-family: var(--font-mono);
+    color: var(--neon);
+    }
+    .music-player button {
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: var(--neon);
+    transition: color var(--speed), text-shadow var(--speed);
+    }
+    .music-player button:hover {
+    color: var(--neon-b);
+    text-shadow: 0 0 4px var(--neon-b);
+    }
+    #track-info {
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
     }
 
-    html.light.blue-theme .water-icon {
-    color: var(--neon) !important;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
-    }
-    html.light.blue-theme .water-icon::after {
-    background: var(--neon-b) !important;
-    }
-
-
-    /* ─── BLOOD‐THEME VARIATION ─── */
-    html.light.blood-theme {
-      --neon:   #E03C31;   /* deep blood-red */
-      --neon-b: #F08080;   /* lighter “bruise” red */
-      --bg-dark:#2a0a0a;
-      --bg-light:#3d1f1f;
-      --text:    #f0dede;
-    }
-
-
-    html.light.blood-theme .blood-icon {
-    color: var(--neon) !important;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.4);
-    }
-    html.light.blood-theme .blood-icon::after {
-    background: var(--neon-b) !important;
-    }
-
-    /* right after your .blood-icon */
-    .water-icon {
-    color: var(--neon) !important;
-    text-shadow:
-        0 1px 2px rgba(0,0,0,0.2),
-        0 2px 4px rgba(0,0,0,0.1);
-    }
-    .water-icon::after {
-    background: var(--neon-b) !important;
-    }
-
-    /* ─── SPECIAL STYLING FOR BLOOD ICON ─── */
-    .blood-icon {
-      /* give it its own drop-shadow and bold red look */
-      color: var(--neon) !important;
-      text-shadow:
-        0 1px 2px rgba(0,0,0,0.6),
-        0 2px 4px rgba(0,0,0,0.4);
-    }
-    .blood-icon::after {
-      background: var(--neon-b) !important;
-    }
 
     /* ─── LIGHT THEME HERO ADJUSTMENTS ─── */
     /* make sure your logo, links & buttons pick up the new vars */
@@ -639,24 +610,21 @@
   <!-- ========= HEADER ========= -->
   <header>
     <nav class="navbar flex just-between">
-      <div class="logo">
-        <a href="/feed/blog">CyberBlogX~RK</a>
-      </div>
+      <div class="logo"><a href="/feed/blog">CyberBlogX~RK</a></div>
       <ul class="nav-links">
+        <div class="music-player">
+            <button id="prev-btn" aria-label="Previous track">⏮</button>
+            <button id="play-btn" aria-label="Play/Pause">▶️</button>
+            <button id="next-btn" aria-label="Next track">⏭</button>
+            <span id="track-info">Loading playlist…</span>
+            <!-- hidden native audio element -->
+            <audio id="audio-player" preload="auto"></audio>
+          </div>
         <li><a href="/layer/redacted.html">🏠</a></li>
         <li><a id="theme-btn" href="#">💡</a></li>
         <li><a href="#contact">📧</a></li>
-        <!-- New blood-drop icon -->
-        <li>
-          <a href="#blood" class="blood-icon" title="Blood Drop">🩸</a>
-        </li>
-        <li>
-            <a href="#blue" class="water-icon" title="Blue Drop">💧</a>
-          </li>
       </ul>
-      <button class="nav-toggle" aria-label="Toggle navigation">
-        <span class="hamburger"></span>
-      </button>
+      <button class="nav-toggle" aria-label="Toggle navigation"><span class="hamburger"></span></button>
     </nav>
   </header>
 
@@ -758,54 +726,25 @@
   <div id="top" title="Back to top"><svg viewBox="0 0 24 24"><path d="M12 4l-8 8h16z"/></svg></div>
 
   <script>
-    /* ------- THEME, NAV & HERO WITH BLUE/BLOOD CYCLE ------- */
-    const root     = document.documentElement;
-    const themeBtn = document.getElementById('theme-btn');
-  
-    // Initialize from localStorage (dark, light+blue, or light+blood)
-    let themeState = localStorage.getItem('themeState') || 'dark';
-  
+    /* ------- THEME & NAV & HERO ------- */
+    const root = document.documentElement,
+          themeBtn = document.getElementById('theme-btn');
+    let theme = localStorage.getItem('theme') || 'dark';
     const applyTheme = () => {
-      // Clear all mode classes
-      root.classList.remove('light', 'blue-theme', 'blood-theme');
-  
-      if (themeState === 'dark') {
-        // no classes → dark
-      } else if (themeState === 'blue') {
-        root.classList.add('light', 'blue-theme');
-      } else if (themeState === 'blood') {
-        root.classList.add('light', 'blood-theme');
-      }
-  
-      // Persist state
-      localStorage.setItem('themeState', themeState);
+      root.classList.toggle('light', theme === 'light');
+      localStorage.setItem('theme', theme);
     };
-  
-    // Cycle order: dark → blue → blood → dark
+    applyTheme();
     themeBtn.addEventListener('click', e => {
       e.preventDefault();
-  
-      if (themeState === 'dark') {
-        themeState = 'blue';
-      } else if (themeState === 'blue') {
-        themeState = 'blood';
-      } else {
-        themeState = 'dark';
-      }
-  
+      theme = theme === 'dark' ? 'light' : 'dark';
       applyTheme();
     });
-  
-    // apply on load
-    applyTheme();
-  
-    // mobile nav toggle (unchanged)
+
     document.querySelector('.nav-toggle').addEventListener('click', () => {
       document.querySelector('.nav-links').classList.toggle('show');
       document.querySelector('.hamburger').classList.toggle('open');
     });
-  </script>
-  
 
     /* ------- BACK TO TOP ------- */
     const topBtn = document.getElementById('top');
@@ -993,5 +932,71 @@
     // Footer year
     document.getElementById('yr').textContent = new Date().getFullYear();
   </script>
+  <script>
+    (function(){
+      const audio     = document.getElementById('audio-player');
+      const playBtn   = document.getElementById('play-btn');
+      const prevBtn   = document.getElementById('prev-btn');
+      const nextBtn   = document.getElementById('next-btn');
+      const info      = document.getElementById('track-info');
+  
+      let playlist = [];
+      let current  = 0;
+      let playing  = false;
+  
+      // Load playlist.json
+      fetch('assets/playlist/playlist.json')
+        .then(r => r.json())
+        .then(json => {
+          playlist = json;
+          if (playlist.length) loadTrack(0);
+        })
+        .catch(err => {
+          console.error('Playlist load error:', err);
+          info.textContent = 'Could not load playlist';
+        });
+  
+      function loadTrack(idx) {
+        const track = playlist[idx];
+        audio.src      = track.url;
+        info.textContent = `${track.title} — ${track.artist}`;
+        current = idx;
+      }
+  
+      function playPause() {
+        if (!playlist.length) return;
+        if (playing) {
+          audio.pause();
+        } else {
+          audio.play();
+        }
+      }
+      audio.addEventListener('play', () => {
+        playing = true;
+        playBtn.textContent = '❚❚';
+      });
+      audio.addEventListener('pause', () => {
+        playing = false;
+        playBtn.textContent = '▶️';
+      });
+  
+      playBtn.addEventListener('click', playPause);
+      prevBtn.addEventListener('click', () => {
+        let idx = (current - 1 + playlist.length) % playlist.length;
+        loadTrack(idx);
+        audio.play();
+      });
+      nextBtn.addEventListener('click', () => {
+        let idx = (current + 1) % playlist.length;
+        loadTrack(idx);
+        audio.play();
+      });
+  
+      // Auto-advance when track ends
+      audio.addEventListener('ended', () => {
+        nextBtn.click();
+      });
+    })();
+  </script>  
 </body>
 </html>
