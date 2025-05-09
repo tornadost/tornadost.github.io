@@ -32,11 +32,18 @@
     :root.light {
       --bg-dark: #f5f7fa;
       --bg-light: #ffffff;
-      --text: #2c3e50;
+      --text: #191d20;
       --neon: #4c5fd7;
       --neon-b: #7f8cfa;
     }
-  
+    /* make excerpts and their links dark on light theme */
+    :root.light .post-excerpt {
+    color: #222 !important;
+    }
+    :root.light .post-excerpt a {
+    color: #000 !important;
+    text-decoration: underline;  /* optional */
+    }  
 
     /* Give the thank-you message some breathing room */
     #my-form-status {
