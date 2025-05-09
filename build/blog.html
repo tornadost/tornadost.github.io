@@ -37,6 +37,47 @@
       --neon-b: #0ff;
     }
   
+
+    /* Give the thank-you message some breathing room */
+    #my-form-status {
+    display: block;        /* ensure it’s a block-level element */
+    margin-top: 0.75rem;   /* push it down a bit from the button */
+    color: var(--neon-b);  /* optional: make it pop in your theme color */
+    }
+
+    
+    /* ========== ABSOLUTE META FOOTER ========== */
+    .post-card {
+    position: relative;                  /* establish positioning context */
+    padding-bottom: 2.5rem;              /* room for the absolutely-positioned meta */
+    }
+
+    .post-meta {
+    position: absolute !important;       /* pull out of the normal flow */
+    bottom: 6px !important;              /* exactly 6px above the card border */
+    left: 1rem !important;               /* align with your content padding */
+    right: 1rem !important;              /* stretch to same padding on right */
+    margin: 0 !important;                /* reset any margins */
+    }
+
+
+    /* ========= THUMBNAIL SIZE CONTROL ====================================== */
+    .post-thumbnail {
+    /* lock into a 16∶9 box, maxing out at 200px tall */
+    aspect-ratio: 16 / 9;
+    max-height: 200px;
+    overflow: hidden;
+    }
+
+    .post-thumbnail img {
+    /* fill that box, cropping as needed */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    }
+
+
+
     /* ========== CARD CONTENT VERTICAL ALIGNMENT ============================ */
     .post-card {
     display: flex;
@@ -56,6 +97,16 @@
 
     .post-meta {
     margin-top: auto;      /* always sit at bottom of .post-content */
+    }
+
+    /* ========== SINGLE‐ITEM GRID CENTERING & MAX WIDTH ========== */
+    .posts-grid {
+    justify-items: center;               /* center each card in its column */
+    }
+
+    .post-card {
+    width: 100%;                         /* fill its grid slot */
+    max-width: 355px;                    /* but never exceed 600px */
     }
 
 
