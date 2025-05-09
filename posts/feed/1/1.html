@@ -39,6 +39,11 @@
           <span class="marquee">Loading playlist…</span>
         </span>
         <audio id="audio-player" preload="auto"></audio>
+
+        <!-- ==== MOVED PROGRESS BAR INTO MUSIC PLAYER ==== -->
+        <div id="progress-container">
+          <div id="progress-bar"></div>
+        </div>
       </div>
 
       <!-- ========== NAV LINKS ========== -->
@@ -53,7 +58,7 @@
         <span class="hamburger"></span>
       </button>
     </nav>
-    <div id="progress-container"><div id="progress-bar"></div></div>
+    <!-- (old progress-container removed from here) -->
   </header>
 
   <!-- ========= POST CONTENT ========= -->
@@ -63,7 +68,7 @@
 
     <!-- optional video -->
     <section id="video-section" style="display:none; margin-top:2rem;">
-      <h2></h2>
+      <h2>Featured Video</h2>
       <iframe
         id="video-frame" width="622" height="350"
         src="" frameborder="0"
@@ -73,7 +78,7 @@
 
     <!-- optional background audio -->
     <section id="audio-section" style="display:none; margin-top:2rem;">
-      <h2></h2>
+      <h2>Background Audio</h2>
       <audio
         id="bg-audio" controls autoplay loop muted
         style="width:80%; margin-top:.5rem;">
