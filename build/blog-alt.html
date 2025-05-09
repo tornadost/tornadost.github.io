@@ -49,13 +49,24 @@
     }
 
     .music-player input[type="range"] {
-    -webkit-appearance: none;
-    width: 100px;
-    height: 4px;
-    background: var(--neon-b);
+    -webkit-appearance: none; /* remove default WebKit styling */
+    -moz-appearance:    none; /* remove default Firefox styling */
+    appearance:         none; /* remove default styling in all modern browsers */
+
+    width:   100px;
+    height:  4px;
+    background:    var(--neon-b);
     border-radius: 2px;
-    cursor: pointer;
+    cursor:        pointer;
     }
+
+    .music-player input[type="range"]::-moz-range-thumb {
+    width:   10px;
+    height:  10px;
+    border-radius: 50%;
+    background:    var(--neon);
+    }
+
 
     /* thumb */
     .music-player input[type="range"]::-webkit-slider-thumb {
@@ -986,7 +997,7 @@
       let isPlaying     = false;
     
       // — Fetch your playlist.json (adjust path if needed) —
-      fetch("assets/playlist/playlist.json")
+      fetch("/assets/playlist/playlist.json")
         .then(res => {
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           return res.json();
@@ -1048,6 +1059,57 @@
     
       // — Auto-advance at end of track —
       audio.addEventListener("ended", () => nextBtn.click());
+
+    // —— NEW: Seek bar, timer & volume support ——
+
+    const currentTimeElem = document.getElementById("current-time");
+    const durationElem    = document.getElementById("duration");
+    const seekBar         = document.getElementById("seek-bar");
+    const muteBtn         = document.getElementById("mute-btn");
+    const volumeBar       = document.getElementById("volume-bar");
+
+    // 1) When metadata loads, set duration & seekBar.max
+    audio.addEventListener("loadedmetadata", () => {
+    const d = Math.floor(audio.duration);
+    durationElem.textContent = formatTime(d);
+    seekBar.max = d;
+    });
+
+    // 2) As the track plays, update current time & seek position
+    audio.addEventListener("timeupdate", () => {
+    const t = Math.floor(audio.currentTime);
+    currentTimeElem.textContent = formatTime(t);
+    seekBar.value = t;
+    });
+
+    // 3) Let the user drag the seek bar
+    seekBar.addEventListener("input", () => {
+    audio.currentTime = seekBar.value;
+    });
+
+    // 4) Mute/unmute button
+    muteBtn.addEventListener("click", () => {
+    audio.muted = !audio.muted;
+    muteBtn.textContent = audio.muted ? "🔇" : "🔊";
+    });
+
+    // 5) Volume slider
+    volumeBar.addEventListener("input", () => {
+    audio.volume = volumeBar.value;
+    if (audio.muted && audio.volume > 0) audio.muted = false;
+    muteBtn.textContent = audio.muted ? "🔇" : "🔊";
+    });
+
+    // Helper function to convert seconds → M:SS
+    function formatTime(sec) {
+    const m = Math.floor(sec / 60);
+    const s = String(Math.floor(sec % 60)).padStart(2, "0");
+    return `${m}:${s}`;
+    }
+
+
+
+      
     })();
     </script>    
 </body>
