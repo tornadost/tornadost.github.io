@@ -37,6 +37,28 @@
       --neon-b: #0ff;
     }
   
+    /* ========== CARD CONTENT VERTICAL ALIGNMENT ============================ */
+        .post-card {
+    display: flex;
+    flex-direction: column;
+    }
+
+    .post-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;               /* make content fill the card */
+    padding: 1rem;         /* keep your existing padding */
+    }
+
+    .post-excerpt {
+    flex: 1;               /* push .post-meta down */
+    }
+
+    .post-meta {
+    margin-top: auto;      /* always sit at bottom of .post-content */
+    }
+
+
     /* ========== UTILITIES ==================================================== */
     .container { max-width: var(--max); margin: 0 auto; padding: 1rem }
     .flex { display: flex; align-items: center }
