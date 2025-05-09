@@ -38,9 +38,20 @@
     }
   
     /* ========= TIGHTEN META TO BOTTOM ========= */
+    /* Make the parent a positioning context */
     .post-content {
-    /* keep top/right/left at 1rem, bottom at exactly 6px */
-    padding: 1rem 1rem 6px;
+    position: relative;
+    padding: 1rem;       /* your existing padding */
+    padding-bottom: 1.5rem; /* extra space to avoid text overlap */
+    }
+
+    /* Absolutely position the meta line */
+    .post-meta {
+    position: absolute;
+    left: 1rem;          /* same as your .post-content padding-left */
+    right: 1rem;         /* same as padding-right */
+    bottom: 6px;         /* exactly 6px above the card’s bottom border */
+    margin: 0;           /* cancel any auto‐margin */
     }
 
 
@@ -89,7 +100,7 @@
 
     .post-card {
     width: 100%;                         /* fill its grid slot */
-    max-width: 400px;                    /* but never exceed 600px */
+    max-width: 380px;                    /* but never exceed 600px */
     }
 
 
