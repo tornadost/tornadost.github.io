@@ -36,79 +36,113 @@
       --neon: #05f;
       --neon-b: #0ff;
     }
-  
+
+    /* —— PROGRESS BAR —— */
+    #loading-bar.progress {
+      position: relative;
+      width: 100%;
+      height: 3px;
+      margin-bottom: 1rem;
+      background: rgba(255,255,255,.1);
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity .3s ease;
+      pointer-events: none;
+      z-index: 10;
+    }
+    #loading-bar.progress.active {
+      opacity: 1;
+    }
+    #loading-bar .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: var(--neon-b);
+      transition: width .4s ease;
+    }
 
     /* Give the thank-you message some breathing room */
     #my-form-status {
-    display: block;        /* ensure it’s a block-level element */
-    margin-top: 0.75rem;   /* push it down a bit from the button */
-    color: var(--neon-b);  /* optional: make it pop in your theme color */
+      display: block;        /* ensure it’s a block-level element */
+      margin-top: 0.75rem;   /* push it down a bit from the button */
+      color: var(--neon-b);  /* optional: make it pop in your theme color */
     }
 
-    
     /* ========== ABSOLUTE META FOOTER ========== */
     .post-card {
-    position: relative;                  /* establish positioning context */
-    padding-bottom: 2.5rem;              /* room for the absolutely-positioned meta */
+      position: relative;                  /* establish positioning context */
+      padding-bottom: 2.5rem;              /* room for the absolutely-positioned meta */
+      display: flex;
+      flex-direction: column;
     }
-
     .post-meta {
-    position: absolute !important;       /* pull out of the normal flow */
-    bottom: 6px !important;              /* exactly 6px above the card border */
-    left: 1rem !important;               /* align with your content padding */
-    right: 1rem !important;              /* stretch to same padding on right */
-    margin: 0 !important;                /* reset any margins */
+      position: absolute !important;       /* pull out of the normal flow */
+      bottom: 6px !important;              /* exactly 6px above the card border */
+      left: 1rem !important;               /* align with your content padding */
+      right: 1rem !important;              /* stretch to same padding on right */
+      margin: 0 !important;                /* reset any margins */
+      font-size: .75rem;
+      color: #888;
     }
-
 
     /* ========= THUMBNAIL SIZE CONTROL ====================================== */
     .post-thumbnail {
-    /* lock into a 16∶9 box, maxing out at 200px tall */
-    aspect-ratio: 16 / 9;
-    max-height: 200px;
-    overflow: hidden;
+      /* lock into a 16∶9 box, maxing out at 200px tall */
+      aspect-ratio: 16 / 9;
+      max-height: 200px;
+      overflow: hidden;
     }
-
     .post-thumbnail img {
-    /* fill that box, cropping as needed */
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+      /* fill that box, cropping as needed */
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
-
-
 
     /* ========== CARD CONTENT VERTICAL ALIGNMENT ============================ */
-    .post-card {
-    display: flex;
-    flex-direction: column;
-    }
-
     .post-content {
-    display: flex;
-    flex-direction: column;
-    flex: 1;               /* make content fill the card */
-    padding: 1rem;         /* keep your existing padding */
+      display: flex;
+      flex-direction: column;
+      flex: 1;               /* make content fill the card */
+      padding: 1rem;         /* keep your existing padding */
     }
-
     .post-excerpt {
-    flex: 1;               /* push .post-meta down */
-    }
-
-    .post-meta {
-    margin-top: auto;      /* always sit at bottom of .post-content */
+      flex: 1;               /* push .post-meta down */
+      color: #ccc;
+      font-size: .95rem;
+      line-height: 1.55;
+      margin-bottom: .8rem;
     }
 
     /* ========== SINGLE‐ITEM GRID CENTERING & MAX WIDTH ========== */
     .posts-grid {
-    justify-items: center;               /* center each card in its column */
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+      justify-items: center;               /* center each card in its column */
     }
-
     .post-card {
-    width: 100%;                         /* fill its grid slot */
-    max-width: 355px;                    /* but never exceed 600px */
+      width: 100%;                         /* fill its grid slot */
+      max-width: 355px;                    /* but never exceed 355px */
+      background: var(--bg-light);
+      border: 1px solid var(--neon);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform var(--speed), box-shadow var(--speed), opacity .3s;
     }
-
+    .post-card.hidden { opacity: 0 }
+    .post-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 8px var(--neon-b);
+    }
+    .post-card:hover .post-thumbnail img {
+      transform: scale(1.05);
+    }
+    .post-title {
+      font-size: 1.2rem;
+      color: var(--neon-b);
+      margin-bottom: .4rem;
+    }
 
     /* ========== UTILITIES ==================================================== */
     .container { max-width: var(--max); margin: 0 auto; padding: 1rem }
@@ -131,7 +165,7 @@
       color: var(--bg-dark);
       box-shadow: 0 0 8px var(--neon), 0 0 16px var(--neon-b);
     }
-  
+
     /* ========== HEADER ======================================================= */
     header {
       position: fixed;
@@ -185,8 +219,7 @@
     .hamburger::after { top: 8px }
     .hamburger.open { transform: rotate(45deg) }
     .hamburger.open::before {
-      top: 0;
-      transform: rotate(90deg);
+      top: 0; transform: rotate(90deg);
     }
     .hamburger.open::after { top: 0; opacity: 0 }
     @media(max-width: 768px) {
@@ -204,7 +237,7 @@
       .nav-links.show { display: flex }
       .nav-links li { margin: 1rem 0 }
     }
-  
+
     /* ========== HERO ========================================================= */
     .hero {
       height: auto; /* reduced from 70vh */
@@ -242,8 +275,8 @@
       animation: pulse 2s infinite;
     }
     @keyframes flicker {
-      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1 }
-      20%, 24%, 55% { opacity: .35 }
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1 }  
+      20%, 24%, 55%                 { opacity: .35 }
     }
     @keyframes pulse {
       0%   { box-shadow: 0 0 4px var(--neon) }
@@ -254,7 +287,7 @@
       to { opacity: 0; visibility: hidden }
     }
     .hero.hidden { animation: fadeOut .8s forwards }
-  
+
     /* ========== SEARCH & TAGS =============================================== */
     .search-bar {
       margin: 2rem 0 0;
@@ -296,69 +329,7 @@
       background: var(--neon-b);
       color: var(--bg-dark);
     }
-  
-    /* ========== POSTS GRID =================================================== */
-    .posts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-    .post-card {
-      background: var(--bg-light);
-      border: 1px solid var(--neon);
-      border-radius: var(--radius);
-      overflow: hidden;
-      transition: transform var(--speed), box-shadow var(--speed), opacity .3s;
-    }
-    .post-card.hidden { opacity: 0 }
-    .post-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 0 8px var(--neon-b);
-    }
-    .post-thumbnail img {
-      width: 100%;
-      display: block;
-      object-fit: cover;
-      min-height: 160px;
-      transition: transform .6s;
-      will-change: transform;
-    }
-    .post-card:hover .post-thumbnail img {
-      transform: scale(1.05);
-    }
-    .post-content { padding: 1rem }
-    .post-title {
-      font-size: 1.2rem;
-      color: var(--neon-b);
-      margin-bottom: .4rem;
-    }
-    .post-excerpt {
-      color: #ccc;
-      font-size: .95rem;
-      line-height: 1.55;
-      margin-bottom: .8rem;
-    }
-    .post-meta { font-size: .75rem; color: #888 }
-    .skeleton {
-      background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
-      background-size: 200% 100%;
-      animation: skeleton 1.25s infinite;
-    }
-    @keyframes skeleton {
-      0%   { background-position: 200% }
-      100% { background-position: -200% }
-    }
-    .lazy {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity .6s ease-out, transform .6s ease-out;
-    }
-    .lazy.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  
+
     /* ========== PAGINATION =================================================== */
     .pagination {
       display: flex;
@@ -383,7 +354,7 @@
       transition: width var(--speed);
     }
     .pagination a:hover::after { width: 100% }
-  
+
     /* ========== CONTACT & FOOTER ============================================ */
     .contact { margin: 4rem 0 }
     .contact form {
@@ -440,7 +411,7 @@
     .social a:hover img {
       transform: scale(1.15) rotate(-8deg);
     }
-  
+
     /* ========== BACK TO TOP ================================================== */
     #top {
       position: fixed;
@@ -468,7 +439,7 @@
       height: 24px;
       fill: var(--bg-dark);
     }
-  </style>  
+  </style>
 </head>
 <body>
 
@@ -481,7 +452,9 @@
         <li><a id="theme-btn" href="#">💡</a></li>
         <li><a href="#contact">📧</a></li>
       </ul>
-      <button class="nav-toggle" aria-label="Toggle navigation"><span class="hamburger"></span></button>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span class="hamburger"></span>
+      </button>
     </nav>
   </header>
 
@@ -499,6 +472,13 @@
       <button id="clear" class="btn hidden">Clear</button>
     </div>
     <div id="tag-wrap" class="tags"></div>
+
+    <!-- ========= LOADING BAR ========= -->
+    <div id="loading-bar" class="progress">
+      <div class="progress-bar"></div>
+    </div>
+
+    <!-- ========= POSTS GRID ========= -->
     <section id="grid" class="posts-grid"></section>
     <nav id="pager" class="pagination"></nav>
   </main>
@@ -507,66 +487,27 @@
   <section class="contact" id="contact">
     <form id="my-form" action="https://formspree.io/f/xyzwjypw" method="POST">
       <h2>Get in Touch</h2>
-  
+
       <label>
         Name
         <input name="name" type="text" required>
       </label>
-  
+
       <label>
         Email
         <input name="email" type="email" required>
       </label>
-  
+
       <label>
         Message
         <textarea name="message" rows="5" required></textarea>
       </label>
-  
+
       <button type="submit">Send</button>
       <p id="my-form-status"></p>
     </form>
   </section>
-  
-  <script>
-    (function() {
-      const form   = document.getElementById("my-form");
-      const status = document.getElementById("my-form-status");
-  
-      async function handleSubmit(event) {
-        event.preventDefault();
-        status.textContent = "Sending…";
-  
-        const data = new FormData(form);
-        try {
-          const res = await fetch(form.action, {
-            method: form.method,
-            body: data,
-            headers: { "Accept": "application/json" }
-          });
-  
-          if (res.ok) {
-            status.textContent = "Thanks for your submission!";
-            form.reset();
-          } else {
-            const json = await res.json();
-            if (json.errors) {
-              status.textContent = json.errors
-                .map(err => err.message)
-                .join(", ");
-            } else {
-              status.textContent = "Oops! There was a problem submitting your form.";
-            }
-          }
-        } catch (err) {
-          status.textContent = "Network error. Please try again later.";
-        }
-      }
-  
-      form.addEventListener("submit", handleSubmit);
-    })();
-  </script>
-  
+
   <!-- ========= FOOTER ========= -->
   <footer>
     <div class="container">
@@ -580,13 +521,15 @@
   </footer>
 
   <!-- ========= BACK TO TOP ========= -->
-  <div id="top" title="Back to top"><svg viewBox="0 0 24 24"><path d="M12 4l-8 8h16z"/></svg></div>
+  <div id="top" title="Back to top">
+    <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h16z"/></svg>
+  </div>
 
   <script>
     /* ------- THEME & NAV & HERO ------- */
-    const root = document.documentElement,
+    const root     = document.documentElement,
           themeBtn = document.getElementById('theme-btn');
-    let theme = localStorage.getItem('theme') || 'dark';
+    let   theme    = localStorage.getItem('theme') || 'dark';
     const applyTheme = () => {
       root.classList.toggle('light', theme === 'light');
       localStorage.setItem('theme', theme);
@@ -598,6 +541,7 @@
       applyTheme();
     });
 
+    /* ------- NAV TOGGLE ------- */
     document.querySelector('.nav-toggle').addEventListener('click', () => {
       document.querySelector('.nav-links').classList.toggle('show');
       document.querySelector('.hamburger').classList.toggle('open');
@@ -606,31 +550,53 @@
     /* ------- BACK TO TOP ------- */
     const topBtn = document.getElementById('top');
     window.addEventListener('scroll', () => {
-      window.scrollY > 300
-        ? topBtn.classList.add('visible')
-        : topBtn.classList.remove('visible');
+      topBtn.classList.toggle('visible', window.scrollY > 300);
     });
     topBtn.addEventListener('click', () =>
       window.scrollTo({ top: 0, behavior: 'smooth' })
     );
 
-    /* ------- CONTACT FAKE SUBMIT ------- */
-    document.querySelector('.contact form').addEventListener('submit', e => {
-      e.preventDefault();
-      const st = document.getElementById('status');
-      st.textContent = 'Sending…';
-      setTimeout(() => (st.textContent = 'Message sent!'), 1200);
-    });
+    /* ------- FORM HANDLING ------- */
+    (function() {
+      const form   = document.getElementById("my-form");
+      const status = document.getElementById("my-form-status");
+      form.addEventListener("submit", async e => {
+        e.preventDefault();
+        status.textContent = "Sending…";
+        const data = new FormData(form);
+        try {
+          const res = await fetch(form.action, {
+            method: form.method,
+            body: data,
+            headers:{"Accept":"application/json"}
+          });
+          if(res.ok){
+            status.textContent="Thanks for your submission!";
+            form.reset();
+          } else {
+            const json = await res.json();
+            status.textContent = json.errors
+              ? json.errors.map(err=>err.message).join(", ")
+              : "Oops! There was a problem submitting your form.";
+          }
+        } catch {
+          status.textContent = "Network error. Please try again later.";
+        }
+      });
+    })();
 
-    /* ------- DYNAMIC POST RENDER (GITHUB API DISCOVERY) ------- */
+    /* ------- DYNAMIC POST RENDER + PROGRESS BAR ------- */
     const PER_PAGE = 6;
     let postsList = [], page = 1, currentTag = '', q = '';
-    const grid = document.getElementById('grid'),
-          pager = document.getElementById('pager'),
-          tagWrap = document.getElementById('tag-wrap'),
+    const grid     = document.getElementById('grid'),
+          pager    = document.getElementById('pager'),
+          tagWrap  = document.getElementById('tag-wrap'),
           searchIn = document.getElementById('search'),
-          clearBtn2 = document.getElementById('clear');
+          clearBtn = document.getElementById('clear'),
+          loadEl   = document.getElementById('loading-bar'),
+          bar      = loadEl.querySelector('.progress-bar');
 
+    // lazy observers
     const ioCard = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
@@ -639,7 +605,6 @@
         }
       });
     }, { threshold: 0.3 });
-
     const ioImg = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
@@ -651,143 +616,130 @@
       });
     }, { rootMargin: '200px' });
 
+    // fetch posts JSON
     async function loadPosts() {
-      const owner = 'tornadost',
-            repo  = 'tornadost.github.io',
-            path  = 'posts/feed';
-      // 1) List folders under /posts/feed
-      const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-      const listRes = await fetch(apiUrl);
+      const owner='tornadost',repo='tornadost.github.io',path='posts/feed';
+      const listRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`);
       if (!listRes.ok) throw new Error(`Could not list posts: ${listRes.status}`);
       const entries = await listRes.json();
-
-      // 2) Filter numeric dirs
-      const dirs = entries
-        .filter(e => e.type === 'dir' && /^\d+$/.test(e.name))
-        .map(e => e.name)
-        .sort((a, b) => Number(a) - Number(b));
-
-      // 3) Fetch each N.json
-      const posts = [];
-      for (const id of dirs) {
-        try {
-          const jsonUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${path}/${id}/${id}.json`;
-          const postRes = await fetch(jsonUrl);
-          if (!postRes.ok) continue;
+      const dirs = entries.filter(e=>e.type==='dir'&&/^\d+$/.test(e.name))
+                          .map(e=>e.name).sort((a,b)=>Number(a)-Number(b));
+      const posts=[];
+      for(const id of dirs){
+        try{
+          const postRes = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/main/${path}/${id}/${id}.json`);
+          if(!postRes.ok) continue;
           const j = await postRes.json();
-          posts.push({
-            id:      Number(id),
-            title:   j.title,
-            excerpt: j.excerpt,
-            date:    j.date,
-            read:    j.read,
-            tags:    j.tags,
-            img:     `/posts/assets/cover/${id}.png`
-          });
-        } catch (e) {
-          console.warn(`Skipping post ${id}:`, e);
-        }
+          posts.push({ id:+id, ...j, img:`/posts/assets/cover/${id}.png` });
+        } catch{}
       }
       return posts;
     }
 
-    function cardHTML(p) {
+    // build card HTML
+    function cardHTML(p){
       return `
-      <article class="post-card lazy">
-        <a href="/posts/feed/${p.id}/${p.id}.html">
-          <div class="post-thumbnail">
-            <img data-src="${p.img}" alt="${p.title}" class="skeleton" loading="lazy">
-          </div>
-          <div class="post-content">
-            <h2 class="post-title">${p.title}</h2>
-            <p class="post-excerpt">${p.excerpt}</p>
-            <span class="post-meta">${p.date} • ${p.read} min read</span>
-          </div>
-        </a>
-      </article>`;
+        <article class="post-card lazy">
+          <a href="/posts/feed/${p.id}/${p.id}.html">
+            <div class="post-thumbnail">
+              <img data-src="${p.img}" alt="${p.title}" class="skeleton" loading="lazy">
+            </div>
+            <div class="post-content">
+              <h2 class="post-title">${p.title}</h2>
+              <p class="post-excerpt">${p.excerpt}</p>
+              <span class="post-meta">${p.date} • ${p.read} min read</span>
+            </div>
+          </a>
+        </article>`;
     }
 
-    function renderTags() {
+    // render tags
+    function renderTags(){
       tagWrap.innerHTML = '';
-      const all = [...new Set(postsList.flatMap(p => p.tags))].sort();
-      all.forEach(t => {
+      const all = [...new Set(postsList.flatMap(p=>p.tags))].sort();
+      all.forEach(t=>{
         const btn = document.createElement('button');
         btn.textContent = t;
-        btn.onclick = () => {
-          currentTag = (currentTag === t ? '' : t);
-          page = 1; draw();
-          tagWrap.querySelectorAll('button').forEach(b =>
-            b.classList.toggle('active', b.textContent === currentTag)
+        btn.onclick = ()=>{
+          currentTag = currentTag===t?'':t;
+          page=1; draw();
+          tagWrap.querySelectorAll('button').forEach(b=>
+            b.classList.toggle('active',b.textContent===currentTag)
           );
-          clearBtn2.classList.toggle('hidden', !currentTag);
+          clearBtn.classList.toggle('hidden', !currentTag);
         };
         tagWrap.appendChild(btn);
       });
     }
 
-    function filterList() {
+    // filter + pagination
+    function filterList(){
       let lst = postsList;
-      if (currentTag) lst = lst.filter(p => p.tags.includes(currentTag));
-      if (q) lst = lst.filter(p =>
-        p.title.toLowerCase().includes(q) ||
+      if(currentTag) lst = lst.filter(p=>p.tags.includes(currentTag));
+      if(q) lst = lst.filter(p=>
+        p.title.toLowerCase().includes(q)||
         p.excerpt.toLowerCase().includes(q)
       );
       return lst;
     }
 
-    function draw() {
+    function draw(){
       const list = filterList();
-      const slice = list.slice((page - 1) * PER_PAGE, page * PER_PAGE);
-
-      document.querySelectorAll('.post-card').forEach(c => c.classList.add('hidden'));
-      setTimeout(() => {
-        grid.innerHTML = slice.map(cardHTML).join('');
-        grid.querySelectorAll('.lazy').forEach(card => {
-          ioCard.observe(card);
-          ioImg.observe(card.querySelector('img'));
-        });
-      }, 200);
-
-      pager.innerHTML =
-        (page > 1 ? `<a href="#" class="prev">« Newer</a>` : '') +
-        `<span> Page ${page} </span>` +
-        ((page * PER_PAGE < list.length) ? `<a href="#" class="next">Older »</a>` : '');
-      pager.querySelectorAll('a').forEach(a => {
-        a.style.opacity = '0';
-        setTimeout(() => (a.style.opacity = '1'), 200);
+      const slice = list.slice((page-1)*PER_PAGE, page*PER_PAGE);
+      grid.innerHTML = slice.map(cardHTML).join('');
+      grid.querySelectorAll('.lazy').forEach(card=>{
+        ioCard.observe(card);
+        ioImg.observe(card.querySelector('img'));
       });
-      pager.onclick = e => {
-        if (e.target.matches('.prev')) { e.preventDefault(); page--; draw(); }
-        if (e.target.matches('.next')) { e.preventDefault(); page++; draw(); }
+      pager.innerHTML =
+        (page>1?`<a href="#" class="prev">« Newer</a>`:'')+
+        `<span> Page ${page} </span>`+
+        (page*PER_PAGE<list.length?`<a href="#" class="next">Older »</a>`:'');
+      pager.querySelectorAll('a').forEach(a=>{
+        a.style.opacity=0;
+        setTimeout(()=>a.style.opacity=1,200);
+      });
+      pager.onclick = e=>{
+        if(e.target.matches('.prev')){e.preventDefault();page--;draw();}
+        if(e.target.matches('.next')){e.preventDefault();page++;draw();}
       };
     }
 
-    // Initialize
-    loadPosts()
-      .then(a => {
+    // init with progress
+    async function initPosts(){
+      try{
+        loadEl.classList.add('active');
+        bar.style.width='25%';
+        const a = await loadPosts();
+        bar.style.width='80%';
         postsList = a;
         renderTags();
         draw();
-      })
-      .catch(err => {
-        grid.innerHTML = '<p style="color:red">Unable to load posts.</p>';
+        bar.style.width='100%';
+        setTimeout(()=>loadEl.classList.remove('active'), 300);
+      } catch(err){
         console.error(err);
-      });
+        loadEl.classList.remove('active');
+      }
+    }
 
-    // Search & clear
-    searchIn.addEventListener('input', () => {
+    // search & clear
+    searchIn.addEventListener('input',()=>{
       q = searchIn.value.trim().toLowerCase();
-      page = 1; draw();
+      page=1; draw();
     });
-    clearBtn2.addEventListener('click', () => {
-      currentTag = '';
-      page = 1; draw();
-      clearBtn2.classList.add('hidden');
-      tagWrap.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    clearBtn.addEventListener('click',()=>{
+      currentTag=''; page=1; draw();
+      clearBtn.classList.add('hidden');
+      tagWrap.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
     });
 
-    // Footer year
+    // footer year
     document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // start
+    initPosts();
   </script>
+
 </body>
 </html>
