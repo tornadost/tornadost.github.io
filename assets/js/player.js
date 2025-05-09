@@ -1,39 +1,33 @@
 ;(function() {
-    // — If you moved the markup into a partial, you can fetch it here instead:
-    // await fetch('assets/html/player.html').then(r => r.text()).then(html => {
-    //   document.getElementById('player-container').innerHTML = html;
-    // });
+    const audio        = document.getElementById('audioPlayer');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const prevBtn      = document.getElementById('prevBtn');
+    const nextBtn      = document.getElementById('nextBtn');
+    const progressBar  = document.getElementById('progressBar');
+    const progressCont = document.getElementById('progressContainer');
+    const songTitle    = document.getElementById('songTitle');
   
-    // Grab elements
-    const audio         = document.getElementById('audioPlayer');
-    const playPauseBtn  = document.getElementById('playPauseBtn');
-    const prevBtn       = document.getElementById('prevBtn');
-    const nextBtn       = document.getElementById('nextBtn');
-    const progressBar   = document.getElementById('progressBar');
-    const progressCont  = document.getElementById('progressContainer');
-    const songTitleElem = document.getElementById('songTitle');
-  
-    // Playlist: add more tracks as needed
+    // playlist
     const tracks = [
-      { title: 'øfdream – thelema', src: 'storage/thelema.mp3' },
-      { title: 'øfdream – another song', src: 'storage/another.mp3' }
+      { title: 'øfdream – thelema', src: 'storage/thelema.mp3' }
+      // add more: { title: 'Another Song', src: 'storage/another.mp3' }
     ];
     let currentTrack = 0;
   
     function loadTrack(i) {
       const t = tracks[i];
       audio.src = t.src;
-      songTitleElem.textContent = t.title;
+      songTitle.textContent = t.title;
       audio.load();
     }
   
     function togglePlay() {
       if (audio.paused) {
         audio.play();
-        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
       } else {
         audio.pause();
-        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        playPauseBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
       }
     }
   
@@ -41,20 +35,19 @@
       currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
       loadTrack(currentTrack);
       audio.play();
-      playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
     }
   
     function nextTrack() {
       currentTrack = (currentTrack + 1) % tracks.length;
       loadTrack(currentTrack);
       audio.play();
-      playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
     }
   
     function updateProgress() {
-      const pct = audio.duration
-        ? (audio.currentTime / audio.duration) * 100
-        : 0;
+      if (!audio.duration) return;
+      const pct = (audio.currentTime / audio.duration) * 100;
       progressBar.style.width = pct + '%';
     }
   
@@ -64,7 +57,7 @@
       audio.currentTime = pct * audio.duration;
     }
   
-    // Event listeners
+    // events
     playPauseBtn.addEventListener('click', togglePlay);
     prevBtn.addEventListener('click', prevTrack);
     nextBtn.addEventListener('click', nextTrack);
@@ -72,7 +65,7 @@
     progressCont.addEventListener('click', seek);
     audio.addEventListener('ended', nextTrack);
   
-    // Initialize
+    // init
     loadTrack(currentTrack);
   })();
   
