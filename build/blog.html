@@ -134,135 +134,77 @@
   
     /* ========== HEADER ======================================================= */
     header {
-    height: 60px;             /* <-- lock in the header height */
-    line-height: 1;           /* reset any inherited line-height */
-    padding: 0;               /* remove extra vertical padding */
-    background: rgba(0,0,0,.8);
-    backdrop-filter: blur(6px);
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    z-index: 100;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, .8);
+      backdrop-filter: blur(6px);
+      z-index: 100;
     }
-
-    .navbar {
-    max-width: var(--max);
-    margin: 0 auto;
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    }
-
-    /* your logo will now sit at the bottom of that 60px header */
+    .navbar { max-width: var(--max); margin: 0 auto; padding: 1rem }
     .logo a {
-    font-family: var(--font-mono);
-    font-size: 1.5rem;
-    color: var(--neon);
-    text-decoration: none;
-    text-shadow: 0 0 4px var(--neon);
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      color: var(--neon);
+      text-decoration: none;
+      text-shadow: 0 0 4px var(--neon);
     }
-
-    .nav-links {
-    list-style: none;
-    }
-
-    .nav-links li {
-    display: inline-block;
-    margin-left: 2rem;
-    }
-
+    .nav-links { list-style: none }
+    .nav-links li { display: inline-block; margin-left: 2rem }
     .nav-links a {
-    color: var(--neon);
-    text-decoration: none;
-    position: relative;
+      color: var(--neon);
+      text-decoration: none;
+      position: relative;
     }
-
     .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--neon-b);
-    transition: width var(--speed);
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 2px;
+      background: var(--neon-b);
+      transition: width var(--speed);
     }
-
-    .nav-links a:hover::after {
-    width: 100%;
-    }
-
-    .nav-toggle {
-    display: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    }
-
+    .nav-links a:hover::after { width: 100% }
+    .nav-toggle { display: none; background: none; border: none; cursor: pointer }
     .hamburger,
     .hamburger::before,
     .hamburger::after {
-    width: 28px;
-    height: 3px;
-    background: var(--neon);
-    display: block;
-    position: relative;
-    transition: all var(--speed);
+      width: 28px; height: 3px;
+      background: var(--neon);
+      display: block;
+      position: relative;
+      transition: all var(--speed);
     }
-
     .hamburger::before,
     .hamburger::after {
-    content: '';
-    position: absolute;
-    left: 0;
+      content: '';
+      position: absolute;
+      left: 0;
     }
-
-    .hamburger::before {
-    top: -8px;
-    }
-
-    .hamburger::after {
-    top: 8px;
-    }
-
-    .hamburger.open {
-    transform: rotate(45deg);
-    }
-
+    .hamburger::before { top: -8px }
+    .hamburger::after { top: 8px }
+    .hamburger.open { transform: rotate(45deg) }
     .hamburger.open::before {
-    top: 0;
-    transform: rotate(90deg);
+      top: 0;
+      transform: rotate(90deg);
     }
-
-    .hamburger.open::after {
-    top: 0;
-    opacity: 0;
-    }
-
-    @media (max-width: 768px) {
-    .nav-toggle {
-        display: block;
-    }
-    .nav-links {
+    .hamburger.open::after { top: 0; opacity: 0 }
+    @media(max-width: 768px) {
+      .nav-toggle { display: block }
+      .nav-links {
         display: none;
         flex-direction: column;
         position: fixed;
-        top: 60px;
-        right: 0;
+        top: 60px; right: 0;
         width: 200px;
         height: calc(100% - 60px);
         background: var(--bg-light);
         padding: 2rem;
+      }
+      .nav-links.show { display: flex }
+      .nav-links li { margin: 1rem 0 }
     }
-    .nav-links.show {
-        display: flex;
-    }
-    .nav-links li {
-        margin: 1rem 0;
-    }
-    }
-
+  
     /* ========== HERO ========================================================= */
     .hero {
       height: auto; /* reduced from 70vh */
@@ -385,11 +327,11 @@
     .post-card:hover .post-thumbnail img {
       transform: scale(1.05);
     }
-    .post-content {
-    margin: 60px auto 2rem;   /* <-- top margin = header height */
-    max-width: 800px;
-    padding: 0 1rem;
-    line-height: 1.6;
+    .post-content { padding: 1rem }
+    .post-title {
+      font-size: 1.2rem;
+      color: var(--neon-b);
+      margin-bottom: .4rem;
     }
     .post-excerpt {
       color: #ccc;
