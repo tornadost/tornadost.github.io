@@ -37,6 +37,13 @@
       --neon-b: #0ff;
     }
   
+    /* ========= TIGHTEN META TO BOTTOM ========= */
+    .post-content {
+    /* keep top/right/left at 1rem, bottom at exactly 6px */
+    padding: 1rem 1rem 6px;
+    }
+
+
     /* ========= THUMBNAIL SIZE CONTROL ====================================== */
     .post-thumbnail {
     /* lock into a 16∶9 box, maxing out at 200px tall */
@@ -82,7 +89,7 @@
 
     .post-card {
     width: 100%;                         /* fill its grid slot */
-    max-width: 600px;                    /* but never exceed 600px */
+    max-width: 400px;                    /* but never exceed 600px */
     }
 
 
