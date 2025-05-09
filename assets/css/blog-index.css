@@ -29,29 +29,6 @@
     }
 
     /* ─── MUSIC PLAYER (in header) ─── */
-
-    /* ensure the player is a positioning context */
-    .music-player {
-      position: relative;
-    }
-
-    /* bar sits at the bottom of its player box */
-    .music-player #progress-container {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 4px;               /* match your desired thickness */
-      background: var(--bg-light);
-    }
-
-    /* the filling track */
-    .music-player #progress-bar {
-      width: 0%;
-      height: 100%;
-      background: var(--neon);
-    }
-
     .music-player {
     display: flex;
     align-items: center;
