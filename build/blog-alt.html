@@ -42,10 +42,15 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-left: 1rem;
     font-family: var(--font-mono);
     color: var(--neon);
+
+    /* shove the links/nav-toggle to the far right */
+    margin-left: 2rem;
+    margin-right: auto;
     }
+
+
     .music-player button {
     background: transparent;
     border: none;
@@ -611,15 +616,16 @@
   <header>
     <nav class="navbar flex just-between">
       <div class="logo"><a href="/feed/blog">CyberBlogX~RK</a></div>
+      
+      <div class="music-player">
+        <button id="prev-btn" aria-label="Previous">⏮</button>
+        <button id="play-btn" aria-label="Play/Pause">▶️</button>
+        <button id="next-btn" aria-label="Next">⏭</button>
+        <span id="track-info">Loading…</span>
+        <audio id="audio-player" preload="auto"></audio>
+      </div>
+      
       <ul class="nav-links">
-        <div class="music-player">
-            <button id="prev-btn" aria-label="Previous track">⏮</button>
-            <button id="play-btn" aria-label="Play/Pause">▶️</button>
-            <button id="next-btn" aria-label="Next track">⏭</button>
-            <span id="track-info">Loading playlist…</span>
-            <!-- hidden native audio element -->
-            <audio id="audio-player" preload="auto"></audio>
-          </div>
         <li><a href="/layer/redacted.html">🏠</a></li>
         <li><a id="theme-btn" href="#">💡</a></li>
         <li><a href="#contact">📧</a></li>
