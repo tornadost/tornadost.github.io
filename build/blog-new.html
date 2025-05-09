@@ -37,21 +37,18 @@
       --neon-b: #0ff;
     }
   
-    /* ========= TIGHTEN META TO BOTTOM ========= */
-    /* Make the parent a positioning context */
-    .post-content {
-    position: relative;
-    padding: 1rem;       /* your existing padding */
-    padding-bottom: 1.5rem; /* extra space to avoid text overlap */
+    /* ========== ABSOLUTE META FOOTER ========== */
+    .post-card {
+    position: relative;                  /* establish positioning context */
+    padding-bottom: 2.5rem;              /* room for the absolutely-positioned meta */
     }
 
-    /* Absolutely position the meta line */
     .post-meta {
-    position: absolute;
-    left: 1rem;          /* same as your .post-content padding-left */
-    right: 1rem;         /* same as padding-right */
-    bottom: 6px;         /* exactly 6px above the card’s bottom border */
-    margin: 0;           /* cancel any auto‐margin */
+    position: absolute !important;       /* pull out of the normal flow */
+    bottom: 6px !important;              /* exactly 6px above the card border */
+    left: 1rem !important;               /* align with your content padding */
+    right: 1rem !important;              /* stretch to same padding on right */
+    margin: 0 !important;                /* reset any margins */
     }
 
 
@@ -100,7 +97,7 @@
 
     .post-card {
     width: 100%;                         /* fill its grid slot */
-    max-width: 380px;                    /* but never exceed 600px */
+    max-width: 360px;                    /* but never exceed 600px */
     }
 
 
