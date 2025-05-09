@@ -1,4 +1,10 @@
 ;(function() {
+    // — If you moved the markup into a partial, you can fetch it here instead:
+    // await fetch('assets/html/player.html').then(r => r.text()).then(html => {
+    //   document.getElementById('player-container').innerHTML = html;
+    // });
+  
+    // Grab elements
     const audio         = document.getElementById('audioPlayer');
     const playPauseBtn  = document.getElementById('playPauseBtn');
     const prevBtn       = document.getElementById('prevBtn');
@@ -7,7 +13,7 @@
     const progressCont  = document.getElementById('progressContainer');
     const songTitleElem = document.getElementById('songTitle');
   
-    // playlist → add more { title, src } if you like
+    // Playlist: add more tracks as needed
     const tracks = [
       { title: 'øfdream – thelema', src: 'storage/thelema.mp3' },
       { title: 'øfdream – another song', src: 'storage/another.mp3' }
@@ -46,20 +52,19 @@
     }
   
     function updateProgress() {
-      const percent = audio.duration
+      const pct = audio.duration
         ? (audio.currentTime / audio.duration) * 100
         : 0;
-      progressBar.style.width = percent + '%';
+      progressBar.style.width = pct + '%';
     }
   
     function seek(e) {
-      const rect   = progressCont.getBoundingClientRect();
-      const offset = e.clientX - rect.left;
-      const pct    = offset / rect.width;
+      const rect = progressCont.getBoundingClientRect();
+      const pct  = (e.clientX - rect.left) / rect.width;
       audio.currentTime = pct * audio.duration;
     }
   
-    // event listeners
+    // Event listeners
     playPauseBtn.addEventListener('click', togglePlay);
     prevBtn.addEventListener('click', prevTrack);
     nextBtn.addEventListener('click', nextTrack);
@@ -67,6 +72,7 @@
     progressCont.addEventListener('click', seek);
     audio.addEventListener('ended', nextTrack);
   
-    // init
+    // Initialize
     loadTrack(currentTrack);
   })();
+  
