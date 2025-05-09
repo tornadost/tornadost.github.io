@@ -35,8 +35,6 @@
       --text: #2c3e50;
       --neon: #4c5fd7;
       --neon-b: #7f8cfa;
-      --border: #d1d5db;
-      --shadow: rgba(0, 0, 0, 0.05);
     }
   
 
@@ -166,9 +164,7 @@
       background: var(--neon-b);
       transition: width var(--speed);
     }
-    .nav-links a:hover::after { 
-    box-shadow: 0 0 8px var(--neon), 0 0 16px var(--neon-b);    
-    width: 100% }
+    .nav-links a:hover::after { width: 100% }
     .nav-toggle { display: none; background: none; border: none; cursor: pointer }
     .hamburger,
     .hamburger::before,
@@ -278,7 +274,6 @@
       border-radius: var(--radius);
       background: var(--bg-light);
       color: var(--text);
-      border-color: var(--border);
     }
     .tags {
       display: flex;
@@ -310,7 +305,6 @@
       margin-top: 2rem;
     }
     .post-card {
-      box-shadow: 0 2px 6px var(--shadow);
       background: var(--bg-light);
       border: 1px solid var(--neon);
       border-radius: var(--radius);
