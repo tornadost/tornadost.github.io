@@ -1,4 +1,6 @@
-export const trackerUrls = [
+// trackers.js
+// Export an array of Base64-encoded tracker URLs
+export const trackerEnc = [
   "aHR0cHM6Ly93d3cucmVkZGl0LmNvbS9yL09wZW5TaWdudXBzL25ldy8=",
   "aHR0cHM6Ly95dS1zY2VuZS5uZXQvdXNlcnMvYWdj",
   "aHR0cHM6Ly9wcml2YXRlc2lsdmVyc2NyZWVuLmNjL3VzZXJzL1JlYW51S2VhdmVzODk=",
@@ -20,7 +22,7 @@ export const trackerUrls = [
   "aHR0cHM6Ly9hbnRoZWxpb24ubWUvdXNlci5waHA/aWQ9OTQxOA==",
   "aHR0cHM6Ly9wb3J0dWdhcy5vcmcvdXNlcnMvUmVhbnVLZWF2ZXM4OQ==",
   "aHR0cHM6Ly9yZWVsZmxpeC54eXovdXNlcnMvUmVhbnVLZWF2ZXM4OQ==",
-  "aHR0cHM6Ly93d3cudG9ycmVudGxlZWNoLm9yZy9wcm9maWxlL1JlYW5u dWtlYXZlczg5L3ZpZXc=",
+  "aHR0cHM6Ly93d3cudG9ycmVudGxlZWNoLm9yZy9wcm9maWxlL1JlYW51dGtlYXZlczg5L3ZpZXc=",
   "aHR0cHM6Ly95b2luay5vcmcvdXNlcnMvUmVhbnVLZWF2ZXM4OQ==",
   "aHR0cHM6Ly9oYXdrZS51bm8vdXNlcnMvUmVhbnVLZWF2ZXM4OS4xMjE1OQ==",
   "aHR0cHM6Ly93d3cuZG9jc3BlZGlhLndvcmxkL3VzZXJkZXRhaWxzLnBocD9pZD0xMjMyMA==",

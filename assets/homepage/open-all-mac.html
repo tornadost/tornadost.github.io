@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tracker Launcher</title>
+  <style>
+    /* ── Full-Viewport & Base Styles ─────────────────────────── */
+    html, body {
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      background: #2e2e2e;
+      display: flex; align-items: center; justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      user-select: none; /* prevent text selection during drag */
+    }
+
+    /* ── macOS-Style Window ──────────────────────────────────── */
+    .window {
+      position: absolute;                 /* for dragging */
+      width: 360px;
+      background: #f0f0f0;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+    .window:active { transform: scale(0.98); } /* subtle click feedback */
+
+    /* ── Title Bar & Traffic Lights ────────────────────────── */
+    .titlebar {
+      height: 28px;
+      background: #e0e0e0;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      -webkit-app-region: drag;            /* macOS drag region :contentReference[oaicite:11]{index=11} */
+    }
+    .traffic-light {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+      background: #ff5f57;                 /* default close (red) */
+      transition: background 0.2s ease;
+    }
+    .traffic-light.minimize { background: #ffbd2e; } /* yellow :contentReference[oaicite:12]{index=12} */
+    .traffic-light.maximize { background: #28c940; } /* green */  
+
+    /* ── Content Area ──────────────────────────────────────── */
+    .content {
+      padding: 24px;
+      background: #ffffff;
+      text-align: center;
+    }
+    #launchBtn {
+      background: #007aff;                 /* macOS blue */
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    #launchBtn:hover { background: #005bb5; }
+    #launchBtn:disabled {
+      background: #888; cursor: default;
+    }
+    #msg {
+      margin-top: 1rem;
+      font-style: italic;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="window" id="appWindow" style="top:20px; left:20px;">
+    <div class="titlebar" id="titlebar">
+      <span class="traffic-light"></span>
+      <span class="traffic-light minimize"></span>
+      <span class="traffic-light maximize"></span>
+    </div>
+    <div class="content">
+      <h2>Open All Trackers</h2>
+      <button id="launchBtn">Launch Trackers</button>
+      <p id="msg"></p>
+    </div>
+  </div>
+
+  <script type="module">
+    'use strict';
+    import { trackerUrls } from '/assets/homepage/ops/trk.js';                // ES module import :contentReference[oaicite:13]{index=13}
+
+    // ── Dragging Logic (W3Schools pattern) ───────────────────────────────
+    // Source: W3Schools "How To - Create a Draggable HTML Element" :contentReference[oaicite:14]{index=14}
+    (() => {
+      const win = document.getElementById('appWindow');
+      const bar = document.getElementById('titlebar');
+      let offsetX = 0, offsetY = 0, isDragging = false;
+
+      bar.addEventListener('pointerdown', e => {
+        isDragging = true;
+        const rect = win.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+      });
+      document.addEventListener('pointermove', e => {
+        if (!isDragging) return;
+        win.style.left = `${e.clientX - offsetX}px`;
+        win.style.top  = `${e.clientY - offsetY}px`;
+      });
+      document.addEventListener('pointerup', () => { isDragging = false; });
+    })();
+
+    // ── Launch Trackers Logic ───────────────────────────────────────────────
+    const btn = document.getElementById('launchBtn');
+    const msg = document.getElementById('msg');
+
+    btn.addEventListener('click', () => {
+      btn.disabled = true;
+      msg.textContent = 'Opening trackers…';
+
+      trackerUrls.forEach(url => {
+        window.open(url, '_blank', 'noopener,noreferrer');        // secure open :contentReference[oaicite:15]{index=15}
+      });
+
+      msg.textContent = '✅ All trackers launched!';
+    });
+  </script>
+</body>
+</html>
