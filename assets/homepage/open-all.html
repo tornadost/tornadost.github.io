@@ -10,81 +10,70 @@
       justify-content: center;
       height: 100vh;
       margin: 0;
-      font-family: sans-serif;
-      background-color: #1e1e1e;
-      color: #eee;
+      font-family: system-ui, sans-serif;
+      background-color: #282c34;
+      color: #fafafa;
     }
     #status {
-      font-size: 1.2rem;
       text-align: center;
+      font-size: 1.25rem;
+      padding: 1rem 2rem;
+      border: 2px solid #61dafb;
+      border-radius: 8px;
+      background: rgba(97,218,251,0.1);
     }
   </style>
 </head>
 <body>
-  <div id="status">Opening trackers…</div>
+  <div id="status">Opening all trackers…</div>
   <script>
-    // List of all your tracker URLs
-    const urls = [
-      "https://www.reddit.com/r/OpenSignups/new/",
-      "https://yu-scene.net/users/agc",
-      "https://privatesilverscreen.cc/users/ReanuKeaves89",
-      "https://capybarabr.com/users/AGCarraraFinalBoss",
-      "https://locadora.cc/users/ReanuKeaves89",
-      "https://blutopia.cc/users/ReanuKeaves89",
-      "https://theldu.to/users/ReanuKeaves89",
-      "https://www.myanonamouse.net/u/229570",
-      "https://fearnopeer.com/users/ReanuKeaves89",
-      "https://aither.cc/users/ReanuKeaves89",
-      "https://seedpool.org/users/ReanuKeaves89",
-      "https://onlyencodes.cc/users/ReanuKeaves89",
-      "https://lst.gg/users/ReanuKeaves89",
-      "https://upload.cx/users/ReanuKeaves89",
-      "https://oldtoons.world/users/ReanuKeaves89",
-      "https://orpheus.network/user.php?id=34911",
-      "https://uhdbits.org/user.php?id=45815",
-      "https://eiga.moi/users/ReanuKeaves89",
-      "https://anthelion.me/user.php?id=9418",
-      "https://portugas.org/users/ReanuKeaves89",
-      "https://reelflix.xyz/users/ReanuKeaves89",
-      "https://www.torrentleech.org/profile/ReanuKeaves89/view",
-      "https://yoinked.org/users/ReanuKeaves89",
-      "https://hawke.uno/users/ReanuKeaves89.12159",
-      "https://www.docspedia.world/userdetails.php?id=12320",
-      "https://lat-team.com/users/ReanuKeaves89",
-      "https://digitalcore.club/user/57960/ReanuKeaves",
-      "https://animetorrents.me/user-profile.php?uid=738769",
-      "https://hd-torrents.org/usercp.php?uid=222329",
-      "https://avistaz.to/profile/ReanuKeaves89",
-      "https://bakabt.me/user/2076101/reanukeaves89",
-      "https://www.empornium.is/user.php?id=948039",
-      "https://www.happyfappy.org/user.php?id=77018",
-      "https://cliente.amigos-share.club/account-details.php?id=3472191",
-      "https://sportscult.org/index.php?page=usercp&uid=60210",
-      "https://hd-space.org/index.php?page=usercp&uid=237064",
-      "https://losslessclub.com/userdetails.php?id=68578",
-      "https://www.cathode-ray.tube/user.php?id=14134",
-      "https://f1carreras.xyz/",
-      "https://homiehelpdesk.net/users/ReanuKeaves89"
-    ];
-
-    // Store references if you want to close them later
-    const windows = [];
-
-    // As soon as the page fully loads, open every URL in its own tab
+    // **IMPORTANT**: Make sure pop-ups are allowed for this domain,
+    // otherwise these window.open() calls will be blocked.
     window.addEventListener('load', () => {
-      urls.forEach(url => {
-        const w = window.open(url, '_blank');               // open new tab :contentReference[oaicite:0]{index=0}
-        if (w) windows.push(w);
-      });
-
-      // Update status message
-      document.getElementById('status').textContent = 'All trackers opened. Closing…';
-
-      // After a short delay, attempt to close each popup and then self-close
-      setTimeout(() => {
-        windows.forEach(wRef => wRef.close());               // close opened tabs if desired :contentReference[oaicite:1]{index=1}
-        window.close();                                      // close this window (only works if opened by script) :contentReference[oaicite:2]{index=2}
-      }, 1000);
+      const urls = [
+        "https://www.reddit.com/r/OpenSignups/new/",
+        "https://yu-scene.net/users/agc",
+        "https://privatesilverscreen.cc/users/ReanuKeaves89",
+        "https://capybarabr.com/users/AGCarraraFinalBoss",
+        "https://locadora.cc/users/ReanuKeaves89",
+        "https://blutopia.cc/users/ReanuKeaves89",
+        "https://theldu.to/users/ReanuKeaves89",
+        "https://www.myanonamouse.net/u/229570",
+        "https://fearnopeer.com/users/ReanuKeaves89",
+        "https://aither.cc/users/ReanuKeaves89",
+        "https://seedpool.org/users/ReanuKeaves89",
+        "https://onlyencodes.cc/users/ReanuKeaves89",
+        "https://lst.gg/users/ReanuKeaves89",
+        "https://upload.cx/users/ReanuKeaves89",
+        "https://oldtoons.world/users/ReanuKeaves89",
+        "https://orpheus.network/user.php?id=34911",
+        "https://uhdbits.org/user.php?id=45815",
+        "https://eiga.moi/users/ReanuKeaves89",
+        "https://anthelion.me/user.php?id=9418",
+        "https://portugas.org/users/ReanuKeaves89",
+        "https://reelflix.xyz/users/ReanuKeaves89",
+        "https://www.torrentleech.org/profile/ReanuKeaves89/view",
+        "https://yoinked.org/users/ReanuKeaves89",
+        "https://hawke.uno/users/ReanuKeaves89.12159",
+        "https://www.docspedia.world/userdetails.php?id=12320",
+        "https://lat-team.com/users/ReanuKeaves89",
+        "https://digitalcore.club/user/57960/ReanuKeaves",
+        "https://animetorrents.me/user-profile.php?uid=738769",
+        "https://hd-torrents.org/usercp.php?uid=222329",
+        "https://avistaz.to/profile/ReanuKeaves89",
+        "https://bakabt.me/user/2076101/reanukeaves89",
+        "https://www.empornium.is/user.php?id=948039",
+        "https://www.happyfappy.org/user.php?id=77018",
+        "https://cliente.amigos-share.club/account-details.php?id=3472191",
+        "https://sportscult.org/index.php?page=usercp&uid=60210",
+        "https://hd-space.org/index.php?page=usercp&uid=237064",
+        "https://losslessclub.com/userdetails.php?id=68578",
+        "https://www.cathode-ray.tube/user.php?id=14134",
+        "https://f1carreras.xyz/",
+        "https://homiehelpdesk.net/users/ReanuKeaves89"
+      ];
+      urls.forEach(u => window.open(u, '_blank'));
+      document.getElementById('status').textContent = 'All tabs opened. Please check your browser.';
     });
   </script>
 </body>
