@@ -4,12 +4,10 @@
   <meta charset="UTF-8">
   <title>Tracker Launcher</title>
   <style>
-    /* ── Full-Viewport & Dark “macOS” Background ───────────────────── */
+    /* ── Full-Viewport Dark Background ─────────────────────────── */
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
       background: radial-gradient(circle at top left, #1b1f2a 0%, #12151f 80%);
       display: flex;
       align-items: center;
@@ -19,13 +17,13 @@
       overflow: hidden;
     }
 
-    /* ── Draggable “Window” Container ─────────────────────────────── */
+    /* ── macOS-Style Window ──────────────────────────────────── */
     .window {
       position: absolute;
       width: 380px;
       background: #242830;
       border-radius: 12px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
       overflow: hidden;
       transition: transform 0.2s ease;
     }
@@ -33,7 +31,7 @@
       transform: scale(0.98);
     }
 
-    /* ── Title Bar & Traffic Lights ──────────────────────────────── */
+    /* ── Title Bar & Traffic Lights ────────────────────────── */
     .titlebar {
       height: 32px;
       background: #1f2630;
@@ -43,8 +41,7 @@
       cursor: grab;
     }
     .traffic-light {
-      width: 12px;
-      height: 12px;
+      width: 12px; height: 12px;
       border-radius: 50%;
       margin-right: 8px;
       background: #ff5f57;
@@ -54,7 +51,7 @@
     .traffic-light.minimize { background: #ffbd2e; }
     .traffic-light.maximize { background: #28c940; }
 
-    /* ── Content Area ────────────────────────────────────────────── */
+    /* ── Content Area ──────────────────────────────────────── */
     .content {
       padding: 24px;
       background: #2b2f3a;
@@ -62,7 +59,7 @@
       text-align: center;
     }
     #launchBtn {
-      background: #0a84ff;
+      background: #007aff;
       color: #fff;
       border: none;
       padding: 0.6rem 1.4rem;
@@ -71,9 +68,7 @@
       cursor: pointer;
       transition: background 0.2s ease;
     }
-    #launchBtn:hover {
-      background: #006edc;
-    }
+    #launchBtn:hover { background: #005bb5; }
     #launchBtn:disabled {
       background: #555;
       cursor: default;
@@ -101,66 +96,70 @@
 
   <script type="module">
     'use strict';
-    // import your tracker URL array (adjust path as needed)
-    import { trackerUrls } from 'https://cache-unlocked.online/assets/homepage/ops/trk.js';
+
+    // Import your obfuscated array
+    import { trackerEnc } from 'https://cache-unlocked.online/assets/homepage/ops/trk.js';
 
     const win = document.getElementById('appWindow');
     const bar = document.getElementById('titlebar');
     const btn = document.getElementById('launchBtn');
     const msg = document.getElementById('msg');
 
-    // ── Persist & Center Window Position ──────────────────────────────
-    function loadPosition() {
-      const stored = localStorage.getItem('winPos');
-      if (stored) {
-        const { left, top } = JSON.parse(stored);
+    // ── Load & Save Position ───────────────────────────────
+    function loadPos() {
+      const pos = localStorage.getItem('winPos');
+      if (pos) {
+        const { left, top } = JSON.parse(pos);
         win.style.left = left;
-        win.style.top = top;
+        win.style.top  = top;
       } else {
-        // center default
-        const vw = window.innerWidth, vh = window.innerHeight;
+        // center by default
+        const vw = innerWidth, vh = innerHeight;
         const rw = win.offsetWidth, rh = win.offsetHeight;
-        win.style.left = (vw - rw) / 2 + 'px';
-        win.style.top  = (vh - rh) / 2 + 'px';
+        win.style.left = (vw - rw)/2 + 'px';
+        win.style.top  = (vh - rh)/2 + 'px';
       }
     }
-    function savePosition() {
+    function savePos() {
       localStorage.setItem('winPos', JSON.stringify({
         left: win.style.left,
         top:  win.style.top
       }));
     }
-    window.addEventListener('load', loadPosition);
+    window.addEventListener('load', loadPos);
 
-    // ── Draggable Logic ───────────────────────────────────────────────
+    // ── Drag Logic ────────────────────────────────────────
     (() => {
-      let offsetX = 0, offsetY = 0, dragging = false;
+      let dx=0, dy=0, dragging=false;
       bar.addEventListener('pointerdown', e => {
         dragging = true;
-        const rect = win.getBoundingClientRect();
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
+        const r = win.getBoundingClientRect();
+        dx = e.clientX - r.left;
+        dy = e.clientY - r.top;
         bar.style.cursor = 'grabbing';
       });
       document.addEventListener('pointermove', e => {
         if (!dragging) return;
-        win.style.left = (e.clientX - offsetX) + 'px';
-        win.style.top  = (e.clientY - offsetY) + 'px';
+        win.style.left = (e.clientX - dx) + 'px';
+        win.style.top  = (e.clientY - dy) + 'px';
       });
       document.addEventListener('pointerup', () => {
-        if (dragging) savePosition();
+        if (dragging) savePos();
         dragging = false;
         bar.style.cursor = 'grab';
       });
     })();
 
-    // ── Launch Trackers Logic ─────────────────────────────────────────
+    // ── Launch Trackers Logic ─────────────────────────────
     btn.addEventListener('click', () => {
       btn.disabled = true;
-      msg.textContent = 'Opening trackers…';
-      trackerUrls.forEach(url =>
-        window.open(url, '_blank', 'noopener,noreferrer')
-      );
+      msg.textContent = 'Opening all trackers…';
+
+      trackerEnc.forEach(enc => {
+        const url = atob(enc);
+        window.open(url, '_blank', 'noopener,noreferrer');
+      });
+
       msg.textContent = '✅ All trackers launched!';
     });
   </script>
