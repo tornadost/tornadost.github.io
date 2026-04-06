@@ -5,7 +5,7 @@ export const trackerEnc = [
   "aHR0cHM6Ly9sb3NzbGVzc2NsdWIuY29tL3VzZXJkZXRhaWxzLnBocD9pZD02ODU3OA==",
   "aHR0cHM6Ly93d3cuZG9jc3BlZGlhLndvcmxkL3VzZXJkZXRhaWxzLnBocD9pZD0xMjMyMA==",
   "aHR0cHM6Ly9sYXQtdGVhbS5jb20vdXNlcnMvUmVhbnVLZWF2ZXM4OQ==",
-  "aHR0cHM6Ly9hbmltZXRvcnJlbnRzLm1lL3VzZXItcHJvZmlsZS5waHA/dWlkPTczODc2OQ==",
+  "aHR0cHM6Ly9hbmltZXoudG8vcHJvZmlsZS9SZWFudUtlYXZlczg5",
   "aHR0cHM6Ly9oZC10b3JyZW50cy5vcmcvdXNlcmNwLnBocD91aWQ9MjIyMzI5",
   "aHR0cHM6Ly9leG90aWNhei50by9wcm9maWxlL1JlYW51S2VhdmVzODk=",
   "aHR0cHM6Ly9jaW5lbWF6LnRvL3Byb2ZpbGUvUmVhbnVLZWF2ZXM4OQ==",
@@ -17,13 +17,11 @@ export const trackerEnc = [
   "aHR0cHM6Ly93d3cudG9ycmVudGxlZWNoLm9yZy9wcm9maWxlL1JlYW51S2VhdmVzODkvdmlldw==",
   "aHR0cHM6Ly9zZWVkcG9vbC5vcmcvdXNlcnMvUmVhbnVLZWF2ZXM4OQ==",
   "aHR0cHM6Ly9vbGR0b29ucy53b3JsZC91c2Vycy9SZWFudUtlYXZlczg5",
-  "aHR0cHM6Ly95b2lua2VkLm9yZy91c2Vycy9SZWFudUtlYXZlczg5",
-  "aHR0cHM6Ly91aGRiaXRzLm9yZy91c2VyLnBocD9pZD00NTgxNQ==",
   "aHR0cHM6Ly9oYXdrZS51bm8vdXNlcnMvUmVhbnVLZWF2ZXM4OS4xMjE1OQ==",
   "aHR0cHM6Ly9yZWVsZmxpeC54eXovdXNlcnMvUmVhbnVLZWF2ZXM4OQ==",
   "aHR0cHM6Ly9kaWdpdGFsY29yZS5jbHViL3VzZXIvNTc5NjAvUmVhbnVLZWF2ZXM=",
   "aHR0cHM6Ly9hbnRoZWxpb24ubWUvdXNlci5waHA/aWQ9OTQxOA==",
-  "aHR0cHM6Ly93d3cuZW1wb3JuaXVtLmlzL3VzZXIucGhwP2lkPTk0ODAzOQ==",
+  "aHR0cHM6Ly93d3cuZW1wb3JuaXVtLnN4L3VzZXIucGhwP2lkPTk0ODAzOQ==",
   "aHR0cHM6Ly9vbmx5ZW5jb2Rlcy5jYy91c2Vycy9SZWFudUtlYXZlczg5",
   "aHR0cHM6Ly91cGxvYWQuY3gvdXNlcnMvUmVhbnVLZWF2ZXM4OQ==",
   "aHR0cHM6Ly9sc3QuZ2cvdXNlcnMvUmVhbnVLZWF2ZXM4OQ==",
@@ -42,8 +40,5 @@ export const trackerEnc = [
   "aHR0cHM6Ly9maWxlbGlzdC5pby8=",
   "aHR0cHM6Ly9waG9lbml4cHJvamVjdC5hcHA=",
   "aHR0cHM6Ly93d3cubW9yZXRoYW50di5tZS9pbmRleC5waHA=",
-  "aHR0cHM6Ly93d3cucmVkZGl0LmNvbS9yL09wZW5TaWdudXBzL25ldy8=",
+  "aHR0cHM6Ly93d3cucmVkZGl0LmNvbS9yL3RyYWNrZXJzL25ldy8=",
 ];
-
-
-
