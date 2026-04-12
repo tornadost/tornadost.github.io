@@ -2,7 +2,6 @@ export const trackerEnc = [
   "ZjFjYXJyZXJhcy54eXov",
   "ZWlnYS5tb2kvdXNlcnMvUmVhbnVLZWF2ZXM4OQ==",
   "aGQtc3BhY2Uub3JnL2luZGV4LnBocD9wYWdlPXVzZXJjcCZ1aWQ9MjM3MDY0",
-  "bG9zc2xlc3NjbHViLmNvbS91c2VyZGV0YWlscy5waHA/aWQ9Njg1Nzg=",
   "ZG9jc3BlZGlhLndvcmxkL3VzZXJkZXRhaWxzLnBocD9pZD0xMjMyMA==",
   "bGF0LXRlYW0uY29tL3VzZXJzL1JlYW51S2VhdmVzODk=",
   "YW5pbWV6LnRvL3Byb2ZpbGUvUmVhbnVLZWF2ZXM4OQ==",
