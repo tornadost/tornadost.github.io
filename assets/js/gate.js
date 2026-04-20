@@ -38,7 +38,7 @@ const pwd = document.getElementById('sF2vM3').value.trim(),
 msg.style.color = 'red';
 try {
 const path = atob('YXNzZXRzL3JlZGFjdGVkLnR4dA=='),
-    dest = atob('aHR0cHM6Ly9jYWNoZS11bmxvY2tlZC5vbmxpbmUvbGF5ZXIvcmVkYWN0ZWQ='),
+    dest = atob('aHR0cHM6Ly90b3JuYWRvc3QuZ2l0aHViLmlvL2xheWVyL3JlZGFjdGVk'),
     list = (await (await fetch(path)).text())
              .split('\n').map(s=>s.trim()).filter(Boolean),
     h = await rB7mC2(pwd);
