@@ -24,7 +24,7 @@ export const trackerEnc = [
   "ZmlsZWxpc3QuaW8v",
   "c3BvcnRzY3VsdC5vcmcvaW5kZXgucGhwP3BhZ2U9dXNlcmNwJnVpZD02MDIxMA==",
   "cGhvZW5peHByb2plY3QuYXBwLw==",
-  "aG9taWVoaGVscGRlc2submV0L3VzZXJzL1JlYW51S2VhdmVzODk=",
+  "aG9taWVoZWxwZGVzay5uZXQvdXNlcnMvUmVhbnVLZWF2ZXM4OQ==",
   "bG9jYWRvcmEuY2MvdXNlcnMvUmVhbnVLZWF2ZXM4OQ==",
   "cmVlbGZsaXguY2MvdXNlcnMvUmVhbnVLZWF2ZXM4OQ==",
   "dXBsb2FkLmN4L3VzZXJzL1JlYW51S2VhdmVzODk=",
