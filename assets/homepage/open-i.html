@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>T. Launcher</title>
+  <title>I. Launcher</title>
   <style>
     html, body {
       margin: 0; padding: 0;
@@ -83,7 +83,7 @@
     <span class="traffic-light maximize"></span>
   </div>
   <div class="content">
-    <h2>Open All</h2>
+    <h2>Open Invites</h2>
     <button id="launchBtn">Launch</button>
     <p id="msg"></p>
   </div>
@@ -92,7 +92,7 @@
 <script type="module">
 'use strict';
 
-import { trkEnc } from 'https://tornadost.github.io/assets/homepage/ops/trk.js';
+import { trkEnc } from 'https://tornadost.github.io/assets/homepage/ops/inv.js';
 
 const win = document.getElementById('appWindow');
 const bar = document.getElementById('titlebar');
@@ -101,7 +101,7 @@ const msg = document.getElementById('msg');
 
 /* ── Window Position ── */
 function loadPos() {
-  const pos = localStorage.getItem('winPos');
+  const pos = localStorage.getItem('winPos_inv');
   if (pos) {
     const { left, top } = JSON.parse(pos);
     win.style.left = left;
@@ -112,7 +112,7 @@ function loadPos() {
   }
 }
 function savePos() {
-  localStorage.setItem('winPos', JSON.stringify({
+  localStorage.setItem('winPos_inv', JSON.stringify({
     left: win.style.left,
     top:  win.style.top
   }));
@@ -144,7 +144,7 @@ window.addEventListener('load', loadPos);
   });
 })();
 
-/* ── Launch Logic (NO DELAY) ── */
+/* ── Launch Logic ── */
 btn.addEventListener('click', () => {
   btn.disabled = true;
   msg.textContent = 'Opening…';
@@ -153,7 +153,6 @@ btn.addEventListener('click', () => {
     try {
       let url = atob(enc).trim();
 
-      // Ensure absolute URL
       if (!/^https?:\/\//i.test(url)) {
         url = 'https://' + url;
       }
