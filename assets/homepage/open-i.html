@@ -92,7 +92,7 @@
 <script type="module">
 'use strict';
 
-import { trackerEnc } from 'https://tornadost.github.io/assets/homepage/ops/inv.js';
+import { trkEnc } from 'https://tornadost.github.io/assets/homepage/ops/inv.js';
 
 const win = document.getElementById('appWindow');
 const bar = document.getElementById('titlebar');
@@ -144,26 +144,24 @@ window.addEventListener('load', loadPos);
   });
 })();
 
-/* ── Launch Logic (FIXED) ── */
+/* ── Launch Logic ── */
 btn.addEventListener('click', () => {
   btn.disabled = true;
   msg.textContent = 'Opening…';
 
-  trackerEnc.forEach((enc, i) => {
-    setTimeout(() => {
-      try {
-        let url = atob(enc).trim();
+  trkEnc.forEach(enc => {
+    try {
+      let url = atob(enc).trim();
 
-        if (!/^https?:\/\//i.test(url)) {
-          url = 'https://' + url;
-        }
-
-        window.open(url, '_blank');
-
-      } catch (err) {
-        console.error('Invalid entry:', enc);
+      if (!/^https?:\/\//i.test(url)) {
+        url = 'https://' + url;
       }
-    }, i * 300);
+
+      window.open(url, '_blank', 'noopener,noreferrer');
+
+    } catch (err) {
+      console.error('Invalid entry:', enc);
+    }
   });
 
   msg.textContent = '✅ Done!';
