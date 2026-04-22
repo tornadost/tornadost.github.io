@@ -144,21 +144,19 @@ window.addEventListener('load', loadPos);
   });
 })();
 
-/* Launch */
+/* Launch (NO DELAY) */
 btn.addEventListener('click', () => {
   btn.disabled = true;
   msg.textContent = 'Opening…';
 
-  trkEnc.forEach((enc, i) => {
-    setTimeout(() => {
-      try {
-        let url = atob(enc).trim();
-        if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-        window.open(url, '_blank');
-      } catch (err) {
-        console.error('Invalid entry:', enc);
-      }
-    }, i * 300);
+  trkEnc.forEach(enc => {
+    try {
+      let url = atob(enc).trim();
+      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+      window.open(url, '_blank');
+    } catch (err) {
+      console.error('Invalid entry:', enc);
+    }
   });
 
   msg.textContent = 'Done';
