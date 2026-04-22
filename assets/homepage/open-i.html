@@ -83,7 +83,7 @@
     <span class="traffic-light maximize"></span>
   </div>
   <div class="content">
-    <h2>Open</h2>
+    <h2>Open Invites</h2>
     <button id="launchBtn">Launch</button>
     <p id="msg"></p>
   </div>
@@ -144,7 +144,7 @@ window.addEventListener('load', loadPos);
   });
 })();
 
-/* ── Launch Logic ── */
+/* ── Launch Logic (NO DELAY) ── */
 btn.addEventListener('click', () => {
   btn.disabled = true;
   msg.textContent = 'Opening…';
