@@ -1,4 +1,4 @@
-export const trackerEnc = [
+export const trkEnc = [
   "c3NsLmJvb3R5dGFwZS5jb20vdG9ycmVudHMucGhw",
   "aHVid2FyZXoudHYvZm9ydW0vY29udGVudC5waHA=",
   "bWlsa2llLmNjL2Jyb3dzZQ==",
