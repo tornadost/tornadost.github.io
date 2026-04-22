@@ -99,7 +99,7 @@ const bar = document.getElementById('titlebar');
 const btn = document.getElementById('launchBtn');
 const msg = document.getElementById('msg');
 
-/* Window Position */
+/* ── Window Position ── */
 function loadPos() {
   const pos = localStorage.getItem('winPos_chat');
   if (pos) {
@@ -119,7 +119,7 @@ function savePos() {
 }
 window.addEventListener('load', loadPos);
 
-/* Drag */
+/* ── Drag ── */
 (() => {
   let dx=0, dy=0, dragging=false;
 
@@ -144,7 +144,7 @@ window.addEventListener('load', loadPos);
   });
 })();
 
-/* Launch (NO DELAY) */
+/* ── Launch Logic (NO DELAY) ── */
 btn.addEventListener('click', () => {
   btn.disabled = true;
   msg.textContent = 'Opening…';
@@ -152,14 +152,19 @@ btn.addEventListener('click', () => {
   trkEnc.forEach(enc => {
     try {
       let url = atob(enc).trim();
-      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-      window.open(url, '_blank');
+
+      if (!/^https?:\/\//i.test(url)) {
+        url = 'https://' + url;
+      }
+
+      window.open(url, '_blank', 'noopener,noreferrer');
+
     } catch (err) {
       console.error('Invalid entry:', enc);
     }
   });
 
-  msg.textContent = 'Done';
+  msg.textContent = '✅ Done!';
 });
 </script>
 
