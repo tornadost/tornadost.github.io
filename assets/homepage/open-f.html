@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>F. Launcher</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(circle at top left, #1b1f2a 0%, #12151f 80%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      user-select: none;
+      overflow: hidden;
+    }
+
+    .window {
+      position: absolute;
+      width: 380px;
+      background: #242830;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+    .window:active { transform: scale(0.98); }
+
+    .titlebar {
+      height: 32px;
+      background: #1f2630;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      cursor: grab;
+    }
+
+    .traffic-light {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+      background: #ff5f57;
+    }
+    .traffic-light.minimize { background: #ffbd2e; }
+    .traffic-light.maximize { background: #28c940; }
+
+    .content {
+      padding: 24px;
+      background: #2b2f3a;
+      color: #e0e0e0;
+      text-align: center;
+    }
+
+    #launchBtn {
+      background: #007aff;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.4rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #launchBtn:hover { background: #005bb5; }
+    #launchBtn:disabled {
+      background: #555;
+      cursor: default;
+    }
+
+    #msg {
+      margin-top: 1rem;
+      font-style: italic;
+      color: #a0a0a0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="window" id="appWindow">
+  <div class="titlebar" id="titlebar">
+    <span class="traffic-light"></span>
+    <span class="traffic-light minimize"></span>
+    <span class="traffic-light maximize"></span>
+  </div>
+  <div class="content">
+    <h2>Open Forum</h2>
+    <button id="launchBtn">Launch</button>
+    <p id="msg"></p>
+  </div>
+</div>
+
+<script type="module">
+'use strict';
+
+import { trkEnc } from 'https://tornadost.github.io/assets/homepage/ops/frm.js';
+
+const win = document.getElementById('appWindow');
+const bar = document.getElementById('titlebar');
+const btn = document.getElementById('launchBtn');
+const msg = document.getElementById('msg');
+
+/* ── Window Position ── */
+function loadPos() {
+  const pos = localStorage.getItem('winPos_forum');
+  if (pos) {
+    const { left, top } = JSON.parse(pos);
+    win.style.left = left;
+    win.style.top  = top;
+  } else {
+    win.style.left = (innerWidth - 380)/2 + 'px';
+    win.style.top  = (innerHeight - 200)/2 + 'px';
+  }
+}
+function savePos() {
+  localStorage.setItem('winPos_forum', JSON.stringify({
+    left: win.style.left,
+    top:  win.style.top
+  }));
+}
+window.addEventListener('load', loadPos);
+
+/* ── Drag ── */
+(() => {
+  let dx=0, dy=0, dragging=false;
+
+  bar.addEventListener('pointerdown', e => {
+    dragging = true;
+    const r = win.getBoundingClientRect();
+    dx = e.clientX - r.left;
+    dy = e.clientY - r.top;
+    bar.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    win.style.left = (e.clientX - dx) + 'px';
+    win.style.top  = (e.clientY - dy) + 'px';
+  });
+
+  document.addEventListener('pointerup', () => {
+    if (dragging) savePos();
+    dragging = false;
+    bar.style.cursor = 'grab';
+  });
+})();
+
+/* ── Launch Logic (NO DELAY) ── */
+btn.addEventListener('click', () => {
+  btn.disabled = true;
+  msg.textContent = 'Opening…';
+
+  trkEnc.forEach(enc => {
+    try {
+      let url = atob(enc).trim();
+
+      if (!/^https?:\/\//i.test(url)) {
+        url = 'https://' + url;
+      }
+
+      window.open(url, '_blank', 'noopener,noreferrer');
+
+    } catch (err) {
+      console.error('Invalid entry:', enc);
+    }
+  });
+
+  msg.textContent = '✅ Done!';
+});
+</script>
+
+</body>
+</html>
