@@ -41,5 +41,6 @@ export const trkEnc = [
   "bW9yZXRoYW50di5tZS9pbmRleC5waHA=",
   "bmVidWxhbmNlLmlvL2xvZ2luLnBocA==",
   "c2VjcmV0LWNpbmVtYS5wdy91c2VyLnBocD9pZD03NTY2",
-  "cmVkZGl0LmNvbS9yL3RyYWNrZXJzL25ldy8="
+  "cmVkZGl0LmNvbS9yL3RyYWNrZXJzL25ldy8=",
+  "YWxwaGFyYXRpby5jYy91c2VyLnBocD9pZD04MzI4MQ=="
 ];
