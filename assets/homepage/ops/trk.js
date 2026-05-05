@@ -2,6 +2,7 @@ export const trkEnc = [
   "ZjFjYXJyZXJhcy54eXov",
   "ZWlnYS5tb2kvdXNlcnMvUmVhbnVLZWF2ZXM4OQ==",
   "YmFrYWJ0Lm1lL3VzZXIvMjA3NjEwMS9yZWFudWtlYXZlczg5",
+  "cGl4ZWxjb3ZlLm1lL2luZGV4LnBocA==",
   "aGQtc3BhY2Uub3JnL2luZGV4LnBocD9wYWdlPXVzZXJjcCZ1aWQ9MjM3MDY0",
   "aGQtdG9ycmVudHMub3JnL3VzZXJjcC5waHA/dWlkPTIyMjMyOQ==",
   "bGF0LXRlYW0uY29tL3VzZXJzL1JlYW51S2VhdmVzODk=",
